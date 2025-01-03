@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+.login-wrapper{
+	min-width: 500px;
+}
+.inputs{
+	font-size: .8rem;
+    border-radius: 5px;
+    padding: 1.5rem 1rem;
+}
+.rounded-border{
+	border-radius: 5px!important;
+}
