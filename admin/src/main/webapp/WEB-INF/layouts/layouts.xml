@@ -10,9 +10,10 @@
 	</definition>
 	
 	<definition name="main-template" template="/WEB-INF/templates/main-template.jsp">
-		<put-attribute name="header" value="/WEB-INF/templates/header.jsp" />		
-		<put-attribute name="left-menu" value="/WEB-INF/templates/left-menu.jsp" />
+		<put-attribute name="header" value="/WEB-INF/templates/inc/header.jsp" />		
+		<put-attribute name="left-menu" value="/WEB-INF/templates/inc/left-menu.jsp" />
 		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/templates/inc/footer.jsp" />
 	</definition>
 	
 </tiles-definitions>

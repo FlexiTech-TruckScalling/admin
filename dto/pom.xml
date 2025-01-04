@@ -11,4 +11,5 @@
 	</parent>
 
 	<artifactId>dto</artifactId>
+	<name>dto</name>
 </project>

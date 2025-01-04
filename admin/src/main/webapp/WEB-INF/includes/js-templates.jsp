@@ -7,3 +7,6 @@
 
 <!-- Custom scripts for all pages-->
 <script src="<%=request.getContextPath()%>/resources/plugins/sb/js/sb-admin-2.min.js"></script>
+
+<!-- Common form -->
+<script src="<%=request.getContextPath()%>/resources/js/common-form.js"></script>

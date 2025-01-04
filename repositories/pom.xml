@@ -8,7 +8,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>repositories</artifactId>
-
+	<name>repositories</name>
 	<dependencies>
 		<dependency>
 			<groupId>org.flexitech.projects.embedded.truckscale</groupId>

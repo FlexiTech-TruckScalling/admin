@@ -299,4 +299,108 @@
 
 	</dependencies>
 
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+					</resource>
+				</resources>
+			</build>
+			<properties>
+				<admin.file.name>flex-truckscale-admin</admin.file.name>
+				<api.file.name>flex-truckscale-api</api.file.name>
+				<portal.file.name>flex-truckscale-portal</portal.file.name>
+				<sport.file.name>flex-truckscale-sport-api</sport.file.name>
+				<live.file.name>flex-truckscale-live-api</live.file.name>
+				<user.file.name>flex-truckscale-user-api</user.file.name>
+				<content.file.name>flex-truckscale-content-api</content.file.name>
+				<common.file.name>flex-truckscale-common-api</common.file.name>
+			</properties>
+		</profile>
+		<profile>
+			<id>uat</id>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources/uat</directory>
+					</resource>
+				</resources>
+			</build>
+			<properties>
+				<admin.file.name>flex-truckscale-admin</admin.file.name>
+				<portal.file.name>flex-truckscale-portal</portal.file.name>
+				<api.file.name>flex-truckscale-api</api.file.name>
+				<sport.file.name>flex-truckscale-sport</sport.file.name>
+				<live.file.name>flex-truckscale-live</live.file.name>
+				<user.file.name>flex-truckscale-user</user.file.name>
+				<content.file.name>flex-truckscale-content</content.file.name>
+				<common.file.name>flex-truckscale-common</common.file.name>
+			</properties>
+		</profile>
+		<profile>
+			<id>live</id>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources/live</directory>
+					</resource>
+				</resources>
+			</build>
+			<properties>
+				<admin.file.name>flex-truckscale-admin</admin.file.name>
+				<portal.file.name>flex-truckscale-portal</portal.file.name>
+				<api.file.name>flex-truckscale-api</api.file.name>
+				<sport.file.name>flex-truckscale-sport</sport.file.name>
+				<live.file.name>flex-truckscale-live</live.file.name>
+				<user.file.name>flex-truckscale-user</user.file.name>
+				<content.file.name>flex-truckscale-content</content.file.name>
+				<common.file.name>flex-truckscale-common</common.file.name>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>sg_uat</id>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources/sg_uat</directory>
+					</resource>
+				</resources>
+			</build>
+			<properties>
+				<admin.file.name>flex-truckscale-uat-admin</admin.file.name>
+				<api.file.name>flex-truckscale-uat-api</api.file.name>
+				<portal.file.name>flex-truckscale-uat-portal</portal.file.name>
+				<sport.file.name>sport</sport.file.name>
+				<live.file.name>live</live.file.name>
+				<user.file.name>user</user.file.name>
+				<content.file.name>content</content.file.name>
+				<common.file.name>common</common.file.name>
+			</properties>
+		</profile>
+
+	</profiles>
+
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version> <!-- Specify the version here -->
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+
 </project>

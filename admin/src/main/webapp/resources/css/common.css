@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 .login-wrapper{
-	min-width: 500px;
+	width: 500px;
 }
 .inputs{
 	font-size: .8rem;
@@ -10,4 +10,12 @@
 }
 .rounded-border{
 	border-radius: 5px!important;
+}
+.input-error-msg{
+	display: none;
+}
+.header-logo{
+	width: 40px;
+	height: auto;
+	display: block;
 }

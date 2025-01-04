@@ -10,4 +10,9 @@
 			value="/WEB-INF/pages/auth/login.jsp" />
 	</definition>
 	
+	<definition name="dashboard" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/dashboard/dashboard.jsp" />
+	</definition>
+	
 </tiles-definitions>
