@@ -6,4 +6,11 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
   <artifactId>entities</artifactId>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.flexitech.projects.embedded.truckscale</groupId>
+  		<artifactId>common</artifactId>
+  		<version>${project.version}</version>
+  	</dependency>
+  </dependencies>
 </project>

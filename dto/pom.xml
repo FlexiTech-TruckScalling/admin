@@ -12,4 +12,22 @@
 
 	<artifactId>dto</artifactId>
 	<name>dto</name>
+	<dependencies>
+		<dependency>
+			<groupId>org.flexitech.projects.embedded.truckscale</groupId>
+			<artifactId>common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.flexitech.projects.embedded.truckscale</groupId>
+			<artifactId>util</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.flexitech.projects.embedded.truckscale</groupId>
+			<artifactId>entities</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 </project>
