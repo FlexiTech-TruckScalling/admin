@@ -7,6 +7,9 @@ import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.dao.counter.CounterDAO;
 import org.flexitech.projects.embedded.truckscale.dto.counter.CounterDTO;
@@ -18,13 +21,15 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class CounterServiceImpl implements CounterService {
 
+	private final Logger logger = LogManager.getLogger(getClass());
+
 	@Autowired
 	CounterDAO counterDAO;
 
 	@Override
 	public CounterDTO getCounterById(Long id) {
 		Counters counter = this.counterDAO.get(id);
-		if(CommonValidators.isValidObject(counter)) {
+		if (CommonValidators.isValidObject(counter)) {
 			return new CounterDTO(counter);
 		}
 		return null;
@@ -40,7 +45,7 @@ public class CounterServiceImpl implements CounterService {
 					return null;
 				}
 				counter.setUpdatedTime(new Date());
-			}else {
+			} else {
 				counter.setCreatedTime(new Date());
 			}
 
@@ -55,12 +60,27 @@ public class CounterServiceImpl implements CounterService {
 	}
 
 	@Override
-	public List<CounterDTO> getAllCounters() {
-		List<Counters> counters = this.counterDAO.getAll();
+	public List<CounterDTO> getAllCounters(Integer status) {
+		List<Counters> counters = this.counterDAO.getAllCounterByStatus(status);
 		if (CommonValidators.validList(counters)) {
 			return counters.stream().map(CounterDTO::new).collect(Collectors.toList());
 		}
 		return new ArrayList<CounterDTO>();
+	}
+
+	@Override
+	public boolean deleteCounter(Long id) throws Exception {
+		Counters counter = this.counterDAO.get(id);
+		try {
+			if (CommonValidators.isValidObject(counter)) {
+				this.counterDAO.delete(counter);
+				return true;
+			}
+		} catch (Exception e) {
+			logger.error("Erorr while deleting counter: {}", ExceptionUtils.getStackTrace(e));
+			throw new Exception(e.getMessage());
+		}
+		return false;
 	}
 
 }

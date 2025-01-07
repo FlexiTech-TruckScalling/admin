@@ -23,6 +23,9 @@ public class UserDTO extends CommonDTO{
 	private UserRoleDTO userRoleDTO;
 	private CounterDTO counterDTO;
 	
+	private Long userRoleId;
+	private Long counterId;
+	
 	public UserDTO(Users user) {
 		this.loginName = user.getLoginName();
 		this.name = user.getName();
@@ -30,9 +33,11 @@ public class UserDTO extends CommonDTO{
 		this.phoneNo = user.getPhoneNo();
 		if(CommonValidators.isValidObject(user.getUserRole())) {
 			userRoleDTO = new UserRoleDTO(user.getUserRole());
+			this.userRoleId = user.getUserRole().getId();
 		}
 		if(CommonValidators.isValidObject(user.getCounter())) {
 			counterDTO = new CounterDTO(user.getCounter());
+			this.counterId = user.getCounter().getId();
 		}
 		// default fields
 		setField(user);

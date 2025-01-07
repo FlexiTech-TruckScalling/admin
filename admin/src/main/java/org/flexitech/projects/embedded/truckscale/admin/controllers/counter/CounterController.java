@@ -7,6 +7,7 @@ import org.flexitech.projects.embedded.truckscale.common.CommonConstants;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.dto.counter.CounterDTO;
+import org.flexitech.projects.embedded.truckscale.dto.deletion.DeleteDTO;
 import org.flexitech.projects.embedded.truckscale.services.counter.CounterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -59,9 +60,28 @@ public class CounterController {
 		return "counter-manage";
 	}
 	
+	@PostMapping("counter-delete")
+	public String deleteRole(@ModelAttribute DeleteDTO deleteDTO, Model model, RedirectAttributes attribute) {
+		try {
+			Long counterId = deleteDTO.getId();
+			if(!CommonValidators.validLong(counterId)) {
+				attribute.addFlashAttribute(CommonConstants.ERROR_MSG, "Failed to delete! Unknow id.");
+			}
+			if(this.counterService.deleteCounter(counterId)) {
+				attribute.addFlashAttribute(CommonConstants.SUCCESS_MSG, "Successfully deleted!");
+			}else {
+				attribute.addFlashAttribute(CommonConstants.ERROR_MSG, "Failed to delete!");
+			}
+		}catch(Exception e) {
+			logger.error("Error on delete counter: {}", ExceptionUtils.getMessage(e));
+			model.addAttribute(CommonConstants.ERROR_MSG, ExceptionUtils.getMessage(e));
+		}
+		return "redirect:counter-manage.fxt";
+	}
+	
 	private void commonModel(Model model, CounterDTO dto) {
 		model.addAttribute("counterDTO", dto);
 		model.addAttribute("statusList", ActiveStatus.getAll());
-		model.addAttribute("counterList", counterService.getAllCounters());
+		model.addAttribute("counterList", counterService.getAllCounters(null));
 	}
 }

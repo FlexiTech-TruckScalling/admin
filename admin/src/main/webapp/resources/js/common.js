@@ -33,3 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 });
 
+$(()=>{
+	$("button.delete-data").on('click', function(){
+		var action = $(this).data('action');
+		var id = $(this).data('id');
+		
+		if(action && id){
+			$('#delete-modal-form').attr('action', action)
+			$('#delete-id').val(id);
+			$('#deleteModal').modal('show');
+		}
+	})
+})

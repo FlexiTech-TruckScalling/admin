@@ -7,5 +7,6 @@ import org.flexitech.projects.embedded.truckscale.dto.counter.CounterDTO;
 public interface CounterService {
 	CounterDTO getCounterById(Long id);
 	CounterDTO manageCounter(CounterDTO counterDTO);
-	List<CounterDTO> getAllCounters();
+	List<CounterDTO> getAllCounters(Integer status);
+	boolean deleteCounter(Long id) throws Exception;
 }

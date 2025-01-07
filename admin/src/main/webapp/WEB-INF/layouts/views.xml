@@ -22,6 +22,18 @@
 			value="/WEB-INF/pages/user/user-manage.jsp" />
 	</definition>
 	
+	<!-- User Role -->
+	<definition name="role-manage" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/user/role-manage.jsp" />
+	</definition>
+	
+	<!-- Menu Access -->
+	<definition name="menu-access-manage" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/menu/menu-access-manage.jsp" />
+	</definition>
+	
 	<!-- Counter -->
 	<definition name="counter-manage" extends="main-template">
 		<put-attribute name="body"
