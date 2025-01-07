@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ENL | Truck Scale Admin</title>
+<title>${pageTitle }</title>
 <meta charset="utf-8">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
@@ -16,7 +16,7 @@
 </head>
 <body>
 	<div id="wrapper">
-	
+
 		<!-- Sidebar -->
 		<tiles:insertAttribute name="left-menu" />
 		<!-- End of Sidebar -->
@@ -72,11 +72,12 @@
 				<div class="modal-footer">
 					<button class="btn btn-secondary" type="button"
 						data-dismiss="modal">Cancel</button>
-					<a class="btn btn-primary" href="login.html">Logout</a>
+					<a class="btn btn-primary" href="logout.fxt">Logout</a>
 				</div>
 			</div>
 		</div>
 	</div>
 	<%@ include file="../includes/js-templates.jsp"%>
+	<%@ include file="./inc/toast-message.jsp" %>
 </body>
 </html>

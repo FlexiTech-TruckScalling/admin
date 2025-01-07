@@ -1,11 +1,17 @@
 package org.flexitech.projects.embedded.truckscale.entities.user;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.flexitech.projects.embedded.truckscale.common.TableNames;
 import org.flexitech.projects.embedded.truckscale.entities.BaseEntity;
+import org.flexitech.projects.embedded.truckscale.entities.menu.MenuRoleAccess;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -28,4 +34,7 @@ public class UserRoles extends BaseEntity {
 	private String name;
 	
 	private String description;
+	
+	@OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<MenuRoleAccess> menuRoleAccesses;
 }

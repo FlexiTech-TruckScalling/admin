@@ -11,7 +11,7 @@ $(() => {
 		'pattern[dd/mm/yy hh:mm:ss]'
 	];
 
-	$(document).on("click", "#common-form button.submit", function(event) {
+	$(document).on("submit", "#common-form", function(event) {
 		console.log("Form click!");
 
 		event.preventDefault();
@@ -22,9 +22,11 @@ $(() => {
 			const $input = $(this);
 			const $next = $(this).next();
 			const classes = $input.attr("class") ? $input.attr("class").split(" ") : [];
-			const errorMsgObj = { msg: "" };
+			const errorMsgObj = { msg: "", prefix: "This Field" };
 			for (let vClass of validationClasses) {
 				if (classes.includes(vClass)) {
+					let prefix = $next.data("label");
+					errorMsgObj.prefix = prefix;
 					if (!validateInput($input, vClass, errorMsgObj)) {
 						$next.removeClass('input-error-msg');
 						$input.addClass('border border-danger')
@@ -39,11 +41,34 @@ $(() => {
 			}
 		});
 
+		$("#common-form select.selectpicker").each(function() {
+			const $input = $(this);
+			const $next = $(this.parentElement).next();
+			const classes = $input.attr("class") ? $input.attr("class").split(" ") : [];
+			const errorMsgObj = { msg: "", prefix: "This Field" };
+			for (let vClass of validationClasses) {
+				if (classes.includes(vClass)) {
+					let prefix = $next.data("label");
+					errorMsgObj.prefix = prefix;
+					if (!validateInput($input, vClass, errorMsgObj)) {
+						$next.removeClass('input-error-msg');
+						$input.parent().addClass('border border-danger')
+						$next.text(errorMsgObj.msg)
+						isValid = false;
+					} else {
+						$input.parent().removeClass('border border-danger')
+						$next.addClass('input-error-msg');
+						$next.text('')
+					}
+				}
+			}
+		});
+
 		// If the form is valid, submit the form
 		if (isValid) {
 			console.log("Form is valid!");
 			// Optionally trigger form submission
-			$("#common-form").submit();
+			this.submit();
 		} else {
 			console.log("Form is invalid!");
 		}
@@ -51,12 +76,15 @@ $(() => {
 
 	// Function to handle input validation based on the class
 	function validateInput($input, validationClass, errorMsgObj) {
-		const value = $input.val().trim();
+		let value = $input.val();
+		if(value){
+			value = value.trim();
+		}
 
 		// Required field validation
 		if (validationClass === "required") {
 			if (!value) {
-				errorMsgObj.msg = "This field is required!";
+				errorMsgObj.msg = errorMsgObj.prefix + " is required!";
 				$input.focus();
 				return false;
 			}

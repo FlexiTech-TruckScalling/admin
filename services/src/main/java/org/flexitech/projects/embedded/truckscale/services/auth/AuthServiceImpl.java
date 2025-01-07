@@ -27,20 +27,21 @@ public class AuthServiceImpl implements AuthService {
 		try {
 			Users user = this.userDAO.findUserByLoginName(loginDTO.getLoginName());
 			if (user == null) {
-				return null;
+				throw new Exception("Invalid login name!");
 			}
 			if (!CommonValidators.validString(loginDTO.getPassword())
 					&& !CommonValidators.validString(user.getPassword())) {
-				return null;
+				throw new Exception("Password cannot be empty!");
 			}
 			if (user.getPassword().equals(loginDTO.getPassword())) {
 				return new UserDTO(user);
+			}else {
+				throw new Exception("Wrong password, please try again!");
 			}
 		} catch (Exception e) {
 			logger.error("Error on Login: {}", ExceptionUtils.getMessage(e));
 			throw e;
 		}
-		return null;
 	}
 
 	@Override

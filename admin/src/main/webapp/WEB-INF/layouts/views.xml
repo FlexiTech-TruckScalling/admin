@@ -10,9 +10,22 @@
 			value="/WEB-INF/pages/auth/login.jsp" />
 	</definition>
 	
+	<!-- Dashboard -->
 	<definition name="dashboard" extends="main-template">
 		<put-attribute name="body"
 			value="/WEB-INF/pages/dashboard/dashboard.jsp" />
+	</definition>
+	
+	<!-- User -->
+	<definition name="user-manage" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/user/user-manage.jsp" />
+	</definition>
+	
+	<!-- Counter -->
+	<definition name="counter-manage" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/counter/counter-manage.jsp" />
 	</definition>
 	
 </tiles-definitions>

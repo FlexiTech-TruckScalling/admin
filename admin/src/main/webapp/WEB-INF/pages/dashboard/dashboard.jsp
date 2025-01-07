@@ -1,1 +1,1 @@
-<h2>This is Dashboard</h2>
+<strong>This is Dashboard</strong>

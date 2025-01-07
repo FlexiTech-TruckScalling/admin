@@ -1,21 +1,53 @@
 @charset "UTF-8";
-
-.login-wrapper{
+body {
+	font-size: 0.85rem !important;
+}
+input, button, .btn {
+	font-size: 0.85rem !important;
+	padding: 5px 10px !important;
+}
+.login-wrapper {
 	width: 500px;
 }
-.inputs{
+
+.inputs {
 	font-size: .8rem;
-    border-radius: 5px;
-    padding: 1.5rem 1rem;
+	border-radius: 5px;
+	padding: 1.5rem 1rem;
 }
-.rounded-border{
-	border-radius: 5px!important;
+
+.rounded-border {
+	border-radius: 5px !important;
 }
-.input-error-msg{
+
+.input-error-msg {
 	display: none;
 }
-.header-logo{
+
+.header-logo {
 	width: 40px;
 	height: auto;
 	display: block;
+}
+
+.toast-container {
+	z-index: 9999;
+}
+.top-0{
+	top: 0;
+}
+.left-0{
+	left: 0;
+}
+.right-0{
+	right: 0;
+}
+.bottom-0{
+	bottom: 0;
+}
+.topbar {
+    height: 2.375rem;
+}
+.footer-text{
+	font-size: 12px !important;
 }

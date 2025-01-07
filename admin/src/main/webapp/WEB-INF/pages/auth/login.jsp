@@ -33,7 +33,7 @@
 										<span class="text-danger input-error-msg"></span>
 									</div>
 
-									<button type="button"
+									<button type="submit"
 										class="submit btn btn-primary btn-user rounded-border btn-block">
 										Login</button>
 								</form:form>

@@ -6,5 +6,8 @@
 <!-- CSS -->
 <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/plugins/sb/css/sb-admin-2.min.css"/>
 
+<!-- Bootstrap Select -->
+<link rel="stylesheet" href="<%=request.getContextPath()%>/resources/plugins/bootstrap/select1.13.14/css/bootstrap-select.min.css"/>
+
 <!-- Common -->
 <link rel="stylesheet" href="<%=request.getContextPath()%>/resources/css/common.css"/>

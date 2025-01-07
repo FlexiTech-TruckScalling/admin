@@ -13,4 +13,6 @@ public class TableNames {
 
 	public static final String USER_SHIFT_TABLE = "user_shifts";
 
+	public static final String MENU_TABLE = "menus";
+	public static final String MENU_ROLE_ACCESS_TABLE = "menus_role_access";
 }

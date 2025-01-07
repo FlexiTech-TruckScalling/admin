@@ -1,8 +1,5 @@
 package org.flexitech.projects.embedded.truckscale.dto.user;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.dto.CommonDTO;
 import org.flexitech.projects.embedded.truckscale.dto.counter.CounterDTO;

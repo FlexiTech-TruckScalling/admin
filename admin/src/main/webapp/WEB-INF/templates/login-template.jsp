@@ -1,4 +1,4 @@
-<%@ include file="../includes/import-tags.jsp" %>
+<%@ include file="../includes/import-tags.jsp"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,6 +15,7 @@
 </head>
 <body>
 	<tiles:insertAttribute name="body" />
-	<%@ include file="../includes/js-templates.jsp" %>
+	<%@ include file="../includes/js-templates.jsp"%>
+	<%@ include file="./inc/toast-message.jsp" %>
 </body>
 </html>
