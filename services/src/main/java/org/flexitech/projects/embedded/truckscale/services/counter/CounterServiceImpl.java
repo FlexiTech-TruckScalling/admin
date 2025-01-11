@@ -11,9 +11,14 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
+import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.dao.counter.CounterDAO;
+import org.flexitech.projects.embedded.truckscale.dao.counter.CounterSettingDAO;
+import org.flexitech.projects.embedded.truckscale.dao.counter.MasterCounterSettingDAO;
 import org.flexitech.projects.embedded.truckscale.dto.counter.CounterDTO;
+import org.flexitech.projects.embedded.truckscale.entities.counters.CounterSetting;
 import org.flexitech.projects.embedded.truckscale.entities.counters.Counters;
+import org.flexitech.projects.embedded.truckscale.entities.setting.MasterCounterSetting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +30,12 @@ public class CounterServiceImpl implements CounterService {
 
 	@Autowired
 	CounterDAO counterDAO;
+	
+	@Autowired
+	CounterSettingDAO counterSettingDAO;
+	
+	@Autowired
+	MasterCounterSettingDAO masterCounterSettingDAO;
 
 	@Override
 	public CounterDTO getCounterById(Long id) {
@@ -54,10 +65,22 @@ public class CounterServiceImpl implements CounterService {
 			counter.setStatus(counterDTO.getStatus());
 
 			counterDAO.saveOrUpdate(counter);
+			
+//			manageCounterSettingByCounter(counter);
+			
 			return new CounterDTO(counter);
 		}
 		return null;
 	}
+
+//	private void manageCounterSettingByCounter(Counters counter) {
+//		if(CommonValidators.isValidObject(counter) && CommonValidators.validLong(counter.getId())) {
+//			List<CounterSetting> counterSettings = this.counterSettingDAO.getCounterSettingByCounterId(counter.getId());
+//			if(!CommonValidators.validList(counterSettings)) { // res
+//				List<MasterCounterSetting> masterCounterSettings = this.masterCounterSettingDAO.getAllByStatus(ActiveStatus.ACTIVE.getCode());
+//			}
+//		}
+//	}
 
 	@Override
 	public List<CounterDTO> getAllCounters(Integer status) {

@@ -40,4 +40,16 @@
 			value="/WEB-INF/pages/counter/counter-manage.jsp" />
 	</definition>
 	
+	<!-- Counter Setting -->
+	<definition name="counter-setting" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/counter/counter-setting.jsp" />
+	</definition>
+	
+	<!-- Weight Unit Setting -->
+	<definition name="weight-units" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/settings/weight-units.jsp" />
+	</definition>
+	
 </tiles-definitions>

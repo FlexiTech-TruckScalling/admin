@@ -41,7 +41,7 @@ public class MenuRoleAccessServiceImpl implements MenuRoleAccessService {
 	@Autowired
 	UserRoleDAO userRoleDAO;
 
-	private final Logger logger = LogManager.getLogger(getClass());
+//	private final Logger logger = LogManager.getLogger(getClass());
 
 	@Override
 	public Map<MenuDTO, List<MenuDTO>> getMenuRoleAccessListByRoleId(Long roleId) {
@@ -72,7 +72,6 @@ public class MenuRoleAccessServiceImpl implements MenuRoleAccessService {
 
 	@Override
 	public List<MenuAccessTreeDTO> getSelectedAccessTree(Long userRoleId) {
-//		List<MenuRoleAccess> allMenus = this.menuRoleAccessDAO.getAllMenuRoleAccess(null, ActiveStatus.ACTIVE.getCode());
 		List<Menu> allMenus = this.menuDAO.getAllByStatus(ActiveStatus.ACTIVE.getCode());
 		List<MenuRoleAccess> userMenus = this.menuRoleAccessDAO.getAllMenuRoleAccess(userRoleId,
 				ActiveStatus.ACTIVE.getCode());

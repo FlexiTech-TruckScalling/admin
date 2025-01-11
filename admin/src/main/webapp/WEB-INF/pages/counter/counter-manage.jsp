@@ -94,7 +94,7 @@
 									class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
 										${counter.statusDesc } </span></td>
 								<td>${counter.createdTimeDesc }</td>
-								<td><a href=""><i class="fas fa-fw fa-cog"></i> Setting</a>
+								<td><a href="counter-setting.fxt?counterId=${counter.id }"><i class="fas fa-fw fa-cog"></i> Setting</a>
 									<a href="?id=${counter.id }"><i class="fas fa-fw fa-edit"></i>Edit</a>
 								</td>
 							</tr>

@@ -15,4 +15,6 @@ public class TableNames {
 
 	public static final String MENU_TABLE = "menus";
 	public static final String MENU_ROLE_ACCESS_TABLE = "menus_role_access";
+	
+	public static final String WEIGHT_UNIT_TABLE = "weight_units";
 }

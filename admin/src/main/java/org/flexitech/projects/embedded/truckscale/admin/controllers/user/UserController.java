@@ -8,7 +8,6 @@ import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.dto.deletion.DeleteDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
-import org.flexitech.projects.embedded.truckscale.dto.user.UserRoleDTO;
 import org.flexitech.projects.embedded.truckscale.services.counter.CounterService;
 import org.flexitech.projects.embedded.truckscale.services.user.UserRoleService;
 import org.flexitech.projects.embedded.truckscale.services.user.UserService;

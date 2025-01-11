@@ -13,6 +13,8 @@
 <meta name="keywords" content="" />
 <meta name="author" content="CodedThemes" />
 <%@ include file="../includes/css-templates.jsp"%>
+<%@ include file="../includes/js-templates.jsp"%>
+
 </head>
 <body>
 	<div id="wrapper">
@@ -56,7 +58,6 @@
 	</a>
 
 	<%@ include file="../includes/modals.jsp"%>
-	<%@ include file="../includes/js-templates.jsp"%>
-	<%@ include file="./inc/toast-message.jsp" %>
+	<%@ include file="./inc/toast-message.jsp"%>
 </body>
 </html>
