@@ -72,7 +72,7 @@
 				<!-- Submit Button -->
 				<div class="row mt-4">
 					<div class="col text-left">
-						<button type="button" id="search-btn" class="btn btn-primary">Search</button>
+						<button type="submit" class="btn btn-primary">Search</button>
 						<a href="customer-search.fxt" class="btn btn-secondary">Clear</a>
 					</div>
 				</div>
@@ -152,8 +152,4 @@
 			$('#common-form').submit();
 		}
 	});
-	$("#search-btn").on("click",function(){
-		$('#pageNo').val(1);
-		$('#common-form').submit();
-	})
 </script>

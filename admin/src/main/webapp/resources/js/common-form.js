@@ -68,6 +68,10 @@ $(() => {
 		if (isValid) {
 			console.log("Form is valid!");
 			// Optionally trigger form submission
+			var page = document.getElementById("pageNo");
+			if(page){
+				$('#pageNo').val(1);
+			}
 			this.submit();
 		} else {
 			console.log("Form is invalid!");
