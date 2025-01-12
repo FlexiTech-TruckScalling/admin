@@ -29,7 +29,7 @@ public class MenuDAOImpl extends CommonDAOImpl<Menu, Long> implements MenuDAO {
 		if(CommonValidators.validInteger(status)) {
 			c.add(Restrictions.eq("status", status));
 		}
-		c.addOrder(Order.asc("id"));
+		c.addOrder(Order.asc("order"));
 		return c.list();
 	}
 
@@ -38,7 +38,7 @@ public class MenuDAOImpl extends CommonDAOImpl<Menu, Long> implements MenuDAO {
 	public List<Menu> getParentMenu() {
 		Criteria c = getCurrentSession().createCriteria(daoType);
 		c.add(Restrictions.eq("parentStatus", ActiveStatus.ACTIVE.getCode()));
-		c.addOrder(Order.asc("id"));
+		c.addOrder(Order.asc("order"));
 		return c.list();
 	}
 

@@ -12,4 +12,7 @@ public class CommonConstants {
 	
 	/* Action New */
 	public static final String NEW_RECORD = "new_id";
+	
+	/* Pagination */
+	public static final int ROW_PER_PAGE = 1;
 }

@@ -17,4 +17,11 @@ public class TableNames {
 	public static final String MENU_ROLE_ACCESS_TABLE = "menus_role_access";
 	
 	public static final String WEIGHT_UNIT_TABLE = "weight_units";
+	
+	public static final String PRODUCT_TABLE = "products";
+	public static final String GOODS_TABLE = "good";
+	
+	public static final String CUSTOMER_TABLE = "customers";
+	public static final String CUSTOMER_TYPE_TABLE = "customer_types";
+	public static final String CUSTOMER_VEHICLE_TABLE = "customer_vehicles";
 }

@@ -3,7 +3,7 @@ package org.flexitech.projects.embedded.truckscale.common;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
+import java.util.Collection;
 
 public class CommonValidators {
 	
@@ -47,7 +47,7 @@ public class CommonValidators {
 		return value != null && !value.trim().isEmpty();
 	}
 	
-	public static boolean validList(List<?> value) {
+	public static boolean validList(Collection<?> value) {
 		return value != null && !value.isEmpty();
 	}
 

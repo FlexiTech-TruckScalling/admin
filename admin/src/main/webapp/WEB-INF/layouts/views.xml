@@ -52,4 +52,29 @@
 			value="/WEB-INF/pages/settings/weight-units.jsp" />
 	</definition>
 	
+	<!-- Goods -->
+	<definition name="goods-manage" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/products/goods-manage.jsp" />
+	</definition>
+	
+	<definition name="products-manage" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/products/products-manage.jsp" />
+	</definition>
+	
+	<!-- Customer -->
+	<definition name="customer-manage" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/customers/customer-manage.jsp" />
+	</definition>
+	<definition name="customer-type-manage" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/customers/customer-type-manage.jsp" />
+	</definition>
+	<definition name="customer-search" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/customers/customer-search.jsp" />
+	</definition>
+	
 </tiles-definitions>
