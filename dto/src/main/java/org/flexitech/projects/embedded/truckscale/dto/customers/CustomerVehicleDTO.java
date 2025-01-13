@@ -19,11 +19,13 @@ public class CustomerVehicleDTO extends CommonDTO {
 	
 	private BigDecimal weight;
 	
+	private Long customerId;
+	
 	public CustomerVehicleDTO(CustomerVehicles v) {
 		if(CommonValidators.isValidObject(v)) {
 			this.number = v.getNumber();
 			this.weight = v.getWeight();
-			
+//	        this.customerId = (v.getCustomer() != null) ? v.getCustomer().getId() : null;
 			setField(v);
 		}
 	}

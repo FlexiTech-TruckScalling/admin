@@ -76,5 +76,9 @@
 		<put-attribute name="body"
 			value="/WEB-INF/pages/customers/customer-search.jsp" />
 	</definition>
+	<definition name="customer-vehicle-manage" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/customers/customer-vehicle-manage.jsp" />
+	</definition>
 	
 </tiles-definitions>

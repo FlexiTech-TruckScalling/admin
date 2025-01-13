@@ -22,4 +22,16 @@ public class CustomerVehicleDAOImpl extends CommonDAOImpl<CustomerVehicles, Long
 		return c.list();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<CustomerVehicles> getAllCustomerVehicles(Long customerId, Integer status) {
+		Criteria c = getCurrentSession().createCriteria(daoType);
+		c.createAlias("customer", "c");
+		if(CommonValidators.validInteger(status)) {
+			c.add(Restrictions.eq("status", status));
+		}
+		c.add(Restrictions.eq("c.id", customerId));
+		return c.list();
+	}
+
 }

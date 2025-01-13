@@ -55,8 +55,7 @@
 						</form:label>
 						<form:input path="address" type="text"
 							class="form-control required" placeholder="Address" />
-						<span class="text-danger input-error-msg"
-							data-label="Address"></span>
+						<span class="text-danger input-error-msg" data-label="Address"></span>
 					</div>
 
 					<div class="col-md-4">
@@ -82,6 +81,7 @@
 						</form:select>
 						<span class="text-danger input-error-msg" data-label="Status"></span>
 					</div>
+
 				</div>
 
 				<!-- Submit Button -->
@@ -92,6 +92,10 @@
 						<c:if test="${not empty customerDTO.id }">
 							<button type="button" data-action="customer-delete.fxt"
 								data-id="${customerDTO.id }" class="btn btn-danger delete-data">Delete</button>
+						</c:if>
+						<c:if test="${not empty customerDTO.id }">
+							<a class="btn btn-info" href="${customerDTO.id }/customer-vehicle-manage.fxt">Add
+								Vehicles</a>
 						</c:if>
 					</div>
 				</div>

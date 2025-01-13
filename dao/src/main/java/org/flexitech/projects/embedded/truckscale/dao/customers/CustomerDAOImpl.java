@@ -46,7 +46,7 @@ public class CustomerDAOImpl extends CommonDAOImpl<Customers, Long> implements C
 		if (countOnly) {
 			b.append(" SELECT COUNT(DISTINCT c.id) ");
 		} else {
-			b.append(" SELECT c.* ");
+			b.append(" SELECT DISTINCT c.* ");
 		}
 		
 		b.append("From customers c ")
@@ -80,6 +80,7 @@ public class CustomerDAOImpl extends CommonDAOImpl<Customers, Long> implements C
 		}
 		
 		if (!countOnly) {
+			b.append("ORDER BY created_time desc ");
 	        b.append(" LIMIT :limit OFFSET :offset ");
 	    }
 		
@@ -113,9 +114,13 @@ public class CustomerDAOImpl extends CommonDAOImpl<Customers, Long> implements C
 	    }
 	    
 	    if (!countOnly) {
-	        query.setParameter("limit", searchDTO.getLimit());
-	        query.setParameter("offset", (searchDTO.getPageNo() - 1) * searchDTO.getLimit());
-	    }
+	    	int limit = searchDTO.getLimit();
+	        int offset = (searchDTO.getPageNo() - 1) * limit;
+	        query.setParameter("limit", limit);
+	        query.setParameter("offset", offset);
+
+	        System.out.println("Pagination Parameters: limit=" + limit + ", offset=" + offset + ", page=" + searchDTO.getPageNo());
+	   }
 	}
 
 }

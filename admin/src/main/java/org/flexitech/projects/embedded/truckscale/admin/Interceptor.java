@@ -17,8 +17,8 @@ public class Interceptor extends HandlerInterceptorAdapter {
         if (loggedUser != null || uri.endsWith("login.fxt") || uri.endsWith("logout.fxt")) {
             return true;
         }
-
-        response.sendRedirect("login.fxt");
+        String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/login.fxt");
         return false;
     }
 }

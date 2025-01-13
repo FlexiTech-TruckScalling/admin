@@ -39,11 +39,6 @@ public class CustomerDTO extends CommonDTO {
 				this.customerTypeIds = c.getCustomerTypes().stream().map(t->t.getId()).collect(Collectors.toList());
 				this.customerTypeNames = c.getCustomerTypes().stream().map(t->t.getName()).collect(Collectors.joining(", "));
 			}
-			
-			if(CommonValidators.validList(c.getVehicles())) {
-				this.customerVehicleDTOs = c.getVehicles().stream().map(CustomerVehicleDTO::new).collect(Collectors.toList());
-			}
-			
 			setField(c);
 		}
 	}

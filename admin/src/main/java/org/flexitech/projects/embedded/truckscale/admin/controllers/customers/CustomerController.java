@@ -1,12 +1,15 @@
 package org.flexitech.projects.embedded.truckscale.admin.controllers.customers;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.flexitech.projects.embedded.truckscale.admin.controllers.BaseController;
+import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerDTO;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerSearchDTO;
 import org.flexitech.projects.embedded.truckscale.dto.deletion.DeleteDTO;
 import org.flexitech.projects.embedded.truckscale.services.customers.CustomerService;
 import org.flexitech.projects.embedded.truckscale.services.customers.CustomerTypeService;
+import org.flexitech.projects.embedded.truckscale.services.customers.CustomerVehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +24,9 @@ public class CustomerController extends BaseController<CustomerDTO, CustomerServ
 
 	@Autowired
 	CustomerTypeService customerTypeService;
+	
+	@Autowired
+	CustomerVehicleService customerVehicleService;
 	
 	protected CustomerController(CustomerService service) {
 		super(service, "ENL | Truck Scale Customer Manage", "customer-manage");
@@ -53,9 +59,11 @@ public class CustomerController extends BaseController<CustomerDTO, CustomerServ
 	private void commonSearchModel(Model model, CustomerSearchDTO searchDTO) {
 		model.addAttribute("pageTitle", "ENL | Truck Scale Customer Search");
 		model.addAttribute("statusList", ActiveStatus.getAll());
+		System.out.println("PageNO: " + searchDTO.getPageNo());
 		model.addAttribute("customerList", service.searchCustomers(searchDTO));
+		System.out.println("PageNO: " + searchDTO.getPageNo());
 		model.addAttribute("searchDTO", searchDTO);
-		model.addAttribute("custometTypeList", customerTypeService.getAllCustomerTypes(ActiveStatus.ACTIVE.getCode()));
+		model.addAttribute("customerTypeList", customerTypeService.getAllCustomerTypes(ActiveStatus.ACTIVE.getCode()));
 	}
 	
 	@PostMapping("customer-delete")
@@ -85,6 +93,13 @@ public class CustomerController extends BaseController<CustomerDTO, CustomerServ
 
 	@Override
 	protected void commonModel(Model model, CustomerDTO dto) {
+		if(CommonValidators.validLong(dto.getId())) {
+			try {
+				dto.setCustomerVehicleDTOs(this.customerVehicleService.getAllCustomerVehicle(dto.getId(), null));
+			} catch (Exception e) {
+				logger.error("Error on getting customer vehicels: {}", ExceptionUtils.getStackTrace(e));
+			}
+		}
 		model.addAttribute("customerDTO", dto);
 		model.addAttribute("statusList", ActiveStatus.getAll());
 		model.addAttribute("customerTypeList", customerTypeService.getAllCustomerTypes(ActiveStatus.ACTIVE.getCode()));

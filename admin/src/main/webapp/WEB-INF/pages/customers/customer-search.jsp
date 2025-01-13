@@ -50,7 +50,7 @@
 						</form:label>
 						<form:select path="customerType"
 							class="form-control border bg-white selectpicker">
-							<option value="-1" disabled>-- Select One --</option>
+							<option value="-1" selected>-- Select One --</option>
 							<form:options items="${customerTypeList }" itemValue="id"
 								itemLabel="name" />
 						</form:select>
@@ -72,7 +72,7 @@
 				<!-- Submit Button -->
 				<div class="row mt-4">
 					<div class="col text-left">
-						<button type="submit" class="btn btn-primary">Search</button>
+						<button type="submit" id="search-btn" class="btn btn-primary">Search</button>
 						<a href="customer-search.fxt" class="btn btn-secondary">Clear</a>
 					</div>
 				</div>
@@ -103,7 +103,7 @@
 				<tbody>
 					<c:if test="${empty customerList }">
 						<tr>
-							<td colspan="9" class="text-center">No customer vehicles.</td>
+							<td colspan="9" class="text-center">No customers.</td>
 						</tr>
 					</c:if>
 					<c:if test="${not empty customerList }">
@@ -148,8 +148,15 @@
 		startPage : parseInt(page), // active page
 		initiateStartPageClick : false,
 		onPageClick : function(event, page) {
-			$('#pageNo').val(page);
+			var pageNo = document.getElementById('pageNo');
+			pageNo.value = page;
 			$('#common-form').submit();
 		}
 	});
+	$("#search-btn").on("click", function(){
+		var page = document.getElementById("pageNo");
+		if(page){
+			$('#pageNo').val(1);
+		}
+	})
 </script>
