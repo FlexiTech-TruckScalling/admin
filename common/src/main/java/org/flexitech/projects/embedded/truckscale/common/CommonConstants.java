@@ -15,4 +15,7 @@ public class CommonConstants {
 	
 	/* Pagination */
 	public static final int ROW_PER_PAGE = 2;
+	
+	/* API access user */
+	public static final String API_ACCESSOR = "API_ACCESSOR";
 }

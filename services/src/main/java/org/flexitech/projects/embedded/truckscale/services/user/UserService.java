@@ -9,4 +9,6 @@ public interface UserService {
 	UserDTO manageUser(UserDTO userRoleDTO);
 	List<UserDTO> getAllUsers(Integer status);
 	boolean deleteUser(Long id) throws Exception;
+	
+	UserDTO findUserBySessionToken(String sessionToken);
 }

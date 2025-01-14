@@ -105,4 +105,13 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+	@Override
+	public UserDTO findUserBySessionToken(String sessionToken) {
+		Users user = this.userDAO.findUserBySessionToken(sessionToken);
+		if(CommonValidators.isValidObject(user)) {
+			return new UserDTO(user);
+		}
+		return null;
+	}
+
 }

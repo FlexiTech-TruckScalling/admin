@@ -8,4 +8,5 @@ import org.flexitech.projects.embedded.truckscale.entities.user.Users;
 public interface UserDAO extends CommonDAO<Users, Long> {
 	Users findUserByLoginName(String loginName);
 	List<Users> getAllUserByStatus(Integer status);
+	Users findUserBySessionToken(String sessionToken);
 }

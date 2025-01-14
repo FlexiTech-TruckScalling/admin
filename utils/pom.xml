@@ -9,4 +9,11 @@
 	</parent>
 	<artifactId>util</artifactId>
 	<name>util</name>
+	<dependencies>
+		<dependency>
+			<groupId>org.flexitech.projects.embedded.truckscale</groupId>
+			<artifactId>common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
 </project>

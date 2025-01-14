@@ -298,6 +298,14 @@
 			<version>0.1.55</version>
 		</dependency>
 
+		<!--JWT-->
+		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<profiles>
@@ -335,6 +343,7 @@
 			</build>
 			<properties>
 				<admin.file.name>flex-truckscale-admin</admin.file.name>
+				<api.file.name>flex-truckscale-api</api.file.name>
 				<portal.file.name>flex-truckscale-portal</portal.file.name>
 				<api.file.name>flex-truckscale-api</api.file.name>
 				<sport.file.name>flex-truckscale-sport</sport.file.name>
@@ -355,6 +364,7 @@
 			</build>
 			<properties>
 				<admin.file.name>flex-truckscale-admin</admin.file.name>
+				<api.file.name>flex-truckscale-api</api.file.name>
 				<portal.file.name>flex-truckscale-portal</portal.file.name>
 				<api.file.name>flex-truckscale-api</api.file.name>
 				<sport.file.name>flex-truckscale-sport</sport.file.name>
@@ -376,6 +386,7 @@
 			</build>
 			<properties>
 				<admin.file.name>flex-truckscale-uat-admin</admin.file.name>
+				<api.file.name>flex-truckscale-api</api.file.name>
 				<api.file.name>flex-truckscale-uat-api</api.file.name>
 				<portal.file.name>flex-truckscale-uat-portal</portal.file.name>
 				<sport.file.name>sport</sport.file.name>

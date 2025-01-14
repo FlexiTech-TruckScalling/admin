@@ -32,6 +32,14 @@ public class UserDAOImpl extends CommonDAOImpl<Users, Long> implements UserDAO {
 		return c.list();
 	}
 
+	@Override
+	public Users findUserBySessionToken(String sessionToken) {
+		Criteria c = getCurrentSession().createCriteria(daoType);
+		c.add(Restrictions.eq("sessionToken", sessionToken));
+		c.setMaxResults(1);
+		return (Users) c.uniqueResult();
+	}
+
 	
 	
 }

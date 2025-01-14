@@ -44,7 +44,7 @@
 		location="/resources/" />
 
 	<context:property-placeholder
-		location="classpath:database.properties" order="1"
+		location="classpath:application.properties" order="1"
 		ignore-unresolvable="true" />
 	<context:property-placeholder
 		location="classpath:messages.properties" order="2"

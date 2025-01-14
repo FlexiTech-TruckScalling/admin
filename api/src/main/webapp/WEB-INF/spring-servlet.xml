@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- Enable Spring annotations -->
+    <context:annotation-config />
+
+    <!-- Component scanning -->
+    <context:component-scan
+        base-package="org.flexitech.projects.embedded.truckscale" />
+
+    <!-- MVC configuration -->
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg index="0" name="defaultCharset" value="UTF-8" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+    <mvc:default-servlet-handler />
+    <mvc:resources mapping="/resources/**" location="/resources/" />
+
+    <!-- Property placeholders -->
+    <context:property-placeholder
+        location="classpath:application.properties"  order="1" />
+    <context:property-placeholder
+        location="classpath:messages.properties" order="2"
+        ignore-unresolvable="true" />
+
+    <!-- Transaction management -->
+    <tx:annotation-driven transaction-manager="hibernateTransactionManager" />
+
+    <!-- Database configuration -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driver}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+    </bean>
+
+    <!-- Hibernate configuration -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" value="org.flexitech.projects.embedded.truckscale.entities" />
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.jdbc.fetch_size">50</prop>
+                <prop key="hibernate.jdbc.batch_size">10</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="hibernateTransactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <!-- View configuration -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+
+    <!-- JWT Authentication Filter as Spring Bean -->
+    <bean id="jwtAuthenticationFilter" class="org.flexitech.projects.embedded.truckscale.api.filter.JwtAuthenticationFilter"></bean>
+
+    <!-- Registering Spring-managed JWT Authentication Filter -->
+    <bean id="jwtAuthenticationFilterBean" class="org.springframework.web.filter.DelegatingFilterProxy">
+        <property name="targetBeanName" value="jwtAuthenticationFilter"/>
+    </bean>
+
+    <!-- Interceptors configuration (optional, if required) -->
+    <!-- <mvc:interceptors> <mvc:interceptor> <mvc:mapping path="/**" /> <bean 
+    class="org.flexitech.projects.embedded.truckscale.api.interceptor.Interceptor" /> 
+    </mvc:interceptor> </mvc:interceptors> -->
+</beans>

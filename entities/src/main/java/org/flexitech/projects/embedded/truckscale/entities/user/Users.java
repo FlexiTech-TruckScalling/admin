@@ -53,4 +53,7 @@ public class Users extends BaseEntity {
 
 	@Column(name = "last_login_time")
 	private Date lastLoginTime;
+	
+	@Column(name = "session_token")
+	private String sessionToken;
 }

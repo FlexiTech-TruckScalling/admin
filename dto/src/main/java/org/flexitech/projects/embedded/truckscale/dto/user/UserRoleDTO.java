@@ -9,6 +9,8 @@ import org.flexitech.projects.embedded.truckscale.dto.CommonDTO;
 import org.flexitech.projects.embedded.truckscale.dto.menu.MenuRoleAccessDTO;
 import org.flexitech.projects.embedded.truckscale.entities.user.UserRoles;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +25,7 @@ public class UserRoleDTO extends CommonDTO{
 	private Integer code;
 	private String name;
 	private String description;
+	@JsonIgnore
 	private List<MenuRoleAccessDTO> menuRoleAccessDTOs = new ArrayList<MenuRoleAccessDTO>(); 
 	
 	public UserRoleDTO(UserRoles role) {

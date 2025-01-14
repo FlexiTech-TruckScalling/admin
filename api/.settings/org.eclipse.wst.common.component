@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
         
-    <wb-module deploy-name="api">
+    <wb-module deploy-name="flex-truckscale-api">
                 
         <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
                 
@@ -28,9 +28,8 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
                 
-        <property name="context-root" value="api"/>
-                
         <property name="java-output-path" value="/api/target/classes"/>
+        <property name="context-root" value="flex-truckscale-api"/>
             
     </wb-module>
     
