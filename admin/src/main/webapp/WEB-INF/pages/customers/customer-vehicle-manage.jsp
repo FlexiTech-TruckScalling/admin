@@ -44,6 +44,19 @@
 						<span class="text-danger input-error-msg" data-label="Status"></span>
 					</div>
 				</div>
+				<div class="row mt-3">
+					<div class="col-md-4">
+						<form:label path="driverId" class="form-label">Driver
+						</form:label>
+						<form:select path="driverId"
+							class="form-control border bg-white selectpicker">
+							<option value="-1" selected>-- Select One --</option>
+							<form:options items="${driverList }" itemValue="id"
+								itemLabel="name" />
+						</form:select>
+						<span class="text-danger input-error-msg" data-label="Driver"></span>
+					</div>
+				</div>
 
 				<!-- Submit Button -->
 				<div class="row mt-4">
@@ -73,6 +86,7 @@
 						<th class="py-1" scope="col" style="width: 50px;">#</th>
 						<th class="py-1" scope="col">Number</th>
 						<th class="py-1" scope="col">Weight</th>
+						<th class="py-1" scope="col">Driver</th>
 						<th class="py-1" scope="col">Status</th>
 						<th class="py-1" scope="col">Created Time</th>
 						<th class="py-1" scope="col" style="width: 140px;">Actions</th>
@@ -81,7 +95,7 @@
 				<tbody>
 					<c:if test="${empty customerVehicleList }">
 						<tr>
-							<td colspan="6" class="text-center">No vehicles.</td>
+							<td colspan="7" class="text-center">No vehicles.</td>
 						</tr>
 					</c:if>
 					<c:if test="${not empty customerVehicleList }">
@@ -91,6 +105,7 @@
 								<td>${loop.index + 1 }</td>
 								<td>${counter.number }</td>
 								<td>${counter.weight }</td>
+								<td>${counter.driver.name }</td>
 								<td><span
 									class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
 										${counter.statusDesc } </span></td>

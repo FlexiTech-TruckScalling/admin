@@ -15,11 +15,12 @@ import lombok.Setter;
 public class MasterCounterSettingDTO extends CommonDTO {
 	private String code;
 	private String description;
+	private Integer sequence;
 	
 	public MasterCounterSettingDTO(MasterCounterSetting setting) {
 		this.code = setting.getCode();
 		this.description = setting.getDescription();
-		
+		this.sequence = setting.getSequence();
 		setField(setting);
 	}
 }

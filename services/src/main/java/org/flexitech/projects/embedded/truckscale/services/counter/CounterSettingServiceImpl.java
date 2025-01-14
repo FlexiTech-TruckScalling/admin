@@ -57,7 +57,6 @@ public class CounterSettingServiceImpl implements CounterSettingService {
 		CounterDTO counterDTO = null;
 
 		if (!CommonValidators.isValidObject(counterId))
-
 			counterDTO = new CounterDTO();
 		else {
 			Counters counter = this.counterDAO.get(counterId);

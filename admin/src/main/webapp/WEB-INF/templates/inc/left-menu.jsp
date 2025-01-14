@@ -19,8 +19,9 @@
 	<hr class="sidebar-divider my-0">
 
 	<!-- Nav Item - Dashboard -->
-	<li class="nav-item active"><a class="nav-link" href="dashboard.fxt">
-			<i class="fas fa-fw fa-tachometer-alt"></i> <span>Dashboard</span>
+	<li class="nav-item active"><a class="nav-link"
+		href="dashboard.fxt"> <i class="fas fa-fw fa-tachometer-alt"></i>
+			<span>Dashboard</span>
 	</a></li>
 
 	<!-- Divider -->
@@ -44,7 +45,8 @@
 
 					<!-- Child Menu Loop -->
 					<c:forEach var="childMenu" items="${parentMenu.value}">
-						<a class="collapse-item" href="${childMenu.url}">${childMenu.name}</a>
+						
+						<a class="collapse-item" href="<%=request.getContextPath()%>/${childMenu.url}">${childMenu.name}</a>
 					</c:forEach>
 				</div>
 			</div></li>

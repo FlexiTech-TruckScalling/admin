@@ -10,9 +10,11 @@ import javax.transaction.Transactional;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerDAO;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerVehicleDAO;
+import org.flexitech.projects.embedded.truckscale.dao.customers.DriverDAO;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerVehicleDTO;
 import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerVehicles;
 import org.flexitech.projects.embedded.truckscale.entities.customers.Customers;
+import org.flexitech.projects.embedded.truckscale.entities.customers.Drivers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,9 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 
 	@Autowired
 	CustomerDAO customerDAO;
+	
+	@Autowired
+	DriverDAO driverDAO;
 
 	@Override
 	public CustomerVehicleDTO getCustomerVehicleById(Long id) {
@@ -60,6 +65,13 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 		v.setNumber(dto.getNumber());
 		v.setWeight(dto.getWeight());
 		v.setStatus(dto.getStatus());
+		
+		if(CommonValidators.validLong(dto.getDriverId())) {
+			Drivers d = this.driverDAO.get(dto.getDriverId());
+			v.setDriver(d);
+		}else {
+			v.setDriver(null);
+		}
 
 		this.customerVehicleDAO.saveOrUpdate(v);
 
@@ -92,12 +104,17 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 		if (CommonValidators.isValidObject(v)) {
 			if (!customerId.equals(v.getCustomer().getId())) {
 				throw new Exception("Customer vehicle is not associated with this customer!");
-			}else {
+			} else {
 				this.customerVehicleDAO.delete(v);
 				return true;
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public boolean isVehicleNumberAlreadyUserd(String number, Long ignoreId) {
+		return this.customerVehicleDAO.isVehicleNumberAlreadyUserd(number, ignoreId);
 	}
 
 }

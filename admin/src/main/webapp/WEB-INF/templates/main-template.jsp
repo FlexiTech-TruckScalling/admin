@@ -14,50 +14,53 @@
 <meta name="author" content="CodedThemes" />
 <%@ include file="../includes/css-templates.jsp"%>
 <%@ include file="../includes/js-templates.jsp"%>
-
 </head>
 <body>
-	<div id="wrapper">
+	<div id="page-top">
+		<div id="wrapper">
 
-		<!-- Sidebar -->
-		<tiles:insertAttribute name="left-menu" />
-		<!-- End of Sidebar -->
+			<!-- Sidebar -->
+			<tiles:insertAttribute name="left-menu" />
+			<!-- End of Sidebar -->
 
-		<!-- Content Wrapper -->
-		<div id="content-wrapper" class="d-flex flex-column">
+			<!-- Content Wrapper -->
+			<div id="content-wrapper" class="d-flex flex-column">
 
-			<!-- Main Content -->
-			<div id="content">
+				<!-- Main Content -->
+				<div id="content">
 
-				<!-- Topbar -->
-				<tiles:insertAttribute name="header" />
-				<!-- End of Topbar -->
+					<!-- Topbar -->
+					<tiles:insertAttribute name="header" />
+					<!-- End of Topbar -->
 
-				<!-- Begin Page Content -->
-				<div class="container-fluid">
-					<tiles:insertAttribute name="body" />
+					<!-- Begin Page Content -->
+					<div class="container-fluid">
+						<tiles:insertAttribute name="body" />
+					</div>
+					<!-- /.container-fluid -->
+
 				</div>
-				<!-- /.container-fluid -->
+				<!-- End of Main Content -->
+
+				<!-- Footer -->
+				<tiles:insertAttribute name="footer" />
+				<!-- End of Footer -->
 
 			</div>
-			<!-- End of Main Content -->
-
-			<!-- Footer -->
-			<tiles:insertAttribute name="footer" />
-			<!-- End of Footer -->
+			<!-- End of Content Wrapper -->
 
 		</div>
-		<!-- End of Content Wrapper -->
+		<!-- End of Page Wrapper -->
 
+		<!-- Scroll to Top Button-->
+		<a class="scroll-to-top rounded" href="#page-top"> <i
+			class="fas fa-angle-up"></i>
+		</a>
+
+		<%@ include file="../includes/modals.jsp"%>
+		<%@ include file="./inc/toast-message.jsp"%>
+
+		<%@ include file="../includes/js-footer-template.jsp"%>
 	</div>
-	<!-- End of Page Wrapper -->
-
-	<!-- Scroll to Top Button-->
-	<a class="scroll-to-top rounded" href="#page-top"> <i
-		class="fas fa-angle-up"></i>
-	</a>
-
-	<%@ include file="../includes/modals.jsp"%>
-	<%@ include file="./inc/toast-message.jsp"%>
 </body>
 </html>

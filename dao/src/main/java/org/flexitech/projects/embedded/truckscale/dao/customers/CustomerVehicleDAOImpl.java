@@ -34,4 +34,15 @@ public class CustomerVehicleDAOImpl extends CommonDAOImpl<CustomerVehicles, Long
 		return c.list();
 	}
 
+	@Override
+	public boolean isVehicleNumberAlreadyUserd(String number, Long ignoreId) {
+		Criteria c = getCurrentSession().createCriteria(daoType);
+		c.add(Restrictions.eq("number", number));
+		if(CommonValidators.validLong(ignoreId)) {
+			c.add(Restrictions.ne("id", ignoreId));
+		}
+		c.setMaxResults(1);
+		return c.uniqueResult() != null;
+	}
+
 }

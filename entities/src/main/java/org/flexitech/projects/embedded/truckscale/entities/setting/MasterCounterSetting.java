@@ -23,4 +23,6 @@ public class MasterCounterSetting extends BaseEntity {
 	private String code;
 	
 	private String description;
+	
+	private Integer sequence;
 }

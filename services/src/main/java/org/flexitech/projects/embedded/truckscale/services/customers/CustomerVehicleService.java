@@ -9,4 +9,5 @@ public interface CustomerVehicleService {
 	CustomerVehicleDTO manageCustomerVehicle(CustomerVehicleDTO dto) throws Exception;
 	List<CustomerVehicleDTO> getAllCustomerVehicle(Long customerId, Integer status) throws Exception;
 	boolean deleteCustomerVehicle(Long id, Long customerId) throws Exception;
+	boolean isVehicleNumberAlreadyUserd(String number, Long ignoreId);
 }

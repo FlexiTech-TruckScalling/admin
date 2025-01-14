@@ -29,7 +29,11 @@ public class CustomerVehicles extends BaseEntity {
 	private BigDecimal weight;
 	
 	@ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
+    @JoinColumn(name = "customer_id", nullable = true)
     private Customers customer;
+	
+	@ManyToOne
+    @JoinColumn(name = "driver_id", nullable = true)
+    private Drivers driver;
 
 }

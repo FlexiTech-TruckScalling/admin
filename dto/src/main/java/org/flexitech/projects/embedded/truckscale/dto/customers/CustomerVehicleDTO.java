@@ -21,11 +21,18 @@ public class CustomerVehicleDTO extends CommonDTO {
 	
 	private Long customerId;
 	
+	private DriverDTO driver;
+	
+	private Long driverId;
+	
 	public CustomerVehicleDTO(CustomerVehicles v) {
 		if(CommonValidators.isValidObject(v)) {
 			this.number = v.getNumber();
 			this.weight = v.getWeight();
-//	        this.customerId = (v.getCustomer() != null) ? v.getCustomer().getId() : null;
+			if(CommonValidators.isValidObject(v.getDriver())) {
+				this.driver = new DriverDTO(v.getDriver());
+				driverId = v.getDriver().getId();
+			}
 			setField(v);
 		}
 	}

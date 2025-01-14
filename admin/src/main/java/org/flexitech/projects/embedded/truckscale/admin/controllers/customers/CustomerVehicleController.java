@@ -1,12 +1,15 @@
 package org.flexitech.projects.embedded.truckscale.admin.controllers.customers;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.flexitech.projects.embedded.truckscale.admin.controllers.BaseController;
+import org.flexitech.projects.embedded.truckscale.common.CommonConstants;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerVehicleDTO;
 import org.flexitech.projects.embedded.truckscale.dto.deletion.DeleteDTO;
 import org.flexitech.projects.embedded.truckscale.services.customers.CustomerService;
 import org.flexitech.projects.embedded.truckscale.services.customers.CustomerVehicleService;
+import org.flexitech.projects.embedded.truckscale.services.customers.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +28,9 @@ public class CustomerVehicleController extends BaseController<CustomerVehicleDTO
 	@Autowired
 	private CustomerService customerService;
 	
+	@Autowired
+	private DriverService driverService;
+	
 	protected CustomerVehicleController(CustomerVehicleService service) {
 		super(service, "ENL | Truck Scale Customer Vehicle Manage", "customer-vehicle-manage");
 	}
@@ -42,6 +48,18 @@ public class CustomerVehicleController extends BaseController<CustomerVehicleDTO
 	public String customerVehicleManagePost(@PathVariable Long customerId, @ModelAttribute CustomerVehicleDTO customerVehicleDTO, Model model, RedirectAttributes attr) {
 		this.customerId = customerId;
 		customerVehicleDTO.setCustomerId(customerId);
+		
+		if(service.isVehicleNumberAlreadyUserd(customerVehicleDTO.getNumber(), customerVehicleDTO.getId())) {
+			model.addAttribute(CommonConstants.ERROR_MSG, "The vehicel number is already used!");
+			try {
+				commonModel(model, customerVehicleDTO);
+			} catch (Exception e) {
+				logger.error("Error on manage customer vehicle: {}", ExceptionUtils.getStackTrace(e));
+				model.addAttribute(CommonConstants.ERROR_MSG, ExceptionUtils.getMessage(e));
+			}
+			return "customer-vehicle-manage";
+		}
+		
 		String page = super.managePost(customerVehicleDTO, model, attr);
 		logger.debug("managed page: {}", page);
 		return resolveURL(customerId + "/", page);
@@ -83,6 +101,7 @@ public class CustomerVehicleController extends BaseController<CustomerVehicleDTO
 		model.addAttribute("statusList", ActiveStatus.getAll());
 		model.addAttribute("customerVehicleList", service.getAllCustomerVehicle(customerId, null));
 		model.addAttribute("customerDTO", this.customerService.getCustomerById(customerId));
+		model.addAttribute("driverList", driverService.getAllDriver(ActiveStatus.ACTIVE.getCode()));
 	}
 	
 	private String resolveURL(String prefix, String endpoint) {

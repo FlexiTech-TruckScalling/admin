@@ -130,8 +130,7 @@
 						<c:if test="${not empty customerDTO.customerVehicleDTOs }">
 							<c:forEach items="${customerDTO.customerVehicleDTOs }"
 								var="counter" varStatus="loop">
-								<tr
-									class="${not empty new_id && new_id == counter.id || customerDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
+								<tr>
 									<td>${loop.index + 1 }</td>
 									<td>${counter.number }</td>
 									<td>${counter.weight }</td>

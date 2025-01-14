@@ -97,7 +97,7 @@
 						<th class="py-1" scope="col">Address</th>
 						<th class="py-1" scope="col">Status</th>
 						<th class="py-1" scope="col">Created Time</th>
-						<th class="py-1" scope="col" style="width: 140px;">Actions</th>
+						<th class="py-1" scope="col" style="width: 180px;">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -119,7 +119,9 @@
 									class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
 										${counter.statusDesc } </span></td>
 								<td>${counter.createdTimeDesc }</td>
-								<td><a href="customer-manage.fxt?id=${counter.id }"><i
+								<td>
+								<a href="${counter.id }/customer-vehicle-manage.fxt"><i class="fas fa-fw fa-truck"></i> Add Vehicles</a>
+								<a href="customer-manage.fxt?id=${counter.id }"><i
 										class="fas fa-fw fa-edit"></i>Edit</a></td>
 							</tr>
 						</c:forEach>

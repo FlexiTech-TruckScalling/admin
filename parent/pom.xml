@@ -15,6 +15,7 @@
 		<module>../dao</module>
 		<module>../services</module>
 		<module>../admin</module>
+		<module>../api</module>
 	</modules>
 
 	<properties>
