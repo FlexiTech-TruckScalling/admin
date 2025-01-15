@@ -48,13 +48,22 @@
 							</form:select>
 							<span class="text-danger input-error-msg" data-label="Status"></span>
 						</div>
-
+					</div>
+					<div class="row mt-3">
 						<!-- Description -->
 						<div class="col-md-4">
 							<form:label path="description" class="form-label">Description</form:label>
 							<form:textarea path="description" type="text"
 								class="form-control" placeholder="Description..." />
 							<span class="text-danger input-error-msg" data-label="IP address"></span>
+						</div>
+
+						<div class="col-md-4 mt-3 d-flex align-items-end">
+							<div class="d-flex align-items-center">
+								<form:checkbox class="" path="useApp" value="1" />
+								<label for="useApp1" class="m-0">Use Desktop Application</label>
+
+							</div>
 						</div>
 
 					</div>

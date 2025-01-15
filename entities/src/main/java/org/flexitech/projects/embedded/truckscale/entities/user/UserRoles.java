@@ -35,6 +35,9 @@ public class UserRoles extends BaseEntity {
 	
 	private String description;
 	
+	@Column(name = "use_app")
+	private Integer useApp;
+	
 	@OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<MenuRoleAccess> menuRoleAccesses;
 }

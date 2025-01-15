@@ -11,5 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class AuthResponse{
 	private UserDTO user;
+	private boolean isShiftStarted;
 	private String token;
 }

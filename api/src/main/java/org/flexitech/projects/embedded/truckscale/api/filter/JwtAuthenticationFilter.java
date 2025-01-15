@@ -13,72 +13,93 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.flexitech.projects.embedded.truckscale.common.CommonConstants;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
+import org.flexitech.projects.embedded.truckscale.common.enums.APIResponceCode;
+import org.flexitech.projects.embedded.truckscale.common.network.response.ErrorResponse;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
 import org.flexitech.projects.embedded.truckscale.services.auth.JwtService;
 import org.flexitech.projects.embedded.truckscale.services.user.UserService;
+import org.flexitech.projects.embedded.truckscale.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class JwtAuthenticationFilter implements Filter {
 
 	@Autowired
-    private JwtService jwtService;
+	private JwtService jwtService;
 
-    @Autowired
-    private UserService userService;
+	@Autowired
+	private UserService userService;
 
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-    }
+	@Override
+	public void init(FilterConfig filterConfig) throws ServletException {
+	}
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
-        
-        String requestURI = httpRequest.getRequestURI();
-        if (requestURI.contains("/auth/login") || requestURI.contains("/auth/token")) {
-            chain.doFilter(request, response);
-            return;
-        }
+	@Override
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+	        throws IOException, ServletException {
+	    HttpServletRequest httpRequest = (HttpServletRequest) request;
+	    HttpServletResponse httpResponse = (HttpServletResponse) response;
+	    System.out.println("Reach filter....");
 
-        String authHeader = httpRequest.getHeader("Authorization");
+	    String requestURI = httpRequest.getRequestURI();
+	    if (requestURI.contains("/auth/login") || requestURI.contains("/auth/token")) {
+	        chain.doFilter(request, response);
+	        return;
+	    }
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            try {
-                String sessionToken = jwtService.extractSessionToken(token);
-                UserDTO userDTO = userService.findUserBySessionToken(sessionToken);
-                if(CommonValidators.isValidObject(userDTO)) {
-                	if (jwtService.validateToken(token, sessionToken)) {
-                        httpRequest.setAttribute(CommonConstants.API_ACCESSOR, userDTO);
-                        chain.doFilter(request, response);
-                        return;
-                    }else {
-                    	httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        httpResponse.getWriter().write("Invalid or expired token");
-                        return;
-                    }
-                }else {
-                	httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    httpResponse.getWriter().write("Invalid or expired token");
-                    return;
-                }
-                
-            } catch (Exception e) {
-                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                httpResponse.getWriter().write("Invalid or expired token");
-                return;
-            }
-        }
+	    ErrorResponse<String> errorResponse = new ErrorResponse<String>();
+	    String authHeader = httpRequest.getHeader("Authorization");
 
-        httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        httpResponse.getWriter().write("Missing or invalid Authorization header");
-    }
+	    if (authHeader != null && authHeader.startsWith("Bearer ")) {
+	        String token = authHeader.substring(7);
+	        try {
+	            String sessionToken = jwtService.extractSessionToken(token);
+	            UserDTO userDTO = userService.findUserBySessionToken(sessionToken);
+	            if (CommonValidators.isValidObject(userDTO)) {
+	                if (jwtService.validateToken(token, sessionToken)) {
+	                    httpRequest.setAttribute(CommonConstants.API_ACCESSOR, userDTO);
+	                    chain.doFilter(request, response);
+	                    return;
+	                } else {
+	                    httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+	                    httpResponse.setContentType("application/json");
+	                    errorResponse.setResponseCode(APIResponceCode.ERROR.getCode());
+	                    errorResponse.setResponseMessage("Invalid or expired token");
+	                    errorResponse.setError("Invalid or expired token");
+	                    httpResponse.getWriter().write(JsonUtils.convertToJson(errorResponse));
+	                    return;
+	                }
+	            } else {
+	                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+	                httpResponse.setContentType("application/json");
+	                errorResponse.setResponseCode(APIResponceCode.ERROR.getCode());
+	                errorResponse.setResponseMessage("Invalid or expired token");
+	                errorResponse.setError("Invalid or expired token");
+	                httpResponse.getWriter().write(JsonUtils.convertToJson(errorResponse));
+	                return;
+	            }
 
-    @Override
-    public void destroy() {
-        // Clean-up if necessary
-    }
+	        } catch (Exception e) {
+	            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+	            httpResponse.setContentType("application/json");
+	            errorResponse.setResponseCode(APIResponceCode.ERROR.getCode());
+	            errorResponse.setResponseMessage("Invalid or expired token");
+	            errorResponse.setError("Invalid or expired token");
+	            httpResponse.getWriter().write(JsonUtils.convertToJson(errorResponse));
+	            return;
+	        }
+	    }
+
+	    httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+	    httpResponse.setContentType("application/json");
+	    errorResponse.setResponseCode(APIResponceCode.ERROR.getCode());
+	    errorResponse.setResponseMessage("Missing or invalid Authorization header");
+	    errorResponse.setError("Missing or invalid Authorization header");
+	    httpResponse.getWriter().write(JsonUtils.convertToJson(errorResponse));
+	}
+
+
+	@Override
+	public void destroy() {
+		// Clean-up if necessary
+	}
 }
-

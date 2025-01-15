@@ -25,6 +25,7 @@ public class UserRoleDTO extends CommonDTO{
 	private Integer code;
 	private String name;
 	private String description;
+	private Integer useApp;
 	@JsonIgnore
 	private List<MenuRoleAccessDTO> menuRoleAccessDTOs = new ArrayList<MenuRoleAccessDTO>(); 
 	
@@ -32,6 +33,7 @@ public class UserRoleDTO extends CommonDTO{
 		this.code = role.getCode();
 		this.name = role.getName();
 		this.description = role.getDescription();
+		this.useApp = role.getUseApp();
 		if(CommonValidators.validList(role.getMenuRoleAccesses())) {
 			this.menuRoleAccessDTOs = role.getMenuRoleAccesses().stream().map(MenuRoleAccessDTO::new).collect(Collectors.toList());
 		}

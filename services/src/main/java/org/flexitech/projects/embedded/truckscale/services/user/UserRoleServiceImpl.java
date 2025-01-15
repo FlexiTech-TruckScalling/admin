@@ -56,6 +56,7 @@ public class UserRoleServiceImpl implements UserRoleService {
 		role.setName(userRoleDTO.getName());
 		role.setDescription(userRoleDTO.getDescription());
 		role.setStatus(userRoleDTO.getStatus());
+		role.setUseApp(userRoleDTO.getUseApp());
 
 		this.userRoleDAO.saveOrUpdate(role);
 

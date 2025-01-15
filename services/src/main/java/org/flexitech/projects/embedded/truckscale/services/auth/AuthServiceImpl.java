@@ -6,6 +6,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
+import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.common.network.response.BaseResponse;
 import org.flexitech.projects.embedded.truckscale.common.network.response.ErrorResponse;
 import org.flexitech.projects.embedded.truckscale.common.network.response.Response;
@@ -13,8 +14,10 @@ import org.flexitech.projects.embedded.truckscale.dao.user.UserDAO;
 import org.flexitech.projects.embedded.truckscale.dto.auth.LoginDTO;
 import org.flexitech.projects.embedded.truckscale.dto.request.auth.LoginRequestDTO;
 import org.flexitech.projects.embedded.truckscale.dto.response.auth.AuthResponse;
+import org.flexitech.projects.embedded.truckscale.dto.shift.UserShiftDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
 import org.flexitech.projects.embedded.truckscale.entities.user.Users;
+import org.flexitech.projects.embedded.truckscale.services.shift.UserShiftService;
 import org.flexitech.projects.embedded.truckscale.util.auth.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +34,9 @@ public class AuthServiceImpl implements AuthService {
 	
 	@Autowired
 	JwtService jwtService;
+	
+	@Autowired
+	UserShiftService shiftService;
 
 	@Override
 	public UserDTO login(LoginDTO loginDTO) throws Exception {
@@ -68,6 +74,15 @@ public class AuthServiceImpl implements AuthService {
 			UserDTO user = this.login(loginDTO);
 			if(CommonValidators.isValidObject(user)) {
 				
+				if(!CommonValidators.isValidObject(user.getUserRoleDTO())
+						||!ActiveStatus.ACTIVE.getCode().equals(user.getUserRoleDTO().getUseApp())) {
+					ErrorResponse<String> error = new ErrorResponse<>();
+					error.setResponseCode(HttpStatus.UNAUTHORIZED.value());
+					error.setResponseMessage("User does not have access to use the app!");
+					error.setError("User does not have access to use the app!");
+					return error;
+				}
+				
 				String sessionToken = TokenUtil.generateSessionToken(user.getLoginName());
 				user.setSessionToken(sessionToken);
 				Users u = this.userDAO.get(user.getId());
@@ -77,6 +92,9 @@ public class AuthServiceImpl implements AuthService {
 				AuthResponse response = new AuthResponse();
 				response.setToken(jwtToken);
 				response.setUser(user);
+				
+				UserShiftDTO shift = this.shiftService.getCurrentActiveShift(user.getId());
+				response.setShiftStarted(CommonValidators.isValidObject(shift));
 				
 				BaseResponse<AuthResponse> res = new BaseResponse<AuthResponse>();
 				res.setData(response);

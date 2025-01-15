@@ -29,11 +29,15 @@ public class UserShift extends BaseEntity {
 	@Column(name = "start_time")
 	private Date startTime;
 
-	@Column(name = "end_time")
+	@Column(name = "end_time", nullable = true)
 	private Date endTime;
 
 	@Column(name = "shift_status")
 	private Integer shiftStatus; // 1 = Opened, 2 = Closed
+	
+	@ManyToOne
+	@JoinColumn(name = "end_user_id", nullable = true)
+	private Users endByUser;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = false)
