@@ -7,4 +7,5 @@ import org.flexitech.projects.embedded.truckscale.entities.product.Products;
 
 public interface ProductDAO extends CommonDAO<Products, Long> {
 	List<Products> getAllProducts(Integer status);
+	List<Products> getAllProductsByGoodId(Long goodId, Integer status);
 }

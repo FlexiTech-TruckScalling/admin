@@ -93,8 +93,10 @@ public class AuthServiceImpl implements AuthService {
 				response.setToken(jwtToken);
 				response.setUser(user);
 				
-				UserShiftDTO shift = this.shiftService.getCurrentActiveShift(user.getId());
+				UserShiftDTO shift = this.shiftService.getCurrentActiveShift(u.getId());
 				response.setShiftStarted(CommonValidators.isValidObject(shift));
+				
+				logger.debug("Shift status: " + CommonValidators.isValidObject(shift));
 				
 				BaseResponse<AuthResponse> res = new BaseResponse<AuthResponse>();
 				res.setData(response);
@@ -123,11 +125,20 @@ public class AuthServiceImpl implements AuthService {
 		if(jwtService.validateToken(token, sessionToken)) {
 			Users user = this.userDAO.findUserBySessionToken(sessionToken);
 			if(CommonValidators.isValidObject(user)) {
-				BaseResponse<UserDTO> baseResponse = new BaseResponse<UserDTO>();
-				baseResponse.setData(new UserDTO(user));
-				baseResponse.setResponseCode(HttpStatus.OK.value());
-				baseResponse.setResponseMessage(HttpStatus.OK.getReasonPhrase());
-				return baseResponse;
+				UserShiftDTO activeShift = this.shiftService.getCurrentActiveShift(user.getId());
+				if(CommonValidators.isValidObject(activeShift)) {
+					BaseResponse<UserDTO> baseResponse = new BaseResponse<UserDTO>();
+					baseResponse.setData(new UserDTO(user));
+					baseResponse.setResponseCode(HttpStatus.OK.value());
+					baseResponse.setResponseMessage(HttpStatus.OK.getReasonPhrase());
+					return baseResponse;
+				}else {
+					ErrorResponse<String> error = new ErrorResponse<String>();
+					error.setResponseCode(HttpStatus.UNAUTHORIZED.value());
+					error.setResponseMessage(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+					error.setResponseMessage("User has been logout or shift has changed! Please login again!");
+					return error;
+				}
 			}else {
 				ErrorResponse<String> error = new ErrorResponse<String>();
 				error.setResponseCode(HttpStatus.UNAUTHORIZED.value());

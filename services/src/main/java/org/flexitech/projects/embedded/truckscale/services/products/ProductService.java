@@ -8,5 +8,6 @@ public interface ProductService {
 	ProductDTO getProductById(Long id);
 	ProductDTO manageProduct(ProductDTO dto);
 	List<ProductDTO> getAllProducts(Integer status);
+	List<ProductDTO> getProductsByGood(Long goodId, Integer status);
 	boolean deleteProduct(Long id);
 }

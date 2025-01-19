@@ -35,6 +35,9 @@ public class UserShift extends BaseEntity {
 	@Column(name = "shift_status")
 	private Integer shiftStatus; // 1 = Opened, 2 = Closed
 	
+	@Column(name = "Code")
+	private String code;
+	
 	@ManyToOne
 	@JoinColumn(name = "end_user_id", nullable = true)
 	private Users endByUser;

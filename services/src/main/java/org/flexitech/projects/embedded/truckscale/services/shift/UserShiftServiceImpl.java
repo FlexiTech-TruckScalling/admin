@@ -106,7 +106,7 @@ public class UserShiftServiceImpl implements UserShiftService {
 		userShift.setShiftStatus(ActiveStatus.ACTIVE.getCode());
 		userShift.setUser(user);
 		userShift.setCreatedTime(current);
-
+		userShift.setCode(System.currentTimeMillis()+"");
 		this.userShiftDAO.save(userShift);
 
 		return new UserShiftDTO(userShift);

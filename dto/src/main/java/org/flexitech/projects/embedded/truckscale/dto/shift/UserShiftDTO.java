@@ -22,6 +22,7 @@ public class UserShiftDTO extends CommonDTO{
 	private Date endTime;
 	private String endTimeDesc;
 	private Integer shiftStatus;
+	private String code;
 	private UserDTO user;
 	
 	public UserShiftDTO(UserShift u) {
@@ -38,7 +39,7 @@ public class UserShiftDTO extends CommonDTO{
 			if(CommonValidators.isValidObject(u.getUser())) {
 				this.user = new UserDTO(u.getUser());
 			}
-			
+			this.code = u.getCode();
 			setField(u);
 		}
 	}

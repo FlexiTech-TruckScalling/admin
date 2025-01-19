@@ -5,6 +5,8 @@ import org.flexitech.projects.embedded.truckscale.dto.CommonDTO;
 import org.flexitech.projects.embedded.truckscale.dto.setting.MasterCounterSettingDTO;
 import org.flexitech.projects.embedded.truckscale.entities.counters.CounterSetting;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class CounterSettingDTO extends CommonDTO{
 	
+	@JsonIgnore
 	private CounterDTO counterDTO;
 	private String value;
 	private String remark;

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/shift")
-public class UserShiftController {
+public class UserShiftAPIController {
 	
 	private final Logger logger = LogManager.getLogger(getClass());
 

@@ -5,7 +5,8 @@ import lombok.Getter;
 @Getter
 public enum APIResponceCode {
 	OK(1, "Success"),
-	ERROR(-1, "Error");
+	ERROR(-1, "Error"),
+	UNAUTHORIZED(-2, "Unauthorized");
 
 	private final int code;
 	private final String desc;

@@ -1,6 +1,7 @@
 package org.flexitech.projects.embedded.truckscale.services.products;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -110,6 +111,16 @@ public class ProductServiceImpl implements ProductService {
 			logger.error("Error on deleting product: {}", ExceptionUtils.getStackTrace(e));
 		}
 		return false;
+	}
+
+	@Override
+	public List<ProductDTO> getProductsByGood(Long goodId, Integer status) {
+		
+		List<Products> products = this.productDAO.getAllProductsByGoodId(goodId, status);
+		if(CommonValidators.validList(products)) {
+			return products.stream().map(ProductDTO::new).collect(Collectors.toList());
+		}
+		return Collections.emptyList();
 	}
 
 }

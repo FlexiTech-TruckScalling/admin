@@ -11,6 +11,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.flexitech.projects.embedded.truckscale.common.CommonConstants;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.common.enums.APIResponceCode;
@@ -22,6 +24,8 @@ import org.flexitech.projects.embedded.truckscale.util.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class JwtAuthenticationFilter implements Filter {
+	
+	private final Logger logger = LogManager.getLogger(getClass());
 
 	@Autowired
 	private JwtService jwtService;
@@ -51,6 +55,7 @@ public class JwtAuthenticationFilter implements Filter {
 
 	    if (authHeader != null && authHeader.startsWith("Bearer ")) {
 	        String token = authHeader.substring(7);
+	        logger.debug("Token : {}", token);
 	        try {
 	            String sessionToken = jwtService.extractSessionToken(token);
 	            UserDTO userDTO = userService.findUserBySessionToken(sessionToken);
@@ -62,7 +67,7 @@ public class JwtAuthenticationFilter implements Filter {
 	                } else {
 	                    httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 	                    httpResponse.setContentType("application/json");
-	                    errorResponse.setResponseCode(APIResponceCode.ERROR.getCode());
+	                    errorResponse.setResponseCode(APIResponceCode.UNAUTHORIZED.getCode());
 	                    errorResponse.setResponseMessage("Invalid or expired token");
 	                    errorResponse.setError("Invalid or expired token");
 	                    httpResponse.getWriter().write(JsonUtils.convertToJson(errorResponse));
@@ -71,7 +76,7 @@ public class JwtAuthenticationFilter implements Filter {
 	            } else {
 	                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 	                httpResponse.setContentType("application/json");
-	                errorResponse.setResponseCode(APIResponceCode.ERROR.getCode());
+	                errorResponse.setResponseCode(APIResponceCode.UNAUTHORIZED.getCode());
 	                errorResponse.setResponseMessage("Invalid or expired token");
 	                errorResponse.setError("Invalid or expired token");
 	                httpResponse.getWriter().write(JsonUtils.convertToJson(errorResponse));
@@ -81,7 +86,7 @@ public class JwtAuthenticationFilter implements Filter {
 	        } catch (Exception e) {
 	            httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 	            httpResponse.setContentType("application/json");
-	            errorResponse.setResponseCode(APIResponceCode.ERROR.getCode());
+	            errorResponse.setResponseCode(APIResponceCode.UNAUTHORIZED.getCode());
 	            errorResponse.setResponseMessage("Invalid or expired token");
 	            errorResponse.setError("Invalid or expired token");
 	            httpResponse.getWriter().write(JsonUtils.convertToJson(errorResponse));
@@ -91,7 +96,7 @@ public class JwtAuthenticationFilter implements Filter {
 
 	    httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 	    httpResponse.setContentType("application/json");
-	    errorResponse.setResponseCode(APIResponceCode.ERROR.getCode());
+	    errorResponse.setResponseCode(APIResponceCode.UNAUTHORIZED.getCode());
 	    errorResponse.setResponseMessage("Missing or invalid Authorization header");
 	    errorResponse.setError("Missing or invalid Authorization header");
 	    httpResponse.getWriter().write(JsonUtils.convertToJson(errorResponse));
