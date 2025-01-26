@@ -24,6 +24,8 @@ public class CustomerVehicles extends BaseEntity {
 	 */
 	private static final long serialVersionUID = 7795538445181289247L;
 	
+	private String prefix;
+	
 	private String number;
 	
 	private BigDecimal weight;

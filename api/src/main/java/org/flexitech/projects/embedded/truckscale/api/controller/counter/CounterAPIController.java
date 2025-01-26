@@ -12,6 +12,7 @@ import org.flexitech.projects.embedded.truckscale.dto.counter.CounterDTO;
 import org.flexitech.projects.embedded.truckscale.dto.response.counter.CounterSettingResponse;
 import org.flexitech.projects.embedded.truckscale.services.counter.CounterService;
 import org.flexitech.projects.embedded.truckscale.services.counter.CounterSettingService;
+import org.flexitech.projects.embedded.truckscale.services.customers.CustomerTypeService;
 import org.flexitech.projects.embedded.truckscale.services.setting.WeightUnitService;
 import org.flexitech.projects.embedded.truckscale.util.network.response.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,9 @@ public class CounterAPIController {
 	@Autowired
 	WeightUnitService weightUnitService;
 	
+	@Autowired
+	CustomerTypeService customerTypeService;
+	
 	@SuppressWarnings("unchecked")
 	@GetMapping("/setting")
 	public ResponseEntity<?> getCounterSetting(@RequestParam(required = false) Long id){
@@ -53,6 +57,7 @@ public class CounterAPIController {
 				settingResponse.setCounter(counter);
 				settingResponse.setUnits(this.weightUnitService.getAllWeightUnit(ActiveStatus.ACTIVE.getCode()));
 				settingResponse.setBounds(InOutBounds.getAll());
+				settingResponse.setCustomerTypes(this.customerTypeService.getAllCustomerTypes(ActiveStatus.ACTIVE.getCode()));
 				
 				response = new BaseResponse<CounterSettingResponse>();
 				response.setResponseCode(HttpStatus.OK.value());

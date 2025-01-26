@@ -14,7 +14,7 @@ public class CommonConstants {
 	public static final String NEW_RECORD = "new_id";
 	
 	/* Pagination */
-	public static final int ROW_PER_PAGE = 2;
+	public static final int ROW_PER_PAGE = 10;
 	
 	/* API access user */
 	public static final String API_ACCESSOR = "API_ACCESSOR";

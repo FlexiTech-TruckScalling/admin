@@ -25,4 +25,6 @@ public class TableNames {
 	public static final String CUSTOMER_TYPE_TABLE = "customer_types";
 	public static final String CUSTOMER_VEHICLE_TABLE = "customer_vehicles";
 	public static final String DRIVER_TABLE = "drivers";
+	
+	public static final String TRANSACTION_TABLE = "transactions";
 }

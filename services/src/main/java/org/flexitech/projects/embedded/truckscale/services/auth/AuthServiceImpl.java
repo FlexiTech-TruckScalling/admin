@@ -23,6 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+
 @Service
 @Transactional
 public class AuthServiceImpl implements AuthService {
@@ -31,10 +34,10 @@ public class AuthServiceImpl implements AuthService {
 
 	@Autowired
 	UserDAO userDAO;
-	
+
 	@Autowired
 	JwtService jwtService;
-	
+
 	@Autowired
 	UserShiftService shiftService;
 
@@ -51,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
 			}
 			if (user.getPassword().equals(loginDTO.getPassword())) {
 				return new UserDTO(user);
-			}else {
+			} else {
 				throw new Exception("Wrong password, please try again!");
 			}
 		} catch (Exception e) {
@@ -72,17 +75,17 @@ public class AuthServiceImpl implements AuthService {
 			loginDTO.setLoginName(loginRequestDTO.getLoginName());
 			loginDTO.setPassword(loginRequestDTO.getPassword());
 			UserDTO user = this.login(loginDTO);
-			if(CommonValidators.isValidObject(user)) {
-				
-				if(!CommonValidators.isValidObject(user.getUserRoleDTO())
-						||!ActiveStatus.ACTIVE.getCode().equals(user.getUserRoleDTO().getUseApp())) {
+			if (CommonValidators.isValidObject(user)) {
+
+				if (!CommonValidators.isValidObject(user.getUserRoleDTO())
+						|| !ActiveStatus.ACTIVE.getCode().equals(user.getUserRoleDTO().getUseApp())) {
 					ErrorResponse<String> error = new ErrorResponse<>();
 					error.setResponseCode(HttpStatus.UNAUTHORIZED.value());
 					error.setResponseMessage("User does not have access to use the app!");
 					error.setError("User does not have access to use the app!");
 					return error;
 				}
-				
+
 				String sessionToken = TokenUtil.generateSessionToken(user.getLoginName());
 				user.setSessionToken(sessionToken);
 				Users u = this.userDAO.get(user.getId());
@@ -92,25 +95,25 @@ public class AuthServiceImpl implements AuthService {
 				AuthResponse response = new AuthResponse();
 				response.setToken(jwtToken);
 				response.setUser(user);
-				
+
 				UserShiftDTO shift = this.shiftService.getCurrentActiveShift(u.getId());
 				response.setShiftStarted(CommonValidators.isValidObject(shift));
-				
+
 				logger.debug("Shift status: " + CommonValidators.isValidObject(shift));
-				
+
 				BaseResponse<AuthResponse> res = new BaseResponse<AuthResponse>();
 				res.setData(response);
 				res.setResponseCode(HttpStatus.OK.value());
 				res.setResponseMessage("Login success!");
-				
+
 				return res;
-			}else {
+			} else {
 				ErrorResponse<?> error = new ErrorResponse<>();
 				error.setResponseCode(HttpStatus.BAD_REQUEST.value());
 				error.setResponseMessage("Invalid credential!");
 				return error;
 			}
-		}catch(Exception e) {
+		} catch (Exception e) {
 			logger.error("Error on login api: {}", ExceptionUtils.getStackTrace(e));
 			ErrorResponse<?> error = new ErrorResponse<>();
 			error.setResponseCode(HttpStatus.UNAUTHORIZED.value());
@@ -121,37 +124,49 @@ public class AuthServiceImpl implements AuthService {
 
 	@Override
 	public Response checkToken(String token) {
-		String sessionToken = jwtService.extractSessionToken(token);
-		if(jwtService.validateToken(token, sessionToken)) {
-			Users user = this.userDAO.findUserBySessionToken(sessionToken);
-			if(CommonValidators.isValidObject(user)) {
-				UserShiftDTO activeShift = this.shiftService.getCurrentActiveShift(user.getId());
-				if(CommonValidators.isValidObject(activeShift)) {
-					BaseResponse<UserDTO> baseResponse = new BaseResponse<UserDTO>();
-					baseResponse.setData(new UserDTO(user));
-					baseResponse.setResponseCode(HttpStatus.OK.value());
-					baseResponse.setResponseMessage(HttpStatus.OK.getReasonPhrase());
-					return baseResponse;
-				}else {
+		try {
+			String sessionToken = jwtService.extractSessionToken(token);
+			if (jwtService.validateToken(token, sessionToken)) {
+				Users user = this.userDAO.findUserBySessionToken(sessionToken);
+				if (CommonValidators.isValidObject(user)) {
+					UserShiftDTO activeShift = this.shiftService.getCurrentActiveShift(user.getId());
+					if (CommonValidators.isValidObject(activeShift)) {
+						BaseResponse<UserDTO> baseResponse = new BaseResponse<UserDTO>();
+						baseResponse.setData(new UserDTO(user));
+						baseResponse.setResponseCode(HttpStatus.OK.value());
+						baseResponse.setResponseMessage(HttpStatus.OK.getReasonPhrase());
+						return baseResponse;
+					} else {
+						ErrorResponse<String> error = new ErrorResponse<String>();
+						error.setResponseCode(HttpStatus.UNAUTHORIZED.value());
+						error.setResponseMessage(HttpStatus.UNAUTHORIZED.getReasonPhrase());
+						error.setResponseMessage("User has been logout or shift has changed! Please login again!");
+						return error;
+					}
+				} else {
 					ErrorResponse<String> error = new ErrorResponse<String>();
 					error.setResponseCode(HttpStatus.UNAUTHORIZED.value());
 					error.setResponseMessage(HttpStatus.UNAUTHORIZED.getReasonPhrase());
 					error.setResponseMessage("User has been logout or shift has changed! Please login again!");
 					return error;
 				}
-			}else {
-				ErrorResponse<String> error = new ErrorResponse<String>();
-				error.setResponseCode(HttpStatus.UNAUTHORIZED.value());
-				error.setResponseMessage(HttpStatus.UNAUTHORIZED.getReasonPhrase());
-				error.setResponseMessage("User has been logout or shift has changed! Please login again!");
+
+			} else {
+				ErrorResponse<String> error = new ErrorResponse<>();
+				error.setResponseCode(HttpStatus.BAD_REQUEST.value());
+				error.setResponseMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
+				error.setError("Token is expired or invalid token!");
 				return error;
 			}
-			
-		}else {
-			ErrorResponse<String> error = new ErrorResponse<>();
-			error.setResponseCode(HttpStatus.BAD_REQUEST.value());
-			error.setResponseMessage(HttpStatus.BAD_REQUEST.getReasonPhrase());
-			error.setError("Token is expired or invalid token!");
+		} catch (Exception e) {
+			logger.error("Error on checking token: {}", ExceptionUtils.getStackTrace(e));
+			ErrorResponse<String> error = new ErrorResponse<String>();
+			if (e instanceof ExpiredJwtException || e instanceof JwtException) {
+				error.setResponseCode(HttpStatus.UNAUTHORIZED.value());
+			} else {
+				error.setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			}
+			error.setResponseMessage(ExceptionUtils.getMessage(e));
 			return error;
 		}
 	}

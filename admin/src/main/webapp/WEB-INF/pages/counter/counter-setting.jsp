@@ -27,7 +27,7 @@
 					<div class="row">
 						<c:forEach items="${counterDTO.counterSettingDTOs }" var="setting"
 							varStatus="loop">
-							<div class="col-md-4 col-sm-12 mb-2">
+							<div class="col-md-3 col-sm-12 mb-2">
 								<form:label path="counterSettingDTOs[${loop.index }].value"
 									class="form-label">${setting.masterCounterSettingDTO.description } <strong
 										class="text-danger">*</strong>
@@ -43,7 +43,7 @@
 												itemLabel="desc" />
 										</form:select>
 									</c:when>
-									<c:when test="${setting.masterCounterSettingDTO.code == 'DEAUTL_WEIGHT_UNIT'  }">
+									<c:when test="${setting.masterCounterSettingDTO.code == 'DEFAULT_WEIGHT_UNIT'  }">
 										<form:select path="counterSettingDTOs[${loop.index }].value"
 											class="form-control border bg-white selectpicker required">
 											<option value="-1" disabled selected>-- None

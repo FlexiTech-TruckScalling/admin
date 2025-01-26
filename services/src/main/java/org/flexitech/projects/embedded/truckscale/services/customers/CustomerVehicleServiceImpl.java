@@ -62,6 +62,7 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 		Customers c = this.customerDAO.get(dto.getCustomerId());
 
 		v.setCustomer(c);
+		v.setPrefix(dto.getPrefix());
 		v.setNumber(dto.getNumber());
 		v.setWeight(dto.getWeight());
 		v.setStatus(dto.getStatus());
@@ -113,8 +114,8 @@ public class CustomerVehicleServiceImpl implements CustomerVehicleService {
 	}
 
 	@Override
-	public boolean isVehicleNumberAlreadyUserd(String number, Long ignoreId) {
-		return this.customerVehicleDAO.isVehicleNumberAlreadyUserd(number, ignoreId);
+	public boolean isVehicleNumberAlreadyUserd(String prefix, String number, Long ignoreId) {
+		return this.customerVehicleDAO.isVehicleNumberAlreadyUserd(number, ignoreId, prefix);
 	}
 
 }

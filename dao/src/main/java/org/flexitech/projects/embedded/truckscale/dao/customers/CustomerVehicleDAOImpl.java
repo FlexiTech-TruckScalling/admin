@@ -35,8 +35,9 @@ public class CustomerVehicleDAOImpl extends CommonDAOImpl<CustomerVehicles, Long
 	}
 
 	@Override
-	public boolean isVehicleNumberAlreadyUserd(String number, Long ignoreId) {
+	public boolean isVehicleNumberAlreadyUserd(String number, Long ignoreId, String prefix) {
 		Criteria c = getCurrentSession().createCriteria(daoType);
+		c.add(Restrictions.eq("prefix", prefix));
 		c.add(Restrictions.eq("number", number));
 		if(CommonValidators.validLong(ignoreId)) {
 			c.add(Restrictions.ne("id", ignoreId));

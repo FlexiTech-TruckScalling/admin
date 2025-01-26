@@ -21,6 +21,7 @@ import lombok.Setter;
 public class UserDTO extends CommonDTO{
 	private String loginName;
 	private String name;
+	@JsonIgnore
 	private String password;
 	private String phoneNo;
 	

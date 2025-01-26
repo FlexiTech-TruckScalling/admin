@@ -11,8 +11,18 @@
 				method="post" id="common-form">
 				<form:hidden path="id" />
 				<div class="row g-3">
+				<!-- Prefix -->
+					<div class="col-md-3">
+						<form:label path="prefix" class="form-label">Prefix <strong
+								class="text-danger">*</strong>
+						</form:label>
+						<form:input path="prefix" type="text" class="form-control required"
+							placeholder="Vehicle Prefix" />
+						<span class="text-danger input-error-msg" data-label="Vehicle Prefix "></span>
+					</div>
+					
 					<!-- Name -->
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<form:label path="number" class="form-label">Number <strong
 								class="text-danger">*</strong>
 						</form:label>
@@ -22,7 +32,7 @@
 					</div>
 
 					<!-- IP -->
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<form:label path="weight" class="form-label">Weight <strong
 								class="text-danger">*</strong>
 						</form:label>
@@ -31,7 +41,7 @@
 						<span class="text-danger input-error-msg" data-label="Weight"></span>
 					</div>
 
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<form:label path="status" class="form-label">Status <strong
 								class="text-danger">*</strong>
 						</form:label>
@@ -45,7 +55,7 @@
 					</div>
 				</div>
 				<div class="row mt-3">
-					<div class="col-md-4">
+					<div class="col-md-3">
 						<form:label path="driverId" class="form-label">Driver
 						</form:label>
 						<form:select path="driverId"
@@ -84,6 +94,7 @@
 				<thead class="bg-gradient-primary text-white">
 					<tr>
 						<th class="py-1" scope="col" style="width: 50px;">#</th>
+						<th class="py-1" scope="col">Prefix</th>
 						<th class="py-1" scope="col">Number</th>
 						<th class="py-1" scope="col">Weight</th>
 						<th class="py-1" scope="col">Driver</th>
@@ -95,7 +106,7 @@
 				<tbody>
 					<c:if test="${empty customerVehicleList }">
 						<tr>
-							<td colspan="7" class="text-center">No vehicles.</td>
+							<td colspan="8" class="text-center">No vehicles.</td>
 						</tr>
 					</c:if>
 					<c:if test="${not empty customerVehicleList }">
@@ -103,6 +114,7 @@
 							<tr
 								class="${not empty new_id && new_id == counter.id || customerVehicleDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
 								<td>${loop.index + 1 }</td>
+								<td>${counter.prefix }</td>
 								<td>${counter.number }</td>
 								<td>${counter.weight }</td>
 								<td>${counter.driver.name }</td>

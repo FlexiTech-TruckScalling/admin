@@ -49,7 +49,7 @@ public class CustomerVehicleController extends BaseController<CustomerVehicleDTO
 		this.customerId = customerId;
 		customerVehicleDTO.setCustomerId(customerId);
 		
-		if(service.isVehicleNumberAlreadyUserd(customerVehicleDTO.getNumber(), customerVehicleDTO.getId())) {
+		if(service.isVehicleNumberAlreadyUserd(customerVehicleDTO.getPrefix(), customerVehicleDTO.getNumber(), customerVehicleDTO.getId())) {
 			model.addAttribute(CommonConstants.ERROR_MSG, "The vehicel number is already used!");
 			try {
 				commonModel(model, customerVehicleDTO);

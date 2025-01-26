@@ -12,6 +12,7 @@ import org.flexitech.projects.embedded.truckscale.dto.shift.UserShiftDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
 import org.flexitech.projects.embedded.truckscale.entities.counters.Counters;
 import org.flexitech.projects.embedded.truckscale.services.counter.CounterSettingService;
+import org.flexitech.projects.embedded.truckscale.services.customers.CustomerTypeService;
 import org.flexitech.projects.embedded.truckscale.services.products.GoodService;
 import org.flexitech.projects.embedded.truckscale.services.setting.WeightUnitService;
 import org.flexitech.projects.embedded.truckscale.services.shift.UserShiftService;
@@ -37,6 +38,9 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 
 	@Autowired
 	UserShiftService shiftService;
+	
+	@Autowired
+	CustomerTypeService customerTypeService;
 
 	@Override
 	public WeightTransactionPreloadDataResponse getWeightTransactionPreloadData(Long userId) {
@@ -60,6 +64,7 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 					settingResponse.setCounter(counter);
 					settingResponse.setUnits(this.weightUnitService.getAllWeightUnit(ActiveStatus.ACTIVE.getCode()));
 					settingResponse.setBounds(InOutBounds.getAll());
+					settingResponse.setCustomerTypes(this.customerTypeService.getAllCustomerTypes(ActiveStatus.ACTIVE.getCode()));
 					data.setCounterSetting(settingResponse);
 				}
 			}

@@ -15,6 +15,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CustomerVehicleDTO extends CommonDTO {
 
+	private String prefix;
+	
 	private String number;
 	
 	private BigDecimal weight;
@@ -27,6 +29,7 @@ public class CustomerVehicleDTO extends CommonDTO {
 	
 	public CustomerVehicleDTO(CustomerVehicles v) {
 		if(CommonValidators.isValidObject(v)) {
+			this.prefix = v.getPrefix();
 			this.number = v.getNumber();
 			this.weight = v.getWeight();
 			if(CommonValidators.isValidObject(v.getDriver())) {
