@@ -20,27 +20,30 @@ public class CustomerDTO extends CommonDTO {
 	private String code;
 	private String phoneNumber;
 	private String address;
-	
+
 	private List<CustomerTypeDTO> customerTypeDTOs = new ArrayList<CustomerTypeDTO>();
 	private List<Long> customerTypeIds = new ArrayList<Long>();
 	private String customerTypeNames;
-	
+
 	private List<CustomerVehicleDTO> customerVehicleDTOs = new ArrayList<CustomerVehicleDTO>();
-	
+
 	public CustomerDTO(Customers c) {
-		if(CommonValidators.isValidObject(c)) {
+		if (CommonValidators.isValidObject(c)) {
 			this.name = c.getName();
 			this.code = c.getCode();
 			this.phoneNumber = c.getPhoneNumber();
 			this.address = c.getAddress();
-			
-			if(CommonValidators.validList(c.getCustomerTypes())) {
-				this.customerTypeDTOs = c.getCustomerTypes().stream().map(CustomerTypeDTO::new).collect(Collectors.toList());
-				this.customerTypeIds = c.getCustomerTypes().stream().map(t->t.getId()).collect(Collectors.toList());
-				this.customerTypeNames = c.getCustomerTypes().stream().map(t->t.getName()).collect(Collectors.joining(", "));
+
+			if (CommonValidators.validList(c.getCustomerTypes())) {
+				this.customerTypeDTOs = c.getCustomerTypes().stream().map(CustomerTypeDTO::new)
+						.collect(Collectors.toList());
+				this.customerTypeIds = c.getCustomerTypes().stream().map(t -> t.getId()).collect(Collectors.toList());
+				this.customerTypeNames = c.getCustomerTypes().stream().map(t -> t.getName())
+						.collect(Collectors.joining(", "));
 			}
+			
 			setField(c);
 		}
 	}
-	
+
 }

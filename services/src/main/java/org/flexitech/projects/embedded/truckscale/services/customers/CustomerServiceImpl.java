@@ -14,11 +14,13 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
+import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerDAO;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerTypeDAO;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerVehicleDAO;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerDTO;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerSearchDTO;
+import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerVehicleDTO;
 import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerTypes;
 import org.flexitech.projects.embedded.truckscale.entities.customers.Customers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,9 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	CustomerTypeDAO customerTypeDAO;
+
+	@Autowired
+	CustomerVehicleService customerVehicleService;
 
 	private final Logger logger = LogManager.getLogger(getClass());
 
@@ -108,7 +113,7 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public List<CustomerDTO> getAllCustomers(Integer status) {
 		List<Customers> customers = this.customerDAO.getAllCustomer(status);
-		if(CommonValidators.validList(customers)) {
+		if (CommonValidators.validList(customers)) {
 			return customers.stream().map(CustomerDTO::new).collect(Collectors.toList());
 		}
 		return new ArrayList<CustomerDTO>();
@@ -117,14 +122,14 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public boolean deleteCustomer(Long id) {
 		try {
-			
+
 			Customers c = this.customerDAO.get(id);
-			if(CommonValidators.isValidObject(c)) {
+			if (CommonValidators.isValidObject(c)) {
 				this.customerDAO.delete(c);
 				return true;
 			}
-			
-		}catch (Exception e) {
+
+		} catch (Exception e) {
 			logger.error("Error on deleting customer: {}", ExceptionUtils.getStackTrace(e));
 		}
 		return false;
@@ -132,25 +137,35 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public List<CustomerDTO> searchCustomers(CustomerSearchDTO searchDTO) {
-	    List<Customers> customers = this.customerDAO.searchCustomer(searchDTO);
+		List<Customers> customers = this.customerDAO.searchCustomer(searchDTO);
 
-	    if (CommonValidators.validList(customers)) {
-	        Integer totalCount = this.customerDAO.countCustomer(searchDTO);
-	        if (totalCount != null && totalCount > 0) {
-	            int pageCount = (int) Math.ceil((totalCount * 1.0) / Math.max(searchDTO.getLimit(), 1));  // Avoid divide by zero
-	            searchDTO.setTotalRecords(totalCount);
-	            searchDTO.setPageCount(pageCount);
-	        } else {
-	            searchDTO.setTotalRecords(0);
-	            searchDTO.setPageCount(0);
-	        }
+		if (CommonValidators.validList(customers)) {
+			Integer totalCount = this.customerDAO.countCustomer(searchDTO);
+			if (totalCount != null && totalCount > 0) {
+				int pageCount = (int) Math.ceil((totalCount * 1.0) / Math.max(searchDTO.getLimit(), 1)); // Avoid divide
+																											// by zero
+				searchDTO.setTotalRecords(totalCount);
+				searchDTO.setPageCount(pageCount);
+			} else {
+				searchDTO.setTotalRecords(0);
+				searchDTO.setPageCount(0);
+			}
 
-	        return customers.stream()
-	                        .map(CustomerDTO::new)
-	                        .collect(Collectors.toList());
-	    }
+			List<CustomerDTO> result = customers.stream().map(CustomerDTO::new).collect(Collectors.toList());
+			for (CustomerDTO c : result) {
+				try {
+					List<CustomerVehicleDTO> vehicles = this.customerVehicleService.getAllCustomerVehicle(c.getId(),
+							ActiveStatus.ACTIVE.getCode());
+					c.setCustomerVehicleDTOs(vehicles);
+				} catch (Exception e) {
+					logger.error("Error on getting customer vehicles: {}", ExceptionUtils.getStackTrace(e));
+				}
+			}
 
-	    return Collections.emptyList();
+			return result;
+		}
+
+		return Collections.emptyList();
 	}
 
 }
