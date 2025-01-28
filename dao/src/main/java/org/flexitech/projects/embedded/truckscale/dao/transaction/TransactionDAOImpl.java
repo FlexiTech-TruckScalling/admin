@@ -6,10 +6,13 @@ import java.util.List;
 
 import org.flexitech.projects.embedded.truckscale.common.CommonDateFormats;
 import org.flexitech.projects.embedded.truckscale.dao.common.CommonDAOImpl;
+import org.flexitech.projects.embedded.truckscale.dto.shift.CurrentShiftSummaryDTO;
 import org.flexitech.projects.embedded.truckscale.dto.transaction.TransactionSearchDTO;
 import org.flexitech.projects.embedded.truckscale.entities.transaction.Transaction;
 import org.flexitech.projects.embedded.truckscale.util.DateUtils;
 import org.hibernate.SQLQuery;
+import org.hibernate.transform.Transformers;
+import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -159,6 +162,32 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 					CommonDateFormats.STANDARD_24_HOUR_DATE_FORMAT);
 			query.setParameter("createdToDate", date);
 		}
+	}
+
+	@Override
+	public CurrentShiftSummaryDTO getCurrentShiftSummary(Long userId, String sessionCode) {
+		SQLQuery query = getCurrentSession().createSQLQuery(prepareSQLForShiftSummary())
+				.addScalar("totalTrn",StandardBasicTypes.INTEGER)
+				.addScalar("totalAmount", StandardBasicTypes.BIG_DECIMAL);
+		
+		query.setParameter("userId", userId);
+		query.setParameter("sessionCode", sessionCode);
+		
+		query.setResultTransformer(Transformers.aliasToBean(CurrentShiftSummaryDTO.class));
+		query.setMaxResults(1);
+		return (CurrentShiftSummaryDTO) query.uniqueResult();
+	}
+	
+	private String prepareSQLForShiftSummary() {
+		StringBuilder b = new StringBuilder();
+		
+		b.append("SELECT COUNT(DISTINCT id) as totalTrn, ")
+		.append("SUM(COALESCE(cost, 0)) as totalAmount ")
+		.append("FROM transactions ")
+		.append("WHERE user_id = :userId ")
+		.append("AND session_code = :sessionCode ");
+		
+		return b.toString();
 	}
 
 }

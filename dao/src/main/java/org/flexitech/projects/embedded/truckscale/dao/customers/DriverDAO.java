@@ -7,4 +7,5 @@ import org.flexitech.projects.embedded.truckscale.entities.customers.Drivers;
 
 public interface DriverDAO extends CommonDAO<Drivers, Long> {
 	List<Drivers> getAllDrivers(Integer status);
+	Drivers getDriverByName(String name);
 }

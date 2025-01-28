@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import org.flexitech.projects.embedded.truckscale.common.TableNames;
 import org.flexitech.projects.embedded.truckscale.entities.BaseEntity;
+import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerTypes;
 import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerVehicles;
 import org.flexitech.projects.embedded.truckscale.entities.customers.Customers;
 import org.flexitech.projects.embedded.truckscale.entities.product.Goods;
@@ -35,6 +36,10 @@ public class Transaction extends BaseEntity{
 	@ManyToOne
 	@JoinColumn(name = "customer_id", nullable = false)
 	private Customers customer;
+	
+	@ManyToOne
+	@JoinColumn(name = "customer_type_id")
+	private CustomerTypes customerType;
 	
 	@ManyToOne
 	@JoinColumn(name = "good_id", nullable = false)
@@ -78,8 +83,8 @@ public class Transaction extends BaseEntity{
 	@Column(name = "over_weight")
 	private Double overWeight;
 	
-	@Column(name = "weight_status")
-	private Integer weightStatus;
+	@Column(name = "cargo_status")
+	private Integer cargoStatus;
 	
 	private Double weight;
 	

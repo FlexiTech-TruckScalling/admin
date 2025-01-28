@@ -24,4 +24,12 @@ public class DriverDAOImpl extends CommonDAOImpl<Drivers, Long> implements Drive
 		return c.list();
 	}
 
+	@Override
+	public Drivers getDriverByName(String name) {
+		Criteria c = getCurrentSession().createCriteria(daoType);
+		c.add(Restrictions.eq("name", name));
+		c.setMaxResults(1);
+		return (Drivers) c.uniqueResult();
+	}
+
 }

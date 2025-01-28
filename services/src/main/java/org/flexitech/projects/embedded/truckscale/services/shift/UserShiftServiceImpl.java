@@ -5,15 +5,19 @@ import java.util.Date;
 import javax.transaction.Transactional;
 
 import org.apache.velocity.exception.ResourceNotFoundException;
+import org.flexitech.projects.embedded.truckscale.common.CommonDateFormats;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.common.enums.ShiftStatus;
 import org.flexitech.projects.embedded.truckscale.dao.shift.UserShiftDAO;
+import org.flexitech.projects.embedded.truckscale.dao.transaction.TransactionDAO;
 import org.flexitech.projects.embedded.truckscale.dao.user.UserDAO;
+import org.flexitech.projects.embedded.truckscale.dto.shift.CurrentShiftSummaryDTO;
 import org.flexitech.projects.embedded.truckscale.dto.shift.UserShiftDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
 import org.flexitech.projects.embedded.truckscale.entities.shift.UserShift;
 import org.flexitech.projects.embedded.truckscale.entities.user.Users;
+import org.flexitech.projects.embedded.truckscale.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +33,9 @@ public class UserShiftServiceImpl implements UserShiftService {
 	@Autowired
 	UserDAO userDAO;
 
+	@Autowired
+	TransactionDAO transactionDAO;
+	
 	@Override
 	public UserShiftDTO getCurrentActiveShift(Long userId) {
 		UserShift s = this.userShiftDAO.getCurrentActiveShift(userId);
@@ -130,6 +137,15 @@ public class UserShiftServiceImpl implements UserShiftService {
 		this.userShiftDAO.update(activeShift);
 
 		return new UserShiftDTO(activeShift);
+	}
+
+	@Override
+	public CurrentShiftSummaryDTO getCurrentShiftSummary(Long userId, String sessionCode) {
+		CurrentShiftSummaryDTO result = this.transactionDAO.getCurrentShiftSummary(userId, sessionCode);
+		result.setDate(DateUtils.dateToString(new Date(), CommonDateFormats.STD_DDMMYYYY));
+		result.setSessionCode(sessionCode);
+		
+		return result;
 	}
 
 }

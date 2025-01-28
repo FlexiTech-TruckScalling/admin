@@ -38,7 +38,7 @@ public class TransactionDTO extends CommonDTO {
     private BigDecimal cost;
     private Double allowedWeight;
     private Double overWeight;
-    private Integer weightStatus;
+    private Integer cargoStatus;
     private Double weight;
     private Integer inOutStatus;
     private String vehiclePhotoOne;
@@ -69,7 +69,7 @@ public class TransactionDTO extends CommonDTO {
         this.cost = t.getCost();
         this.allowedWeight = t.getAllowedWeight();
         this.overWeight = t.getOverWeight();
-        this.weightStatus = t.getWeightStatus();
+        this.cargoStatus = t.getCargoStatus();
         this.weight = t.getWeight();
         this.inOutStatus = t.getInOutStatus();
         this.vehiclePhotoOne = t.getVehiclePhotoOne();

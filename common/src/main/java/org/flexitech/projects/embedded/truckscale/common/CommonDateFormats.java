@@ -8,5 +8,6 @@ public class CommonDateFormats {
 	public static final String STANDARD_DATE_FOR_TRNREF = "ddMMyy";
 	public static final String STANDARD_MONTH_YEAR_TRNREF = "MM_yy";
 	public static final String FTP_IMAGE_DATE_FORMAT = "dd_MM_yyyy";
+	public static final String STD_DDMMYYYY = "dd/MM/yyyy";
 	
 }

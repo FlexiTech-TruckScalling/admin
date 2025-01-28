@@ -46,4 +46,13 @@ public class CustomerVehicleDAOImpl extends CommonDAOImpl<CustomerVehicles, Long
 		return c.uniqueResult() != null;
 	}
 
+	@Override
+	public CustomerVehicles getVehicleByPrefixAndNumber(String prefix, String number) {
+		Criteria c = getCurrentSession().createCriteria(daoType);
+		c.add(Restrictions.eq("prefix", prefix));
+		c.add(Restrictions.eq("number", number));
+		c.setMaxResults(1);
+		return (CustomerVehicles) c.uniqueResult();
+	}
+
 }
