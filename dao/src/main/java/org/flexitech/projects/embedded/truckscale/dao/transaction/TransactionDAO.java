@@ -12,4 +12,6 @@ public interface TransactionDAO extends CommonDAO<Transaction, Long>{
 	Integer countTransactions(TransactionSearchDTO searchDTO);
 	
 	CurrentShiftSummaryDTO getCurrentShiftSummary(Long userId, String sessionCode);
+	
+	boolean isCodeAlreadyUsed(String code);
 }

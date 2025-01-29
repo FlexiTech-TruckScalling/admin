@@ -94,5 +94,8 @@ public class WeightTransactionRequest {
     @DateTimeFormat(pattern = CommonDateFormats.STANDARD_12_HOUR_DATE_MINUTE_FORMAT)
     @JsonFormat(pattern = CommonDateFormats.STANDARD_12_HOUR_DATE_MINUTE_FORMAT)
     private Date outTime;
+    
+    @JsonProperty("transaction_code")
+    private String transactionCode;
 }
 

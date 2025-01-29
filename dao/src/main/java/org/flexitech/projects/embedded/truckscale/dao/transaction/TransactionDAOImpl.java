@@ -5,12 +5,15 @@ import java.util.Date;
 import java.util.List;
 
 import org.flexitech.projects.embedded.truckscale.common.CommonDateFormats;
+import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.dao.common.CommonDAOImpl;
 import org.flexitech.projects.embedded.truckscale.dto.shift.CurrentShiftSummaryDTO;
 import org.flexitech.projects.embedded.truckscale.dto.transaction.TransactionSearchDTO;
 import org.flexitech.projects.embedded.truckscale.entities.transaction.Transaction;
 import org.flexitech.projects.embedded.truckscale.util.DateUtils;
+import org.hibernate.Criteria;
 import org.hibernate.SQLQuery;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.StandardBasicTypes;
 import org.springframework.stereotype.Repository;
@@ -188,6 +191,15 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 		.append("AND session_code = :sessionCode ");
 		
 		return b.toString();
+	}
+
+	@Override
+	public boolean isCodeAlreadyUsed(String code) {
+		if(!CommonValidators.validString(code)) return true;
+		Criteria c = getCurrentSession().createCriteria(daoType);
+		c.add(Restrictions.eq("transactionCode", code));
+		c.setMaxResults(1);
+		return c.uniqueResult() != null;
 	}
 
 }

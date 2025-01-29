@@ -40,6 +40,7 @@ import org.flexitech.projects.embedded.truckscale.services.products.GoodService;
 import org.flexitech.projects.embedded.truckscale.services.setting.WeightUnitService;
 import org.flexitech.projects.embedded.truckscale.services.shift.UserShiftService;
 import org.flexitech.projects.embedded.truckscale.services.user.UserService;
+import org.flexitech.projects.embedded.truckscale.util.auth.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,37 +62,37 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 
 	@Autowired
 	UserShiftService shiftService;
-	
+
 	@Autowired
 	CustomerTypeService customerTypeService;
-	
+
 	@Autowired
 	TransactionDAO transactionDAO;
-	
+
 	@Autowired
 	CustomerDAO customerDAO;
-	
+
 	@Autowired
 	CustomerTypeDAO customerTypeDAO;
 
 	@Autowired
 	CustomerVehicleDAO customerVehicleDAO;
-	
+
 	@Autowired
 	DriverDAO driverDAO;
-	
+
 	@Autowired
 	GoodDAO goodDAO;
-	
+
 	@Autowired
 	ProductDAO productDAO;
-	
+
 	@Autowired
 	WeightUnitDAO weightUnitDAO;
-	
+
 	@Autowired
 	UserDAO userDAO;
-	
+
 	@Override
 	public WeightTransactionPreloadDataResponse getWeightTransactionPreloadData(Long userId) {
 		WeightTransactionPreloadDataResponse data = new WeightTransactionPreloadDataResponse();
@@ -114,7 +115,8 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 					settingResponse.setCounter(counter);
 					settingResponse.setUnits(this.weightUnitService.getAllWeightUnit(ActiveStatus.ACTIVE.getCode()));
 					settingResponse.setBounds(InOutBounds.getAll());
-					settingResponse.setCustomerTypes(this.customerTypeService.getAllCustomerTypes(ActiveStatus.ACTIVE.getCode()));
+					settingResponse.setCustomerTypes(
+							this.customerTypeService.getAllCustomerTypes(ActiveStatus.ACTIVE.getCode()));
 					data.setCounterSetting(settingResponse);
 				}
 			}
@@ -124,39 +126,55 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 	}
 
 	@Override
-	public WeightTransactionResponse manageWeightTransaction(WeightTransactionRequest request)  throws Exception{
-		if(!CommonValidators.isValidObject(request)) {
+	public WeightTransactionResponse manageWeightTransaction(WeightTransactionRequest request) throws Exception {
+		if (!CommonValidators.isValidObject(request)) {
 			throw new IllegalArgumentException("Request cannot be empty!");
 		}
-		
+
 		Transaction transaction = null;
-		
-		if(CommonValidators.validLong(request.getId())) {
+
+		if (CommonValidators.validLong(request.getId())) {
 			transaction = this.transactionDAO.get(request.getId());
 			transaction.setUpdatedTime(new Date());
-		}else {
+		} else {
 			transaction = new Transaction();
 			transaction.setCreatedTime(new Date());
+
+			// transaction code
+			/*
+			 * int attempts = 0; final int maxAttempts = 5; boolean success = false;
+			 * 
+			 * while (attempts < maxAttempts && !success) { String code =
+			 * TokenUtil.generateTransactionCode(); if
+			 * (!this.transactionDAO.isCodeAlreadyUsed(code)) {
+			 * transaction.setTransactionCode(code); success = true; } attempts++; }
+			 * 
+			 * if (!success) throw new IllegalStateException(
+			 * "Failed to generate a unique transaction code after " + maxAttempts +
+			 * " attempts.");
+			 */
 		}
-		
-		if(CommonValidators.validLong(request.getCustomerId())) {
+
+		if (CommonValidators.validLong(request.getCustomerId())) {
 			Customers c = this.customerDAO.get(request.getCustomerId());
 			transaction.setCustomer(c);
 		}
-		
-		if(CommonValidators.validLong(request.getCustomerTypeId())) {
+
+		if (CommonValidators.validLong(request.getCustomerTypeId())) {
 			CustomerTypes t = this.customerTypeDAO.get(request.getCustomerTypeId());
 			transaction.setCustomerType(t);
 		}
-		
+
+		transaction.setTransactionCode(request.getTransactionCode());
 		transaction.setContainerNumber(request.getContainerNumber());
 		transaction.setContainerSize(request.getContainerSize());
-		
+
 		transaction.setRegisterVehicleStatus(request.getSaveNewVehicle());
-		
-		CustomerVehicles vehicle = this.customerVehicleDAO.getVehicleByPrefixAndNumber(request.getVehiclePrefix(), request.getVehicleNumber());
-		if(vehicle == null) {
-			if(CommonValidators.validInteger(request.getSaveNewVehicle())) {
+
+		CustomerVehicles vehicle = this.customerVehicleDAO.getVehicleByPrefixAndNumber(request.getVehiclePrefix(),
+				request.getVehicleNumber());
+		if (vehicle == null) {
+			if (CommonValidators.validInteger(request.getSaveNewVehicle())) {
 				CustomerVehicles v = new CustomerVehicles();
 				v.setPrefix(request.getVehiclePrefix());
 				v.setNumber(request.getVehicleNumber());
@@ -166,10 +184,10 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 				v.setStatus(ActiveStatus.ACTIVE.getCode());
 				v.setCreatedTime(new Date());
 				Drivers d = this.driverDAO.getDriverByName(request.getDriverName());
-				
-				if(CommonValidators.isValidObject(d)) {
+
+				if (CommonValidators.isValidObject(d)) {
 					v.setDriver(d);
-				}else {
+				} else {
 					Drivers driver = new Drivers();
 					driver.setName(request.getDriverName());
 					driver.setStatus(ActiveStatus.ACTIVE.getCode());
@@ -180,65 +198,65 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 				this.customerVehicleDAO.save(v);
 				transaction.setVehicle(v);
 			}
-		}else {
+		} else {
 			transaction.setVehicle(vehicle);
 		}
-		
+
 		transaction.setDriverName(request.getDriverName());
-		
-		if(CommonValidators.validLong(request.getGoodId())) {
+
+		if (CommonValidators.validLong(request.getGoodId())) {
 			Goods g = this.goodDAO.get(request.getGoodId());
 			transaction.setGoods(g);
 		}
-		
-		if(CommonValidators.validLong(request.getProductId())) {
+
+		if (CommonValidators.validLong(request.getProductId())) {
 			Products p = this.productDAO.get(request.getProductId());
 			transaction.setProduct(p);
 		}
-		
+
 		transaction.setQty(new BigDecimal(request.getQuantity()));
-		
-		if(CommonValidators.validLong(request.getQuantityUnitId())) {
+
+		if (CommonValidators.validLong(request.getQuantityUnitId())) {
 			WeightUnit unit = this.weightUnitDAO.get(request.getQuantityUnitId());
 			transaction.setQuantityUnit(unit);
 		}
-		
+
 		transaction.setCost(new BigDecimal(request.getCost()));
-		
+
 		transaction.setAllowedWeight(request.getAllowedWeight());
-		
+
 		transaction.setOverWeight(request.getOverWeight());
-		
+
 		transaction.setWeight(request.getWeight());
-		
-		if(CommonValidators.validLong(request.getWeightUnitId())) {
+
+		if (CommonValidators.validLong(request.getWeightUnitId())) {
 			WeightUnit unit = this.weightUnitDAO.get(request.getWeightUnitId());
 			transaction.setWeightUnit(unit);
 		}
-		
+
 		transaction.setInOutStatus(request.getInOutStatus());
-		
+
 		transaction.setCargoStatus(request.getCargoStatus());
-		
-		if(CommonValidators.isValidObject(request.getInTime())) {
+
+		if (CommonValidators.isValidObject(request.getInTime())) {
 			transaction.setInTime(request.getInTime());
 		}
-		
-		if(CommonValidators.isValidObject(request.getOutTime())) {
+
+		if (CommonValidators.isValidObject(request.getOutTime())) {
 			transaction.setOutTime(request.getOutTime());
 		}
-		
+
 		transaction.setSessionCode(request.getSessionId());
-		
-		if(CommonValidators.validLong(request.getUserId())) {
+
+		if (CommonValidators.validLong(request.getUserId())) {
 			Users user = this.userDAO.get(request.getUserId());
 			transaction.setUser(user);
 		}
-		
+
 		transaction.setStatus(ActiveStatus.ACTIVE.getCode());
-		
+
 		this.transactionDAO.saveOrUpdate(transaction);
-		
+
 		return new WeightTransactionResponse(new TransactionDTO(transaction));
 	}
 

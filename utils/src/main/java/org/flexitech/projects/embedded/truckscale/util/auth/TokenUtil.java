@@ -1,8 +1,10 @@
 package org.flexitech.projects.embedded.truckscale.util.auth;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -29,4 +31,11 @@ public class TokenUtil {
             throw new RuntimeException("Error generating session ID", e);
         }
     }
+    
+
+    public static String generateTransactionCode() {
+        SecureRandom random = new SecureRandom();
+        return "TX" + new BigInteger(40, random).toString(36).toUpperCase().substring(0, 6);
+    }
+
 }

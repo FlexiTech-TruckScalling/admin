@@ -113,4 +113,7 @@ public class Transaction extends BaseEntity{
 	@JoinColumn(name = "user_id")
 	private Users user;
 	
+	@Column(name = "transaction_code")
+	private String transactionCode;
+	
 }
