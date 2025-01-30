@@ -27,4 +27,6 @@ public class TableNames {
 	public static final String DRIVER_TABLE = "drivers";
 	
 	public static final String TRANSACTION_TABLE = "transactions";
+	
+	public static final String USER_SHIFT_SUMMARY_TABLE = "user_shift_summary";
 }

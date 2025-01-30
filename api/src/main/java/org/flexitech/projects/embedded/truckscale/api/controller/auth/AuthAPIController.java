@@ -1,10 +1,22 @@
 package org.flexitech.projects.embedded.truckscale.api.controller.auth;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.flexitech.projects.embedded.truckscale.common.CommonConstants;
+import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
+import org.flexitech.projects.embedded.truckscale.common.network.response.BaseResponse;
+import org.flexitech.projects.embedded.truckscale.common.network.response.ErrorResponse;
 import org.flexitech.projects.embedded.truckscale.common.network.response.Response;
 import org.flexitech.projects.embedded.truckscale.dto.request.auth.LoginRequestDTO;
+import org.flexitech.projects.embedded.truckscale.dto.request.auth.LogoutRequestDTO;
+import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
 import org.flexitech.projects.embedded.truckscale.services.auth.AuthService;
 import org.flexitech.projects.embedded.truckscale.util.network.response.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +28,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 public class AuthAPIController {
+	
+	private final Logger logger = LogManager.getLogger(getClass());
 	
 	@Autowired
 	AuthService authService;
@@ -29,5 +43,29 @@ public class AuthAPIController {
 	@GetMapping("/token")
 	public ResponseEntity<?> checkToken(@RequestParam(required = false) String token){
 		return ResponseUtil.send(authService.checkToken(token));
+	}
+	
+	@PostMapping("/logout")
+	public ResponseEntity<?> logout(@RequestBody LogoutRequestDTO request, HttpServletRequest req){
+		Response response = new Response();
+		try {
+			UserDTO loggedUser = (UserDTO) req.getAttribute(CommonConstants.API_ACCESSOR);
+			if(CommonValidators.isValidObject(loggedUser)) {
+				this.authService.logout(request, loggedUser);
+			}
+			response = new BaseResponse<String>();
+			response.setResponseCode(HttpStatus.OK.value());
+			response.setResponseMessage("Logout successfully!");
+		}catch (Exception e) {
+			logger.error("Error on logout: {}", ExceptionUtils.getStackTrace(e));
+			response = new ErrorResponse<String>();
+			if(e instanceof IllegalArgumentException) {
+				response.setResponseCode(HttpStatus.BAD_REQUEST.value());
+			}else {
+				response.setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			}
+			response.setResponseMessage(ExceptionUtils.getMessage(e));
+		}
+		return ResponseUtil.send(response);
 	}
 }

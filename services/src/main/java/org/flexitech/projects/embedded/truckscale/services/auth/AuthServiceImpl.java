@@ -1,5 +1,7 @@
 package org.flexitech.projects.embedded.truckscale.services.auth;
 
+import java.util.Date;
+
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -10,12 +12,20 @@ import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.common.network.response.BaseResponse;
 import org.flexitech.projects.embedded.truckscale.common.network.response.ErrorResponse;
 import org.flexitech.projects.embedded.truckscale.common.network.response.Response;
+import org.flexitech.projects.embedded.truckscale.dao.counter.CounterDAO;
+import org.flexitech.projects.embedded.truckscale.dao.shift.UserShiftDAO;
+import org.flexitech.projects.embedded.truckscale.dao.shift.UserShiftSummaryDAO;
 import org.flexitech.projects.embedded.truckscale.dao.user.UserDAO;
 import org.flexitech.projects.embedded.truckscale.dto.auth.LoginDTO;
 import org.flexitech.projects.embedded.truckscale.dto.request.auth.LoginRequestDTO;
+import org.flexitech.projects.embedded.truckscale.dto.request.auth.LogoutRequestDTO;
+import org.flexitech.projects.embedded.truckscale.dto.request.user_shift.UserShiftSummaryRequestDTO;
 import org.flexitech.projects.embedded.truckscale.dto.response.auth.AuthResponse;
 import org.flexitech.projects.embedded.truckscale.dto.shift.UserShiftDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
+import org.flexitech.projects.embedded.truckscale.entities.counters.Counters;
+import org.flexitech.projects.embedded.truckscale.entities.shift.UserShift;
+import org.flexitech.projects.embedded.truckscale.entities.shift.UserShiftSummary;
 import org.flexitech.projects.embedded.truckscale.entities.user.Users;
 import org.flexitech.projects.embedded.truckscale.services.shift.UserShiftService;
 import org.flexitech.projects.embedded.truckscale.util.auth.TokenUtil;
@@ -40,6 +50,15 @@ public class AuthServiceImpl implements AuthService {
 
 	@Autowired
 	UserShiftService shiftService;
+	
+	@Autowired
+	UserShiftDAO userShiftDAO;
+	
+	@Autowired
+	CounterDAO counterDAO;
+	
+	@Autowired
+	UserShiftSummaryDAO userShiftSummaryDAO;
 
 	@Override
 	public UserDTO login(LoginDTO loginDTO) throws Exception {
@@ -64,8 +83,65 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public void logout(UserDTO userDTO) {
-		// TODO Auto-generated method stub
+	public void logout(LogoutRequestDTO logoutRequest, UserDTO loggedUser)  throws Exception{
+		if(!CommonValidators.isValidObject(logoutRequest)) {
+			throw new IllegalArgumentException("Please provide a valid request!");
+		}
+		if(!CommonValidators.validLong(logoutRequest.getUserId())) {
+			throw new IllegalArgumentException("Invalid request!");
+		}
+		
+		Users user = this.userDAO.get(logoutRequest.getUserId());
+		if(!CommonValidators.isValidObject(user)) {
+			throw new IllegalArgumentException("Please provide a valid user id!");
+		}
+		
+		Users loggedU = this.userDAO.get(loggedUser.getId());
+		
+		user.setSessionToken("");
+		
+		// logout change session
+		this.userDAO.update(user);
+		
+		if(logoutRequest.isEndShift()) {
+			
+			if(!CommonValidators.isValidObject(logoutRequest.getShiftSummary())) {
+				throw new IllegalArgumentException("Please provide shift summary to end shift!");
+			}
+			
+			UserShift shift = this.userShiftDAO.getCurrentActiveShift(user.getId());
+			
+			if(!CommonValidators.isValidObject(shift)) {
+				throw new IllegalArgumentException("Current user doesn't have active shift!");
+			}
+			
+			// end shift
+			this.shiftService.endShift(user.getId(), loggedUser);
+			
+			UserShiftSummaryRequestDTO summary = logoutRequest.getShiftSummary();
+			
+			UserShiftSummary s = new UserShiftSummary();
+			
+			Users sUser = this.userDAO.get(summary.getUserId());
+			s.setUser(sUser);
+			
+			UserShift sShift = this.userShiftDAO.getUserShitByCode(summary.getShiftCode());
+			s.setUserShift(sShift);
+			
+			Counters c = this.counterDAO.get(summary.getCounterId());
+			s.setCounter(c);
+			
+			s.setTotalTransaction(summary.getTotalTransaction());
+			s.setTotalInTransaction(summary.getTotalInTransaction());
+			s.setTotalOutTransaction(summary.getTotalOutTranaction());
+			s.setTotalAmount(summary.getTotalAmount());
+			s.setEndByUser(loggedU);
+			s.setCreatedTime(new Date());
+			s.setStatus(ActiveStatus.ACTIVE.getCode());
+			
+			this.userShiftSummaryDAO.save(s);
+		}
+		
 	}
 
 	@Override
@@ -90,6 +166,7 @@ public class AuthServiceImpl implements AuthService {
 				user.setSessionToken(sessionToken);
 				Users u = this.userDAO.get(user.getId());
 				u.setSessionToken(sessionToken);
+				u.setLastLoginTime(new Date());
 				this.userDAO.update(u);
 				String jwtToken = jwtService.generateToken(user);
 				AuthResponse response = new AuthResponse();

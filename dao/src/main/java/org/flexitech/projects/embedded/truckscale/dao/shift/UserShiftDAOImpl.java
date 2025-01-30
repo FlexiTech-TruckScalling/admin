@@ -23,4 +23,14 @@ public class UserShiftDAOImpl extends CommonDAOImpl<UserShift, Long> implements 
 		return (UserShift) c.uniqueResult();
 	}
 
+	@Override
+	public UserShift getUserShitByCode(String code) {
+		Criteria c = getCurrentSession().createCriteria(daoType);
+		c.add(Restrictions.eq("code", code));
+		c.setMaxResults(1);
+		return (UserShift) c.uniqueResult();
+	}
+	
+	
+
 }
