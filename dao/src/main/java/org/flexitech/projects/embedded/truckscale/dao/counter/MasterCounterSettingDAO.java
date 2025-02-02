@@ -7,4 +7,5 @@ import org.flexitech.projects.embedded.truckscale.entities.setting.MasterCounter
 
 public interface MasterCounterSettingDAO extends CommonDAO<MasterCounterSetting, Long>{
 	List<MasterCounterSetting> getAllByStatus(Integer status);
+	List<MasterCounterSetting> getAllByCategory(Long categoryId, Integer status);
 }

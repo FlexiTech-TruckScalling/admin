@@ -8,6 +8,7 @@ public class TableNames {
 	public static final String MASTER_COUNTER_SETTING_TABLE = "master_counter_settings";
 	public static final String COUNTER_SETTING_TABLE = "counter_settings";
 	public static final String SYSTEM_SETTING_TABLE = "system_settings";
+	public static final String COUNTER_SETTING_CATEGORY = "counter_setting_category";
 
 	public static final String COUNTER_TABLE = "counters";
 
@@ -29,4 +30,5 @@ public class TableNames {
 	public static final String TRANSACTION_TABLE = "transactions";
 	
 	public static final String USER_SHIFT_SUMMARY_TABLE = "user_shift_summary";
+	
 }

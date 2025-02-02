@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.flexitech.projects.embedded.truckscale.dto.products.GoodDTO;
 import org.flexitech.projects.embedded.truckscale.dto.response.counter.CounterSettingResponse;
+import org.flexitech.projects.embedded.truckscale.dto.setting.SystemSettingListDTO;
 import org.flexitech.projects.embedded.truckscale.dto.shift.UserShiftDTO;
 
 import lombok.Getter;
@@ -17,4 +18,5 @@ public class WeightTransactionPreloadDataResponse {
 	private List<GoodDTO> goods;
 	private CounterSettingResponse counterSetting;
 	private UserShiftDTO userShift;
+	private SystemSettingListDTO systemSettings;
 }

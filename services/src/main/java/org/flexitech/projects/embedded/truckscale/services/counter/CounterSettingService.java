@@ -8,5 +8,6 @@ import org.flexitech.projects.embedded.truckscale.dto.setting.MasterCounterSetti
 public interface CounterSettingService {
 	List<MasterCounterSettingDTO> getMasterCounterSettings();
 	CounterDTO getCounterSettingByCounterId(Long counterId);
+	CounterDTO getCounterSettingWithMasterSettingByCounterId(Long counterId);
 	void manageCounterSetting(CounterDTO counterDTO);
 }

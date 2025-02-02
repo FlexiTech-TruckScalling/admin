@@ -91,4 +91,10 @@
 			value="/WEB-INF/pages/customers/driver-manage.jsp" />
 	</definition>
 	
+	<!-- System Settings -->
+	<definition name="system-settings" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/settings/system-settings.jsp" />
+	</definition>
+	
 </tiles-definitions>

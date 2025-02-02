@@ -1,12 +1,13 @@
 <%@ include file="../../includes/import-tags.jsp"%>
 
-<div class="card shadow mb4">
-	<div class="card-header py-3">
-		<h6 class="m-0 font-weight-bold text-primary">Counter Setting</h6>
-	</div>
-	<div class="card-body">
-		<form:form action="counter-setting.fxt" modelAttribute="counterDTO"
-			method="post" id="common-form">
+<form:form action="counter-setting.fxt" modelAttribute="counterDTO"
+	method="post" id="common-form">
+	<div class="card shadow mb-4">
+		<div class="card-header py-3">
+			<h6 class="m-0 font-weight-bold text-primary">Counter Setting</h6>
+		</div>
+		<div class="card-body">
+
 			<div class="row">
 				<div class="col-md-6">
 					<form:label path="id" class="form-label">Counter <strong
@@ -21,63 +22,85 @@
 					<span class="text-danger input-error-msg" data-label="Counter"></span>
 				</div>
 			</div>
-			<div class="row px-2 mt-2">
-				<fieldset class="col-md-12 rounded">
-					<legend>Settings</legend>
-					<div class="row">
-						<c:forEach items="${counterDTO.counterSettingDTOs }" var="setting"
-							varStatus="loop">
-							<div class="col-md-3 col-sm-12 mb-2">
-								<form:label path="counterSettingDTOs[${loop.index }].value"
-									class="form-label">${setting.masterCounterSettingDTO.description } <strong
-										class="text-danger">*</strong>
-								</form:label>
-								<c:choose>
-									<c:when
-										test="${setting.masterCounterSettingDTO.code == 'INOUT_BOUND'  }">
-										<form:select path="counterSettingDTOs[${loop.index }].value"
-											class="form-control border bg-white selectpicker required">
-											<option value="-1" disabled selected>-- None
-												--</option>
-											<form:options items="${inOutBoundList }" itemValue="code"
-												itemLabel="desc" />
-										</form:select>
-									</c:when>
-									<c:when test="${setting.masterCounterSettingDTO.code == 'DEFAULT_WEIGHT_UNIT'  }">
-										<form:select path="counterSettingDTOs[${loop.index }].value"
-											class="form-control border bg-white selectpicker required">
-											<option value="-1" disabled selected>-- None
-												--</option>
-											<form:options items="${weigthUnitList }" itemValue="code"
-												itemLabel="name" />
-										</form:select>
-									</c:when>
-									<c:otherwise>
-										<form:input path="counterSettingDTOs[${loop.index }].value"
-											type="text" class="form-control required"
-											placeholder="${setting.masterCounterSettingDTO.description }" />
-									</c:otherwise>
-								</c:choose>
 
-								<span class="text-danger input-error-msg"
-									data-label="${setting.masterCounterSettingDTO.description }"></span>
-								<form:hidden path="counterSettingDTOs[${loop.index }].id" />
-								<form:hidden
-									path="counterSettingDTOs[${loop.index }].masterCounterSettingDTO.id"
-									value="${setting.masterCounterSettingDTO.id}" />
+		</div>
+
+	</div>
+	<c:forEach items="${counterDTO.settingCategoryDTOs }" var="category"
+		varStatus="cLoop">
+		<div class="card shadow mb-4">
+			<a href="#collapseCard${category.id }"
+				class="d-block card-header py-3" data-toggle="collapse"
+				role="button" aria-expanded="true"
+				aria-controls="collapseCardExample">
+				<h6 class="m-0 font-weight-bold text-primary">${category.description}</h6>
+			</a>
+			<div class="collapse ${category.sequence == 1 ? 'show':'' }"
+				id="collapseCard${category.id }">
+				<div class="card-body">
+					<div class="row px-2 mt-3">
+						<fieldset class="col-md-12 rounded">
+							<legend>${category.description }</legend>
+							<div class="row">
+								<c:forEach items="${category.counterSettingDTOs }" var="setting"
+									varStatus="loop">
+									<div class="col-md-3 col-sm-12 mb-2">
+										<form:label
+											path="settingCategoryDTOs[${cLoop.index}].counterSettingDTOs[${loop.index }].value"
+											class="form-label">${setting.masterCounterSettingDTO.description } <strong
+												class="text-danger">*</strong>
+										</form:label>
+										<c:choose>
+											<c:when
+												test="${setting.masterCounterSettingDTO.code == 'INOUT_BOUND'  }">
+												<form:select
+													path="settingCategoryDTOs[${cLoop.index}].counterSettingDTOs[${loop.index }].value"
+													class="form-control border bg-white selectpicker required">
+													<option value="-1" disabled selected>-- None --</option>
+													<form:options items="${inOutBoundList }" itemValue="code"
+														itemLabel="desc" />
+												</form:select>
+											</c:when>
+											<c:when
+												test="${setting.masterCounterSettingDTO.code == 'DEFAULT_WEIGHT_UNIT'  }">
+												<form:select
+													path="settingCategoryDTOs[${cLoop.index}].counterSettingDTOs[${loop.index }].value"
+													class="form-control border bg-white selectpicker required">
+													<option value="-1" disabled selected>-- None --</option>
+													<form:options items="${weigthUnitList }" itemValue="code"
+														itemLabel="name" />
+												</form:select>
+											</c:when>
+											<c:otherwise>
+												<form:input
+													path="settingCategoryDTOs[${cLoop.index}].counterSettingDTOs[${loop.index }].value"
+													type="text" class="form-control required"
+													placeholder="${setting.masterCounterSettingDTO.description }" />
+											</c:otherwise>
+										</c:choose>
+
+										<span class="text-danger input-error-msg"
+											data-label="${setting.masterCounterSettingDTO.description }"></span>
+										<form:hidden
+											path="settingCategoryDTOs[${cLoop.index}].counterSettingDTOs[${loop.index }].id" />
+										<form:hidden
+											path="settingCategoryDTOs[${cLoop.index}].counterSettingDTOs[${loop.index }].masterCounterSettingDTO.id"
+											value="${setting.masterCounterSettingDTO.id}" />
+									</div>
+								</c:forEach>
 							</div>
-						</c:forEach>
+						</fieldset>
 					</div>
-				</fieldset>
-			</div>
-			<div class="row mt-4">
-				<div class="col text-left">
-					<button type="submit" class="btn btn-primary">Save</button>
-					<a href="counter-setting.fxt" class="btn btn-secondary">Clear</a>
+					<div class="row mt-4">
+						<div class="col text-left">
+							<button type="submit" class="btn btn-primary">Save</button>
+							<a href="counter-setting.fxt" class="btn btn-secondary">Clear</a>
+						</div>
+					</div>
 				</div>
 			</div>
-		</form:form>
-	</div>
-</div>
+		</div>
+	</c:forEach>
+</form:form>
 <script
 	src="<%=request.getContextPath()%>/resources/js/counter-setting.js"></script>

@@ -45,5 +45,6 @@ public class MasterCounterSettingController {
 	private void commonModel(Model model, MasterCounterSettingListDTO dto) {
 		model.addAttribute("masterCounterSettingListDTO", dto);
 		model.addAttribute("statusList", ActiveStatus.getAll());
+		model.addAttribute("categoryList", this.counterSettingService.getAllCategory(ActiveStatus.ACTIVE.getCode()));
 	}
 }

@@ -37,10 +37,10 @@ import org.flexitech.projects.embedded.truckscale.entities.user.Users;
 import org.flexitech.projects.embedded.truckscale.services.counter.CounterSettingService;
 import org.flexitech.projects.embedded.truckscale.services.customers.CustomerTypeService;
 import org.flexitech.projects.embedded.truckscale.services.products.GoodService;
+import org.flexitech.projects.embedded.truckscale.services.setting.SystemSettingService;
 import org.flexitech.projects.embedded.truckscale.services.setting.WeightUnitService;
 import org.flexitech.projects.embedded.truckscale.services.shift.UserShiftService;
 import org.flexitech.projects.embedded.truckscale.services.user.UserService;
-import org.flexitech.projects.embedded.truckscale.util.auth.TokenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -92,11 +92,16 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 
 	@Autowired
 	UserDAO userDAO;
+	
+	@Autowired
+	SystemSettingService systemSettingService;
 
 	@Override
 	public WeightTransactionPreloadDataResponse getWeightTransactionPreloadData(Long userId) {
 		WeightTransactionPreloadDataResponse data = new WeightTransactionPreloadDataResponse();
 
+		data.setSystemSettings(this.systemSettingService.getAllSystemSettings(ActiveStatus.ACTIVE.getCode()));
+		
 		data.setGoods(this.goodService.getAllGoods(ActiveStatus.ACTIVE.getCode()));
 
 		UserDTO user = this.userService.getUserById(userId);
@@ -109,7 +114,7 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 
 		if (CommonValidators.isValidObject(user)) {
 			if (CommonValidators.validLong(user.getCounterId())) {
-				CounterDTO counter = (this.counterSettingService.getCounterSettingByCounterId(user.getCounterId()));
+				CounterDTO counter = (this.counterSettingService.getCounterSettingWithMasterSettingByCounterId(user.getCounterId()));
 				if (CommonValidators.isValidObject(counter)) {
 					CounterSettingResponse settingResponse = new CounterSettingResponse();
 					settingResponse.setCounter(counter);
@@ -252,6 +257,9 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 			Users user = this.userDAO.get(request.getUserId());
 			transaction.setUser(user);
 		}
+		
+		transaction.setVehiclePhotoOne(request.getVehiclePhotoOne());
+		transaction.setVehiclePhotoTwo(request.getVehiclePhotoTwo());
 
 		transaction.setStatus(ActiveStatus.ACTIVE.getCode());
 

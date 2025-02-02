@@ -20,6 +20,21 @@ public class MasterCounterSettingDAOImpl extends CommonDAOImpl<MasterCounterSett
 		if(CommonValidators.validInteger(status)) {
 			c.add(Restrictions.eq("status", status));
 		}
+		c.createAlias("category", "c");
+		c.addOrder(Order.asc("c.sequence"));
+		c.addOrder(Order.asc("sequence"));
+		return c.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<MasterCounterSetting> getAllByCategory(Long categoryId, Integer status) {
+		Criteria c = getCurrentSession().createCriteria(daoType);
+		if(CommonValidators.validInteger(status)) {
+			c.add(Restrictions.eq("status", status));
+		}
+		c.createAlias("category", "c");
+		c.add(Restrictions.eq("c.id", categoryId));
 		c.addOrder(Order.asc("sequence"));
 		return c.list();
 	}

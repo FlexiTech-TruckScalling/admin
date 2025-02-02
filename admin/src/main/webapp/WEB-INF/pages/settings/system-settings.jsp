@@ -14,12 +14,12 @@ table td {
 
 <div class="card">
 	<div class="card-header py-3">
-		<span class="m-0 font-weight-bold text-secondary">Master
-			Counter Setting</span>
+		<span class="m-0 font-weight-bold text-secondary">System
+			Settings</span>
 	</div>
 	<div class="card-body">
-		<form:form action="master-counter-settings.fxt" method="POST"
-			id="common-form" modelAttribute="masterCounterSettingListDTO">
+		<form:form action="system-settings.fxt" method="POST" id="common-form"
+			modelAttribute="systemSettingListDTO">
 			<div class="overflow-auto">
 				<table class="table table-striped border">
 					<thead class="bg-gradient-primary text-white">
@@ -27,35 +27,49 @@ table td {
 							<th class="py-1 text-center" scope="col" style="width: 50px;">#</th>
 							<th class="py-1" scope="col">Code</th>
 							<th class="py-1" scope="col">Description</th>
-							<th class="py-1" scope="col">Category</th>
+							<th class="py-1" scope="col">Value</th>
 							<th class="py-1" scope="col">Sequence</th>
 							<th class="py-1" scope="col">Status</th>
 							<th class="py-1" scope="col">Updated Time</th>
 						</tr>
 					</thead>
 					<tbody>
-						<c:if test="${empty masterCounterSettingListDTO.settings }">
+						<c:if test="${empty systemSettingListDTO.settings }">
 							<tr>
-								<td colspan="5" class="text-center">No setting.</td>
+								<td colspan="6" class="text-center">No setting.</td>
 							</tr>
 						</c:if>
-						<c:if test="${not empty masterCounterSettingListDTO.settings }">
-							<c:forEach items="${masterCounterSettingListDTO.settings }"
+						<c:if test="${not empty systemSettingListDTO.settings }">
+							<c:forEach items="${systemSettingListDTO.settings }"
 								var="counter" varStatus="loop">
 								<form:hidden path="settings[${loop.index }].id" />
+								<form:hidden path="settings[${loop.index }].code"/>
 								<tr>
 									<td class="align-middle text-center">${loop.index + 1 }</td>
 									<td class="align-middle">${counter.code }</td>
 									<td class="align-middle">${counter.description }</td>
-									<td class="align-middle"><form:select
-											path="settings[${loop.index }].categoryId"
-											class="form-control border bg-white selectpicker">
-											<form:options items="${categoryList }" itemValue="id"
-												itemLabel="description" />
-										</form:select></td>
-									<td class="align-middle"><form:input
-											class="form-control small-width required py-1 mx-auto text-center" min="1"
-											path="settings[${loop.index }].sequence" /></td>
+									<td class="align-middle"><c:choose>
+											<c:when test="${counter.inputType == 2 }">
+												<form:input type="password"
+													class="form-control required py-1"
+													path="settings[${loop.index }].value"
+													placeholder="${counter.description }" />
+											</c:when>
+											<c:when test="${counter.inputType == 3 }">
+												<form:input type="number" min="0"
+													class="form-control required py-1"
+													path="settings[${loop.index }].value"
+													placeholder="${counter.description }" />
+											</c:when>
+											<c:otherwise>
+												<form:input class="form-control required py-1"
+													path="settings[${loop.index }].value"
+													placeholder="${counter.description }" />
+											</c:otherwise>
+										</c:choose></td>
+									<td class="align-middle"><form:input type="number"
+											class="form-control small-width mx-auto required py-1 text-center"
+											min="1" path="settings[${loop.index }].sequence" /></td>
 									<td class="align-middle"><form:select
 											path="settings[${loop.index }].status"
 											class="form-control border bg-white selectpicker">
@@ -71,7 +85,7 @@ table td {
 			</div>
 			<div class="row fieldset-row mt-2">
 				<div class="col-md-12" style="text-align: left;">
-					<a href="master-counter-settings.fxt" class="btn btn-secondary"
+					<a href="system-settings.fxt" class="btn btn-secondary"
 						type="reset" style="margin-right: 10px;">Clear</a>
 					<button class="btn btn-primary" id="btnSubmit" type="submit">Update</button>
 				</div>

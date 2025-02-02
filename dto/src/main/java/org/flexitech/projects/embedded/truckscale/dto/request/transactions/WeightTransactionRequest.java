@@ -97,5 +97,11 @@ public class WeightTransactionRequest {
     
     @JsonProperty("transaction_code")
     private String transactionCode;
+    
+    @JsonProperty("vehicle_photo_one")
+    private String vehiclePhotoOne;
+    
+    @JsonProperty("vehicle_photo_two")
+    private String vehiclePhotoTwo;
 }
 
