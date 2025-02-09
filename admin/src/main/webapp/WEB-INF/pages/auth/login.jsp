@@ -16,7 +16,7 @@
 						<div class="col-lg-12">
 							<div class="p-2">
 								<div class="text-center mt-2 mb-4">
-									<h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
+									<h1 class="h4 text-gray-900 mb-4">ENL Truck Scale Management System</h1>
 								</div>
 								<form:form method="POST" class="user" id="common-form" action="login.fxt"
 									modelAttribute="loginDTO">

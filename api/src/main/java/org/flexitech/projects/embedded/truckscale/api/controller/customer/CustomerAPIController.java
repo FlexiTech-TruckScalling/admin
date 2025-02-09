@@ -1,4 +1,4 @@
-package org.flexitech.projects.embedded.truckscale.api.controller.user;
+package org.flexitech.projects.embedded.truckscale.api.controller.customer;
 
 import java.util.List;
 

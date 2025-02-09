@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerTypeDAO;
+import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerDTO;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerTypeDTO;
 import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerTypes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class CustomerTypeServiceImpl implements CustomerTypeService {
 	
 	@Autowired
 	CustomerTypeDAO customerTypeDAO;
+	
+	@Autowired
+	CustomerService customerService;
 
 	@Override
 	public CustomerTypeDTO getCustomerTypeById(Long id) {
@@ -79,6 +83,15 @@ public class CustomerTypeServiceImpl implements CustomerTypeService {
 			logger.error("Error on deleting customer types: {}", ExceptionUtils.getStackTrace(e));
 		}
 		return false;
+	}
+
+	@Override
+	public List<CustomerTypeDTO> getCustomerTypeByCustomerId(Long customerId)  throws Exception{
+		CustomerDTO customer = this.customerService.getCustomerById(customerId);
+		if(!CommonValidators.isValidObject(customer)) {
+			throw new IllegalArgumentException("No customer found with id " + customerId);
+		}
+		return customer.getCustomerTypeDTOs();
 	}
 
 }

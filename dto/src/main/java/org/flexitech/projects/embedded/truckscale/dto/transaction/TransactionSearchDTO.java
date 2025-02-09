@@ -1,5 +1,6 @@
 package org.flexitech.projects.embedded.truckscale.dto.transaction;
 
+import org.flexitech.projects.embedded.truckscale.common.enums.MathSign;
 import org.flexitech.projects.embedded.truckscale.dto.CommonSearchDTO;
 
 import lombok.Getter;
@@ -18,10 +19,14 @@ public class TransactionSearchDTO extends CommonSearchDTO{
 	private String vehicleNumber;
 	private String driverName;
 	private Double weight;
+	private Double fromWeight;
+	private Double toWeight;
+	private Integer mathSign = MathSign.GREATER_THAN_EQUAL.getCode();
 	private Integer inOutStatus;
 	private Integer overWeightStatus;
 	private String sessionCode;
 	private Long userId;
 	private String createdFromDate;
 	private String createdToDate;
+	private String transctionCode;
 }

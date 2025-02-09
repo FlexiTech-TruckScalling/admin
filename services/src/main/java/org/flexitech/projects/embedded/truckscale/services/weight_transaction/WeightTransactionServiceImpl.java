@@ -1,13 +1,20 @@
 package org.flexitech.projects.embedded.truckscale.services.weight_transaction;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.common.enums.InOutBounds;
+import org.flexitech.projects.embedded.truckscale.common.enums.TransactionStatus;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerDAO;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerTypeDAO;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerVehicleDAO;
@@ -24,6 +31,7 @@ import org.flexitech.projects.embedded.truckscale.dto.response.weight_transactio
 import org.flexitech.projects.embedded.truckscale.dto.response.weight_transaction.WeightTransactionResponse;
 import org.flexitech.projects.embedded.truckscale.dto.shift.UserShiftDTO;
 import org.flexitech.projects.embedded.truckscale.dto.transaction.TransactionDTO;
+import org.flexitech.projects.embedded.truckscale.dto.transaction.TransactionSearchDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
 import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerTypes;
 import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerVehicles;
@@ -47,6 +55,8 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 public class WeightTransactionServiceImpl implements WeightTransactionService {
+
+	private final Logger logger = LogManager.getLogger(getClass());
 
 	@Autowired
 	UserService userService;
@@ -92,7 +102,7 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 
 	@Autowired
 	UserDAO userDAO;
-	
+
 	@Autowired
 	SystemSettingService systemSettingService;
 
@@ -101,7 +111,7 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 		WeightTransactionPreloadDataResponse data = new WeightTransactionPreloadDataResponse();
 
 		data.setSystemSettings(this.systemSettingService.getAllSystemSettings(ActiveStatus.ACTIVE.getCode()));
-		
+
 		data.setGoods(this.goodService.getAllGoods(ActiveStatus.ACTIVE.getCode()));
 
 		UserDTO user = this.userService.getUserById(userId);
@@ -114,7 +124,8 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 
 		if (CommonValidators.isValidObject(user)) {
 			if (CommonValidators.validLong(user.getCounterId())) {
-				CounterDTO counter = (this.counterSettingService.getCounterSettingWithMasterSettingByCounterId(user.getCounterId()));
+				CounterDTO counter = (this.counterSettingService
+						.getCounterSettingWithMasterSettingByCounterId(user.getCounterId()));
 				if (CommonValidators.isValidObject(counter)) {
 					CounterSettingResponse settingResponse = new CounterSettingResponse();
 					settingResponse.setCounter(counter);
@@ -139,8 +150,20 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 		Transaction transaction = null;
 
 		if (CommonValidators.validLong(request.getId())) {
-			transaction = this.transactionDAO.get(request.getId());
-			transaction.setUpdatedTime(new Date());
+			try {
+				transaction = this.transactionDAO.get(request.getId());
+				if (CommonValidators.isValidObject(transaction)) {
+					transaction.setUpdatedTime(new Date());
+				} else {
+					logger.warn("Transaction is not exit! continue with new transaction.");
+					transaction = new Transaction();
+					transaction.setCreatedTime(new Date());
+				}
+			} catch (Exception e) {
+				logger.error("Failed to get existing transaction: {}", ExceptionUtils.getStackTrace(e));
+				transaction = new Transaction();
+				transaction.setCreatedTime(new Date());
+			}
 		} else {
 			transaction = new Transaction();
 			transaction.setCreatedTime(new Date());
@@ -257,7 +280,7 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 			Users user = this.userDAO.get(request.getUserId());
 			transaction.setUser(user);
 		}
-		
+
 		transaction.setVehiclePhotoOne(request.getVehiclePhotoOne());
 		transaction.setVehiclePhotoTwo(request.getVehiclePhotoTwo());
 
@@ -265,7 +288,50 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 
 		this.transactionDAO.saveOrUpdate(transaction);
 
+		checkForCompletedTransction(transaction);
+
 		return new WeightTransactionResponse(new TransactionDTO(transaction));
+	}
+
+	private void checkForCompletedTransction(Transaction transaction) {
+		if (!CommonValidators.isValidObject(transaction) && !CommonValidators.validLong(transaction.getId()))
+			return;
+		if (transaction.getInTime() != null && transaction.getOutTime() != null) {
+			// completed
+			transaction.setTransactionStatus(TransactionStatus.COMPLETED.getCode());
+		} else {
+			transaction.setTransactionStatus(TransactionStatus.INCOMPLETED.getCode());
+		}
+		this.transactionDAO.update(transaction);
+	}
+
+	@Override
+	public Long cancelTransaction(Long transactionId) throws Exception {
+		if (!CommonValidators.validLong(transactionId)) {
+			throw new IllegalAccessException("Please provide the transaction to cancel!");
+		}
+		Transaction transaction = this.transactionDAO.get(transactionId);
+		if (!CommonValidators.isValidObject(transaction)) {
+			throw new IllegalAccessException("No transaction found.");
+		}
+
+		transaction.setTransactionStatus(TransactionStatus.CANCEL.getCode());
+		this.transactionDAO.update(transaction);
+		return transaction.getId();
+	}
+
+	@Override
+	public List<TransactionDTO> searchTransactions(TransactionSearchDTO searchDTO) {
+		List<Transaction> transactions = this.transactionDAO.searchTransactions(searchDTO, false);
+		if (CommonValidators.validList(transactions)) {
+			return transactions.stream().map(TransactionDTO::new).collect(Collectors.toList());
+		}
+		return Collections.emptyList();
+	}
+
+	@Override
+	public Integer countTotalTransaction(TransactionSearchDTO searchDTO) {
+		return this.transactionDAO.countTransactions(searchDTO);
 	}
 
 }

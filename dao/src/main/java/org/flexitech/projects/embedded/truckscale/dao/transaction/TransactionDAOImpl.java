@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.flexitech.projects.embedded.truckscale.common.CommonDateFormats;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
+import org.flexitech.projects.embedded.truckscale.common.enums.MathSign;
+import org.flexitech.projects.embedded.truckscale.common.enums.TransactionStatus;
 import org.flexitech.projects.embedded.truckscale.dao.common.CommonDAOImpl;
 import org.flexitech.projects.embedded.truckscale.dto.shift.CurrentShiftSummaryDTO;
 import org.flexitech.projects.embedded.truckscale.dto.transaction.TransactionSearchDTO;
@@ -39,99 +41,111 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 
 	@Override
 	public Integer countTransactions(TransactionSearchDTO searchDTO) {
-		// TODO Auto-generated method stub
-		return null;
+		SQLQuery query = getCurrentSession().createSQLQuery(prepareSQLForSearch(searchDTO, true, false));
+		setQueryParameters(query, searchDTO);
+		query.setMaxResults(1);
+		return ((Number) query.uniqueResult()).intValue();
 	}
 
 	private String prepareSQLForSearch(TransactionSearchDTO searchDTO, boolean countOnly, boolean export) {
-		StringBuilder builder = new StringBuilder();
-		List<String> joins = new ArrayList<>();
-		List<String> conditions = new ArrayList<>();
+	    StringBuilder builder = new StringBuilder();
+	    List<String> joins = new ArrayList<>();
+	    List<String> conditions = new ArrayList<>();
 
-		// SELECT clause
-		if (countOnly) {
-			builder.append("SELECT COUNT(DISTINCT t.id) ");
-		} else {
-			builder.append("SELECT t.* ");
-		}
+	    // SELECT clause
+	    if (countOnly) {
+	        builder.append("SELECT COUNT(DISTINCT t.id) ");
+	    } else {
+	        builder.append("SELECT t.* ");
+	    }
 
-		// FROM clause
-		builder.append("FROM transactions t ");
-		joins.add("LEFT JOIN customers c ON t.customer_id = c.id");
+	    // FROM clause
+	    builder.append("FROM transactions t ");
+	    joins.add("LEFT JOIN customers c ON t.customer_id = c.id");
 
-		if (searchDTO.getVehiclePrefix() != null || searchDTO.getVehicleNumber() != null) {
-			joins.add("LEFT JOIN customer_vehicles cv ON t.vehicle_id = cv.id");
-		}
+	    if (CommonValidators.validString(searchDTO.getVehiclePrefix()) || CommonValidators.validString(searchDTO.getVehicleNumber())) {
+	        joins.add("LEFT JOIN customer_vehicles cv ON t.vehicle_id = cv.id");
+	    }
 
-		// Append joins
-		if (!joins.isEmpty()) {
-			builder.append(String.join(" ", joins)).append(" ");
-		}
+	    // Append joins
+	    if (!joins.isEmpty()) {
+	        builder.append(String.join(" ", joins)).append(" ");
+	    }
 
-		// WHERE clause
-		if (searchDTO.getCustomerName() != null && !searchDTO.getCustomerName().isEmpty()) {
-			conditions.add("c.name LIKE :customerName");
-		}
-		if (searchDTO.getGoodId() != null) {
-			conditions.add("t.good_id = :goodId");
-		}
-		if (searchDTO.getProductId() != null) {
-			conditions.add("t.product_id = :productId");
-		}
-		if (searchDTO.getVehiclePrefix() != null && !searchDTO.getVehiclePrefix().isEmpty()) {
-			conditions.add("cv.prefix LIKE :vehiclePrefix");
-		}
-		if (searchDTO.getVehicleNumber() != null && !searchDTO.getVehicleNumber().isEmpty()) {
-			conditions.add("cv.number LIKE :vehicleNumber");
-		}
-		if (searchDTO.getDriverName() != null && !searchDTO.getDriverName().isEmpty()) {
-			conditions.add("t.driver_name LIKE :driverName");
-		}
-		if (searchDTO.getWeight() != null) {
-			conditions.add("t.weight = :weight");
-		}
-		if (searchDTO.getInOutStatus() != null) {
-			conditions.add("t.in_out_status = :inOutStatus");
-		}
-		if (searchDTO.getOverWeightStatus() != null) {
-			if (searchDTO.getOverWeightStatus() == 1) {
-				conditions.add("t.over_weight > 0");
-			} else {
-				conditions.add("t.over_weight <= 0");
-			}
-		}
-		if (searchDTO.getSessionCode() != null && !searchDTO.getSessionCode().isEmpty()) {
-			conditions.add("t.session_code = :sessionCode");
-		}
-		if (searchDTO.getUserId() != null) {
-			conditions.add("t.user_id = :userId");
-		}
-		if (searchDTO.getCreatedFromDate() != null) {
-			conditions.add("t.created_time >= :createdFromDate");
-		}
-		if (searchDTO.getCreatedToDate() != null) {
-			conditions.add("t.created_time <= :createdToDate");
-		}
+	    conditions.add("t.transaction_status != " + TransactionStatus.CANCEL.getCode() + " ");
 
-		if (!conditions.isEmpty()) {
-			builder.append("WHERE ").append(String.join(" AND ", conditions)).append(" ");
-		}
+	    if(CommonValidators.validString(searchDTO.getTransctionCode())) {
+	    	conditions.add("t.transaction_code = :transactionCode");
+	    }
+	    
+	    // WHERE clause
+	    if (CommonValidators.validString(searchDTO.getCustomerName())) {
+	        conditions.add("c.name LIKE :customerName");
+	    }
+	    if (CommonValidators.validLong(searchDTO.getGoodId())) {
+	        conditions.add("t.good_id = :goodId");
+	    }
+	    if (CommonValidators.validLong(searchDTO.getProductId())) {
+	        conditions.add("t.product_id = :productId");
+	    }
+	    if (CommonValidators.validString(searchDTO.getVehiclePrefix())) {
+	        conditions.add("cv.prefix LIKE :vehiclePrefix");
+	    }
+	    if (CommonValidators.validString(searchDTO.getVehicleNumber())) {
+	        conditions.add("cv.number LIKE :vehicleNumber");
+	    }
+	    if (CommonValidators.validString(searchDTO.getDriverName())) {
+	        conditions.add("t.driver_name LIKE :driverName");
+	    }
+	    if (CommonValidators.validDouble(searchDTO.getWeight())) {
+	        conditions.add("t.weight = :weight");
+	    }
+	    if (CommonValidators.validDouble(searchDTO.getFromWeight())
+	            && CommonValidators.validInteger(searchDTO.getMathSign())) {
+	        conditions.add("t.weight " + MathSign.getDescByCode(searchDTO.getMathSign()) + " :fromWeight ");
+	    }
+	    if (CommonValidators.validInteger(searchDTO.getInOutStatus())) {
+	        conditions.add("t.in_out_status = :inOutStatus");
+	    }
+	    if (CommonValidators.validInteger(searchDTO.getOverWeightStatus())) {
+	        if (searchDTO.getOverWeightStatus() == 1) {
+	            conditions.add("t.over_weight > 0");
+	        } else {
+	            conditions.add("t.over_weight <= 0");
+	        }
+	    }
+	    if (CommonValidators.validString(searchDTO.getSessionCode())) {
+	        conditions.add("t.session_code = :sessionCode");
+	    }
+	    if (CommonValidators.validLong(searchDTO.getUserId())) {
+	        conditions.add("t.user_id = :userId");
+	    }
+	    if (CommonValidators.validString(searchDTO.getCreatedFromDate())) {
+	        conditions.add("t.created_time >= :createdFromDate");
+	    }
+	    if (CommonValidators.validString(searchDTO.getCreatedToDate())) {
+	        conditions.add("t.created_time <= :createdToDate");
+	    }
 
-		if (!countOnly && !export) {
-			builder.append("ORDER BY t.in_time DESC ");
-		}
+	    if (!conditions.isEmpty()) {
+	        builder.append("WHERE ").append(String.join(" AND ", conditions)).append(" ");
+	    }
 
-		return builder.toString();
+	    if (!countOnly && !export) {
+	        builder.append("ORDER BY t.in_time DESC ");
+	    }
+
+	    return builder.toString();
 	}
 
 	private void setQueryParameters(SQLQuery query, TransactionSearchDTO searchDTO) {
-		if (searchDTO.getCustomerName() != null && !searchDTO.getCustomerName().isEmpty()) {
+		if (CommonValidators.validString(searchDTO.getCustomerName())) {
 			query.setParameter("customerName", "%" + searchDTO.getCustomerName() + "%");
 		}
-		if (searchDTO.getGoodId() != null) {
+		if (CommonValidators.validLong(searchDTO.getGoodId())) {
 			query.setParameter("goodId", searchDTO.getGoodId());
 		}
-		if (searchDTO.getProductId() != null) {
+		if (CommonValidators.validLong(searchDTO.getProductId())) {
 			query.setParameter("productId", searchDTO.getProductId());
 		}
 		if (searchDTO.getVehiclePrefix() != null && !searchDTO.getVehiclePrefix().isEmpty()) {
@@ -160,10 +174,17 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 					CommonDateFormats.STANDARD_24_HOUR_DATE_FORMAT);
 			query.setParameter("createdFromDate", date);
 		}
+		if(CommonValidators.validDouble(searchDTO.getFromWeight())
+				&& CommonValidators.validInteger(searchDTO.getMathSign())) {
+			query.setParameter("fromWeight", searchDTO.getFromWeight());
+		}
 		if (searchDTO.getCreatedToDate() != null) {
 			Date date = DateUtils.stringToDate(searchDTO.getCreatedToDate(),
 					CommonDateFormats.STANDARD_24_HOUR_DATE_FORMAT);
 			query.setParameter("createdToDate", date);
+		}
+		if(CommonValidators.validString(searchDTO.getTransctionCode())) {
+			query.setParameter("transactionCode", searchDTO.getTransctionCode());
 		}
 	}
 

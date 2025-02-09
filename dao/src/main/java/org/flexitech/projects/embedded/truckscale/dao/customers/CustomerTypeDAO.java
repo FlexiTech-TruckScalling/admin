@@ -7,4 +7,5 @@ import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerTyp
 
 public interface CustomerTypeDAO extends CommonDAO<CustomerTypes, Long> {
 	List<CustomerTypes> getAllCustomerTypes(Integer status);
+	List<CustomerTypes> getCustomerTypesByCustomerId(Long customerId);
 }

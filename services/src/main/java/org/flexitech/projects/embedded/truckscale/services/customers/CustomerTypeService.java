@@ -9,4 +9,5 @@ public interface CustomerTypeService {
 	CustomerTypeDTO manageCustomerType(CustomerTypeDTO dto);
 	List<CustomerTypeDTO> getAllCustomerTypes(Integer status);
 	boolean deleteCustomerType(Long id);
+	List<CustomerTypeDTO> getCustomerTypeByCustomerId(Long customerId) throws Exception;
 }
