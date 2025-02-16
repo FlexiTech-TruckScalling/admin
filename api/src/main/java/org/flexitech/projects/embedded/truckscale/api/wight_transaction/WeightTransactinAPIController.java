@@ -158,5 +158,38 @@ public class WeightTransactinAPIController {
 		}
 		return ResponseUtil.send(response);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@GetMapping()
+	public ResponseEntity<?> getTransactionData(@RequestParam(required = false) Long id){
+		Response response = new Response();
+		
+		if(!CommonValidators.validLong(id)) {
+			response = new ErrorResponse<String>();
+			response.setResponseCode(HttpStatus.BAD_REQUEST.value());
+			response.setResponseMessage("Please provide a valid transaction!");
+		}else {
+			try {
+				TransactionDTO trn = this.weightTransactionService.getById(id);
+				if(CommonValidators.isValidObject(trn)) {
+					response = new BaseResponse<TransactionDTO>();
+					response.setResponseCode(HttpStatus.OK.value());
+					response.setResponseMessage("Getting transaction detail success.");
+					((BaseResponse<TransactionDTO>) response).setData(trn);
+				}else {
+					response = new ErrorResponse<String>();
+					response.setResponseCode(HttpStatus.NOT_FOUND.value());
+					response.setResponseMessage("No transaction found!");
+				}
+			}catch (Exception e) {
+				logger.error("Error on getting transaction detail: {}", ExceptionUtils.getStackTrace(e));
+				response = new ErrorResponse<String>();
+				response.setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+				response.setResponseMessage(ExceptionUtils.getMessage(e));
+			}
+		}
+		
+		return ResponseUtil.send(response);
+	}
 
 }

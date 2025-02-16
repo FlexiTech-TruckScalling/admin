@@ -7,6 +7,7 @@ import org.flexitech.projects.embedded.truckscale.common.CommonDateFormats;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.dto.CommonDTO;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerDTO;
+import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerTypeDTO;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerVehicleDTO;
 import org.flexitech.projects.embedded.truckscale.dto.products.GoodDTO;
 import org.flexitech.projects.embedded.truckscale.dto.products.ProductDTO;
@@ -25,6 +26,7 @@ import lombok.Setter;
 public class TransactionDTO extends CommonDTO {
 
 	private CustomerDTO customerDTO;
+	private CustomerTypeDTO customerTypeDTO;
 	private GoodDTO goodDTO;
 	private ProductDTO productDTO;
 	private String containerNumber;
@@ -58,6 +60,7 @@ public class TransactionDTO extends CommonDTO {
 
 		// Map fields from Transaction entity to TransactionDTO
 		this.customerDTO = new CustomerDTO(t.getCustomer());
+		this.customerTypeDTO = new CustomerTypeDTO(t.getCustomerType());
 		this.goodDTO = new GoodDTO(t.getGoods());
 		this.productDTO = t.getProduct() != null ? new ProductDTO(t.getProduct()) : null;
 		this.containerNumber = t.getContainerNumber();

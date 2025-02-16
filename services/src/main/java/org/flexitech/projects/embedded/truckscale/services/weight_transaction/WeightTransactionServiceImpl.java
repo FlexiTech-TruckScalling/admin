@@ -334,4 +334,12 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 		return this.transactionDAO.countTransactions(searchDTO);
 	}
 
+	@Override
+	public TransactionDTO getById(Long id) {
+		Transaction trn = this.transactionDAO.get(id);
+		if(CommonValidators.isValidObject(trn))
+			return new TransactionDTO(trn);
+		return null;
+	}
+
 }

@@ -14,4 +14,5 @@ public interface WeightTransactionService {
 	Long cancelTransaction(Long transactionId) throws Exception;
 	List<TransactionDTO> searchTransactions(TransactionSearchDTO searchDTO);
 	Integer countTotalTransaction(TransactionSearchDTO searchDTO);
+	TransactionDTO getById(Long id);
 }
