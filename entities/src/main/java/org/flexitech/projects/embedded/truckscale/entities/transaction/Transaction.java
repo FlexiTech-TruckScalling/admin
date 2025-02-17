@@ -88,6 +88,9 @@ public class Transaction extends BaseEntity{
 	
 	private Double weight;
 	
+	@Column(name = "cargo_weight")
+	private Double cargoWeight;
+	
 	@Column(name = "in_out_status")
 	private Integer inOutStatus;
 	

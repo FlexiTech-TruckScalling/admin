@@ -42,6 +42,7 @@ public class TransactionDTO extends CommonDTO {
 	private Double overWeight;
 	private Integer cargoStatus;
 	private Double weight;
+	private Double cargoWeight;
 	private Integer inOutStatus;
 	private String vehiclePhotoOne;
 	private String vehiclePhotoTwo;
@@ -76,6 +77,7 @@ public class TransactionDTO extends CommonDTO {
 		this.overWeight = t.getOverWeight();
 		this.cargoStatus = t.getCargoStatus();
 		this.weight = t.getWeight();
+		this.cargoWeight = t.getCargoWeight();
 		this.inOutStatus = t.getInOutStatus();
 		this.vehiclePhotoOne = t.getVehiclePhotoOne();
 		this.vehiclePhotoTwo = t.getVehiclePhotoTwo();

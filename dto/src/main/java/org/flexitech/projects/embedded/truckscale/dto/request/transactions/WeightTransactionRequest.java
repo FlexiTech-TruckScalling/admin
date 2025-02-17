@@ -70,6 +70,9 @@ public class WeightTransactionRequest {
     @JsonProperty("weight")
     private Double weight;
     
+    @JsonProperty("cargo_weight")
+    private Double cargoWeight;
+    
     @JsonProperty("weight_unit_id")
     private Long weightUnitId;
     

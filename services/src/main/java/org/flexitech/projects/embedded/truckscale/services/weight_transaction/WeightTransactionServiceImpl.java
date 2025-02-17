@@ -13,6 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
+import org.flexitech.projects.embedded.truckscale.common.enums.CargoStatus;
 import org.flexitech.projects.embedded.truckscale.common.enums.InOutBounds;
 import org.flexitech.projects.embedded.truckscale.common.enums.TransactionStatus;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerDAO;
@@ -255,8 +256,11 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 
 		transaction.setOverWeight(request.getOverWeight());
 
-		transaction.setWeight(request.getWeight());
-
+		if (request.getCargoStatus() == CargoStatus.WITH_CARGO.getCode())
+			transaction.setCargoWeight(request.getCargoWeight());
+		else if(request.getCargoStatus() == CargoStatus.WITHOUT_CARGO.getCode())
+			transaction.setWeight(request.getWeight());
+		
 		if (CommonValidators.validLong(request.getWeightUnitId())) {
 			WeightUnit unit = this.weightUnitDAO.get(request.getWeightUnitId());
 			transaction.setWeightUnit(unit);
@@ -337,7 +341,7 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 	@Override
 	public TransactionDTO getById(Long id) {
 		Transaction trn = this.transactionDAO.get(id);
-		if(CommonValidators.isValidObject(trn))
+		if (CommonValidators.isValidObject(trn))
 			return new TransactionDTO(trn);
 		return null;
 	}
