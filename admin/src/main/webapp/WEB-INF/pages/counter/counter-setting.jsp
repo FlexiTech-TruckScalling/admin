@@ -58,7 +58,7 @@
 											<div class="col-md-3 col-sm-12 mb-2">
 												<form:label
 													path="settingCategoryDTOs[${cLoop.index}].counterSettingDTOs[${loop.index }].value"
-													class="form-label">${setting.masterCounterSettingDTO.description} 
+													class="form-label text-truncate" style="max-width: 200px;">${setting.masterCounterSettingDTO.description} 
                                         <strong class="text-danger">*</strong>
 												</form:label>
 												<c:choose>

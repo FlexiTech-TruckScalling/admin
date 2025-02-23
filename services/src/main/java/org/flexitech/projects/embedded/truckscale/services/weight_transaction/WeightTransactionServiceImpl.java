@@ -16,10 +16,12 @@ import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.common.enums.CargoStatus;
 import org.flexitech.projects.embedded.truckscale.common.enums.InOutBounds;
 import org.flexitech.projects.embedded.truckscale.common.enums.TransactionStatus;
+import org.flexitech.projects.embedded.truckscale.common.enums.TransactionType;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerDAO;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerTypeDAO;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerVehicleDAO;
 import org.flexitech.projects.embedded.truckscale.dao.customers.DriverDAO;
+import org.flexitech.projects.embedded.truckscale.dao.payment_type.PaymentTypeDAO;
 import org.flexitech.projects.embedded.truckscale.dao.products.GoodDAO;
 import org.flexitech.projects.embedded.truckscale.dao.products.ProductDAO;
 import org.flexitech.projects.embedded.truckscale.dao.setting.WeightUnitDAO;
@@ -38,6 +40,7 @@ import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerTyp
 import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerVehicles;
 import org.flexitech.projects.embedded.truckscale.entities.customers.Customers;
 import org.flexitech.projects.embedded.truckscale.entities.customers.Drivers;
+import org.flexitech.projects.embedded.truckscale.entities.payment_type.PaymentType;
 import org.flexitech.projects.embedded.truckscale.entities.product.Goods;
 import org.flexitech.projects.embedded.truckscale.entities.product.Products;
 import org.flexitech.projects.embedded.truckscale.entities.setting.WeightUnit;
@@ -45,6 +48,7 @@ import org.flexitech.projects.embedded.truckscale.entities.transaction.Transacti
 import org.flexitech.projects.embedded.truckscale.entities.user.Users;
 import org.flexitech.projects.embedded.truckscale.services.counter.CounterSettingService;
 import org.flexitech.projects.embedded.truckscale.services.customers.CustomerTypeService;
+import org.flexitech.projects.embedded.truckscale.services.payment_type.PaymentTypeService;
 import org.flexitech.projects.embedded.truckscale.services.products.GoodService;
 import org.flexitech.projects.embedded.truckscale.services.setting.SystemSettingService;
 import org.flexitech.projects.embedded.truckscale.services.setting.WeightUnitService;
@@ -105,7 +109,13 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 	UserDAO userDAO;
 
 	@Autowired
+	PaymentTypeDAO paymentTypeDAO;
+
+	@Autowired
 	SystemSettingService systemSettingService;
+	
+	@Autowired
+	PaymentTypeService paymentTypeService;
 
 	@Override
 	public WeightTransactionPreloadDataResponse getWeightTransactionPreloadData(Long userId) {
@@ -115,6 +125,8 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 
 		data.setGoods(this.goodService.getAllGoods(ActiveStatus.ACTIVE.getCode()));
 
+		data.setPaymentTypes(this.paymentTypeService.getAll(ActiveStatus.ACTIVE.getCode()));
+		
 		UserDTO user = this.userService.getUserById(userId);
 
 		UserShiftDTO activeShift = this.shiftService.getCurrentActiveShift(userId);
@@ -250,17 +262,19 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 			transaction.setQuantityUnit(unit);
 		}
 
-		transaction.setCost(new BigDecimal(request.getCost()));
+		if (TransactionType.INOUT.getCode().equals(request.getTransactionType()))
+			transaction.setCost(new BigDecimal(request.getCost()));
 
 		transaction.setAllowedWeight(request.getAllowedWeight());
 
 		transaction.setOverWeight(request.getOverWeight());
 
-		if (request.getCargoStatus() == CargoStatus.WITH_CARGO.getCode())
-			transaction.setCargoWeight(request.getCargoWeight());
-		else if(request.getCargoStatus() == CargoStatus.WITHOUT_CARGO.getCode())
-			transaction.setWeight(request.getWeight());
-		
+		if (TransactionType.INOUT.getCode().equals(request.getTransactionType()))
+			if (request.getCargoStatus() == CargoStatus.WITH_CARGO.getCode())
+				transaction.setCargoWeight(request.getCargoWeight());
+			else if (request.getCargoStatus() == CargoStatus.WITHOUT_CARGO.getCode())
+				transaction.setWeight(request.getWeight());
+
 		if (CommonValidators.validLong(request.getWeightUnitId())) {
 			WeightUnit unit = this.weightUnitDAO.get(request.getWeightUnitId());
 			transaction.setWeightUnit(unit);
@@ -289,6 +303,14 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 		transaction.setVehiclePhotoTwo(request.getVehiclePhotoTwo());
 
 		transaction.setStatus(ActiveStatus.ACTIVE.getCode());
+		transaction.setTransactionType(request.getTransactionType());
+
+		if (CommonValidators.validLong(request.getPaymentTypeId())) {
+			PaymentType type = this.paymentTypeDAO.get(request.getPaymentTypeId());
+			if (CommonValidators.isValidObject(type)) {
+				transaction.setPaymentType(type);
+			}
+		}
 
 		this.transactionDAO.saveOrUpdate(transaction);
 

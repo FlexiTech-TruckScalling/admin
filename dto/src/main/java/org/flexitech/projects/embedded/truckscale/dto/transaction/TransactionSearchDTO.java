@@ -29,4 +29,5 @@ public class TransactionSearchDTO extends CommonSearchDTO{
 	private String createdFromDate;
 	private String createdToDate;
 	private String transctionCode;
+	private Long paymentTypeId;
 }

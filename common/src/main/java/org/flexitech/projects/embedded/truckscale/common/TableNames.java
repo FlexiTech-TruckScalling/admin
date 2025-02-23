@@ -31,4 +31,6 @@ public class TableNames {
 	
 	public static final String USER_SHIFT_SUMMARY_TABLE = "user_shift_summary";
 	
+	public static final String PAYMENT_TYPE_TABLE = "payment_types";
+	
 }

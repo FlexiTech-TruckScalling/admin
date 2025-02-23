@@ -126,6 +126,10 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 	    if (CommonValidators.validString(searchDTO.getCreatedToDate())) {
 	        conditions.add("t.created_time <= :createdToDate");
 	    }
+	    
+	    if(CommonValidators.validLong(searchDTO.getPaymentTypeId())) {
+	    	conditions.add("t.payment_type_id = :paymentTypeId");
+	    }
 
 	    if (!conditions.isEmpty()) {
 	        builder.append("WHERE ").append(String.join(" AND ", conditions)).append(" ");
@@ -185,6 +189,9 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 		}
 		if(CommonValidators.validString(searchDTO.getTransctionCode())) {
 			query.setParameter("transactionCode", searchDTO.getTransctionCode());
+		}
+		if(CommonValidators.validLong(searchDTO.getPaymentTypeId())) {
+			query.setParameter("paymentTypeId", searchDTO.getPaymentTypeId());
 		}
 	}
 

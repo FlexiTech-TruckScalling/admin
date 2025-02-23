@@ -106,5 +106,11 @@ public class WeightTransactionRequest {
     
     @JsonProperty("vehicle_photo_two")
     private String vehiclePhotoTwo;
+    
+    @JsonProperty("transaction_type")
+    private Integer transactionType;
+    
+    @JsonProperty("payment_type_id")
+    private Long paymentTypeId;
 }
 

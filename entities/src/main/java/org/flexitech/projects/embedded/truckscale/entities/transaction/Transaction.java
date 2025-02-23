@@ -14,6 +14,7 @@ import org.flexitech.projects.embedded.truckscale.entities.BaseEntity;
 import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerTypes;
 import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerVehicles;
 import org.flexitech.projects.embedded.truckscale.entities.customers.Customers;
+import org.flexitech.projects.embedded.truckscale.entities.payment_type.PaymentType;
 import org.flexitech.projects.embedded.truckscale.entities.product.Goods;
 import org.flexitech.projects.embedded.truckscale.entities.product.Products;
 import org.flexitech.projects.embedded.truckscale.entities.setting.WeightUnit;
@@ -119,4 +120,10 @@ public class Transaction extends BaseEntity{
 	@Column(name = "transaction_code")
 	private String transactionCode;
 	
+	@Column(name = "transaction_type")
+	private Integer transactionType;
+	
+	@ManyToOne
+	@JoinColumn(name = "payment_type_id")
+	private PaymentType paymentType;
 }

@@ -9,6 +9,7 @@ import org.flexitech.projects.embedded.truckscale.dto.CommonDTO;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerDTO;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerTypeDTO;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerVehicleDTO;
+import org.flexitech.projects.embedded.truckscale.dto.payment_type.PaymentTypeDTO;
 import org.flexitech.projects.embedded.truckscale.dto.products.GoodDTO;
 import org.flexitech.projects.embedded.truckscale.dto.products.ProductDTO;
 import org.flexitech.projects.embedded.truckscale.dto.setting.WeightUnitDTO;
@@ -54,6 +55,9 @@ public class TransactionDTO extends CommonDTO {
 	private String sessionCode;
 	private UserDTO userDTO;
 	private String transactionCode;
+	private Integer transactionType;
+	
+	private PaymentTypeDTO paymentTypeDTO;
 
 	public TransactionDTO(Transaction t) {
 		if (!CommonValidators.isValidObject(t))
@@ -93,6 +97,10 @@ public class TransactionDTO extends CommonDTO {
 		this.sessionCode = t.getSessionCode();
 		this.userDTO = t.getUser() != null ? new UserDTO(t.getUser()) : null;
 		this.transactionCode = t.getTransactionCode();
+		this.transactionType = t.getTransactionType();
+		if(CommonValidators.isValidObject(t.getPaymentType())) {
+			this.paymentTypeDTO = new PaymentTypeDTO(t.getPaymentType());
+		}
 		setField(t);
 	}
 }

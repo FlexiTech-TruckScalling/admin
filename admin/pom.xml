@@ -27,6 +27,14 @@
 
 	<dependencies>
 
+		<!-- https://mvnrepository.com/artifact/commons-net/commons-net -->
+		<dependency>
+			<groupId>commons-net</groupId>
+			<artifactId>commons-net</artifactId>
+			<version>3.11.1</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>org.flexitech.projects.embedded.truckscale</groupId>
 			<artifactId>dto</artifactId>
@@ -53,7 +61,7 @@
 			<version>4.0.1</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<!-- Lombok -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>

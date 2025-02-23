@@ -97,4 +97,21 @@
 			value="/WEB-INF/pages/settings/system-settings.jsp" />
 	</definition>
 	
+	<!-- Payment Type -->
+	<definition name="payment-type-manage" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/payment-type/payment-type-manage.jsp" />
+	</definition>
+	
+	<!-- Transaction Report -->
+	<definition name="transaction-report" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/reports/transaction-reports.jsp" />
+	</definition>
+	<!-- Transaction Report -->
+	<definition name="transaction-detail" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/reports/transaction-detail.jsp" />
+	</definition>
+	
 </tiles-definitions>

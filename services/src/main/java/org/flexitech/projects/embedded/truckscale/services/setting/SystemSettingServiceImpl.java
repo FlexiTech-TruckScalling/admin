@@ -69,6 +69,14 @@ public class SystemSettingServiceImpl implements SystemSettingService {
 	    return settingListDTO;
 	}
 
+	@Override
+	public SystemSettingDTO getSettingByCode(String code) {
+		SystemSetting setting = this.systemSettingDAO.getSettingByCode(code);
+		if(setting != null)
+			return new SystemSettingDTO(setting);
+		return null;
+	}
+
 
 
 }
