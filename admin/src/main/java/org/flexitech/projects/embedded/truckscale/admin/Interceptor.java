@@ -15,7 +15,12 @@ public class Interceptor extends HandlerInterceptorAdapter {
 
         String uri = request.getRequestURI();
         System.out.println("URI: "+uri);
-        if (loggedUser != null || uri.endsWith("login.fxt") || uri.endsWith("logout.fxt") || uri.endsWith("fpt-photo.fxt")) {
+        
+        //public requests
+        if(uri.endsWith("fpt-photo.fxt")) {
+        	return true;
+        }
+        if (loggedUser != null || uri.endsWith("login.fxt") || uri.endsWith("logout.fxt")) {
             return true;
         }
         String contextPath = request.getContextPath();

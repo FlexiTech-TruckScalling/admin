@@ -2,6 +2,7 @@ package org.flexitech.projects.embedded.truckscale.dto.response.weight_transacti
 
 import java.util.List;
 
+import org.flexitech.projects.embedded.truckscale.dto.company.CompanyDTO;
 import org.flexitech.projects.embedded.truckscale.dto.payment_type.PaymentTypeDTO;
 import org.flexitech.projects.embedded.truckscale.dto.products.GoodDTO;
 import org.flexitech.projects.embedded.truckscale.dto.response.counter.CounterSettingResponse;
@@ -21,4 +22,5 @@ public class WeightTransactionPreloadDataResponse {
 	private UserShiftDTO userShift;
 	private SystemSettingListDTO systemSettings;
 	private List<PaymentTypeDTO> paymentTypes;
+	private CompanyDTO company;
 }

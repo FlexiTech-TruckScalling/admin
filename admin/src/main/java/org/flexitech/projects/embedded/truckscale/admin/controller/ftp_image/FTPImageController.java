@@ -1,17 +1,19 @@
 package org.flexitech.projects.embedded.truckscale.admin.controller.ftp_image;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
+import javax.imageio.ImageIO;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.common.SystemSettingConstants;
 import org.flexitech.projects.embedded.truckscale.services.setting.SystemSettingService;
+import org.flexitech.projects.embedded.truckscale.util.FtpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.CacheControl;
@@ -30,7 +32,6 @@ public class FTPImageController {
 	@Autowired
 	private SystemSettingService systemSettingService;
 
-	@SuppressWarnings("deprecation")
 	@GetMapping("/ftp-photo")
 	public ResponseEntity<InputStreamResource> getFtpImage(@RequestParam(required = false) String url) {
 		logger.debug("Request received for FTP image: {}", url);
@@ -40,66 +41,55 @@ public class FTPImageController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 		}
 
-		FTPClient ftpClient = new FTPClient();
+		// Get FTP configuration
+		final String ftpHost = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_HOST).getValue();
+		final String ftpUsername = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_USER).getValue();
+		final String ftpPassword = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_PASSWORD)
+				.getValue();
+		final String ftpFolder = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_FOLDER_PATH)
+				.getValue();
+
+		String filePath = buildFtpPath(ftpFolder, url);
+		logger.debug("Attempting to retrieve file: {}", filePath);
+
+	
+		
 		try {
-			// Get FTP configuration
-			final String ftpHost = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_HOST).getValue();
-			final String ftpUsername = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_USER)
-					.getValue();
-			final String ftpPassword = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_PASSWORD)
-					.getValue();
-			final String ftpFolder = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_FOLDER_PATH)
-					.getValue();
-
-			// Configure FTP client
-			ftpClient.setConnectTimeout(5000);
-			ftpClient.setDataTimeout(10000);
-
-			logger.debug("Connecting to FTP server: {}", ftpHost);
-			ftpClient.connect(ftpHost, 21);
+			FtpUtil ftpUtil = new FtpUtil(ftpHost, ftpUsername, ftpPassword);
 			
-			logger.debug("FTP credentials> username: {}, password: {}", ftpUsername, ftpPassword);
-
-			if (!ftpClient.login(ftpUsername, ftpPassword)) {
-				logger.error("FTP login failed for user: {}", ftpUsername);
-				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+			BufferedImage image = ftpUtil.getImageFromFtp(filePath);
+			
+			if (image == null) {
+				logger.warn("File not found or transfer failed: {}", filePath);
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 			}
 
-			ftpClient.enterLocalPassiveMode();
-			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+			ByteArrayInputStream imageStream = new ByteArrayInputStream(imageToBytes(image, determineFormat(url)));
+			return ResponseEntity.ok().cacheControl(createCacheControl()).contentType(determineMediaType(url))
+					.body(new InputStreamResource(imageStream));
 
-			// Build full file path
-			final String filePath = buildFtpPath(ftpFolder, url);
-			logger.debug("Attempting to retrieve file: {}", filePath);
-
-			try (InputStream inputStream = ftpClient.retrieveFileStream(filePath)) {
-				if (inputStream == null) {
-					logger.warn("File not found on FTP server: {}", filePath);
-					return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-				}
-
-				// Verify successful transfer
-				if (!ftpClient.completePendingCommand()) {
-					logger.error("FTP transfer failed for file: {}", filePath);
-					return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-				}
-
-				return ResponseEntity.ok().cacheControl(createCacheControl()).contentType(determineMediaType(url))
-						.body(new InputStreamResource(inputStream));
-			}
-		} catch (IOException e) {
-			logger.error("FTP operation failed: {}", ExceptionUtils.getRootCauseMessage(e));
+		} catch (Exception e) {
+			logger.error("FTP error: ", e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-		} finally {
-			quietlyDisconnectFtp(ftpClient);
 		}
+	}
+
+	private byte[] imageToBytes(BufferedImage image, String format) throws Exception {
+		try (java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream()) {
+			ImageIO.write(image, format, baos);
+			return baos.toByteArray();
+		}
+	}
+
+	private String determineFormat(String path) {
+		String extension = path.substring(path.lastIndexOf('.') + 1).toLowerCase();
+		return (extension.equals("jpg") || extension.equals("jpeg")) ? "jpeg" : extension;
 	}
 
 	private MediaType determineMediaType(String path) {
 		String extension = path.substring(path.lastIndexOf('.') + 1).toLowerCase();
 		switch (extension) {
 		case "jpg":
-			return MediaType.IMAGE_JPEG;
 		case "jpeg":
 			return MediaType.IMAGE_JPEG;
 		case "png":
@@ -117,16 +107,5 @@ public class FTPImageController {
 
 	private CacheControl createCacheControl() {
 		return CacheControl.maxAge(7, TimeUnit.DAYS).cachePublic().mustRevalidate();
-	}
-
-	private void quietlyDisconnectFtp(FTPClient ftpClient) {
-		try {
-			if (ftpClient.isConnected()) {
-				ftpClient.logout();
-				ftpClient.disconnect();
-			}
-		} catch (IOException e) {
-			logger.warn("Error disconnecting from FTP: {}", ExceptionUtils.getRootCauseMessage(e));
-		}
 	}
 }

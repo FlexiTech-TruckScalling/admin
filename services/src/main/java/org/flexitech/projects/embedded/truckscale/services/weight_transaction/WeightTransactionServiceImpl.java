@@ -17,6 +17,7 @@ import org.flexitech.projects.embedded.truckscale.common.enums.CargoStatus;
 import org.flexitech.projects.embedded.truckscale.common.enums.InOutBounds;
 import org.flexitech.projects.embedded.truckscale.common.enums.TransactionStatus;
 import org.flexitech.projects.embedded.truckscale.common.enums.TransactionType;
+import org.flexitech.projects.embedded.truckscale.dao.company.CompanyDAO;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerDAO;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerTypeDAO;
 import org.flexitech.projects.embedded.truckscale.dao.customers.CustomerVehicleDAO;
@@ -27,6 +28,7 @@ import org.flexitech.projects.embedded.truckscale.dao.products.ProductDAO;
 import org.flexitech.projects.embedded.truckscale.dao.setting.WeightUnitDAO;
 import org.flexitech.projects.embedded.truckscale.dao.transaction.TransactionDAO;
 import org.flexitech.projects.embedded.truckscale.dao.user.UserDAO;
+import org.flexitech.projects.embedded.truckscale.dto.company.CompanyDTO;
 import org.flexitech.projects.embedded.truckscale.dto.counter.CounterDTO;
 import org.flexitech.projects.embedded.truckscale.dto.request.transactions.WeightTransactionRequest;
 import org.flexitech.projects.embedded.truckscale.dto.response.counter.CounterSettingResponse;
@@ -36,6 +38,7 @@ import org.flexitech.projects.embedded.truckscale.dto.shift.UserShiftDTO;
 import org.flexitech.projects.embedded.truckscale.dto.transaction.TransactionDTO;
 import org.flexitech.projects.embedded.truckscale.dto.transaction.TransactionSearchDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
+import org.flexitech.projects.embedded.truckscale.entities.company.Company;
 import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerTypes;
 import org.flexitech.projects.embedded.truckscale.entities.customers.CustomerVehicles;
 import org.flexitech.projects.embedded.truckscale.entities.customers.Customers;
@@ -116,6 +119,9 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 	
 	@Autowired
 	PaymentTypeService paymentTypeService;
+	
+	@Autowired
+	CompanyDAO companyDAO;
 
 	@Override
 	public WeightTransactionPreloadDataResponse getWeightTransactionPreloadData(Long userId) {
@@ -126,6 +132,9 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 		data.setGoods(this.goodService.getAllGoods(ActiveStatus.ACTIVE.getCode()));
 
 		data.setPaymentTypes(this.paymentTypeService.getAll(ActiveStatus.ACTIVE.getCode()));
+		
+		List<Company> companies = this.companyDAO.getAll();
+		data.setCompany(new CompanyDTO(companies.get(0)));
 		
 		UserDTO user = this.userService.getUserById(userId);
 

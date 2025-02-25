@@ -33,4 +33,6 @@ public class TableNames {
 	
 	public static final String PAYMENT_TYPE_TABLE = "payment_types";
 	
+	public static final String COMPANY_TABLE = "company_info";
+	
 }

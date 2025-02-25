@@ -152,28 +152,28 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 		if (CommonValidators.validLong(searchDTO.getProductId())) {
 			query.setParameter("productId", searchDTO.getProductId());
 		}
-		if (searchDTO.getVehiclePrefix() != null && !searchDTO.getVehiclePrefix().isEmpty()) {
+		if (CommonValidators.validString(searchDTO.getVehiclePrefix())) {
 			query.setParameter("vehiclePrefix", searchDTO.getVehiclePrefix() + "%");
 		}
-		if (searchDTO.getVehicleNumber() != null && !searchDTO.getVehicleNumber().isEmpty()) {
+		if (CommonValidators.validString(searchDTO.getVehicleNumber())) {
 			query.setParameter("vehicleNumber", "%" + searchDTO.getVehicleNumber() + "%");
 		}
-		if (searchDTO.getDriverName() != null && !searchDTO.getDriverName().isEmpty()) {
+		if (CommonValidators.validString(searchDTO.getDriverName())) {
 			query.setParameter("driverName", "%" + searchDTO.getDriverName() + "%");
 		}
-		if (searchDTO.getWeight() != null) {
+		if (CommonValidators.validDouble(searchDTO.getWeight())) {
 			query.setParameter("weight", searchDTO.getWeight());
 		}
-		if (searchDTO.getInOutStatus() != null) {
+		if (CommonValidators.validInteger(searchDTO.getInOutStatus())) {
 			query.setParameter("inOutStatus", searchDTO.getInOutStatus());
 		}
-		if (searchDTO.getSessionCode() != null && !searchDTO.getSessionCode().isEmpty()) {
+		if (CommonValidators.validString(searchDTO.getSessionCode())) {
 			query.setParameter("sessionCode", searchDTO.getSessionCode());
 		}
-		if (searchDTO.getUserId() != null) {
+		if (CommonValidators.validLong(searchDTO.getUserId() )) {
 			query.setParameter("userId", searchDTO.getUserId());
 		}
-		if (searchDTO.getCreatedFromDate() != null) {
+		if (CommonValidators.validString(searchDTO.getCreatedFromDate())) {
 			Date date = DateUtils.stringToDate(searchDTO.getCreatedFromDate(),
 					CommonDateFormats.STANDARD_24_HOUR_DATE_FORMAT);
 			query.setParameter("createdFromDate", date);
@@ -182,7 +182,7 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 				&& CommonValidators.validInteger(searchDTO.getMathSign())) {
 			query.setParameter("fromWeight", searchDTO.getFromWeight());
 		}
-		if (searchDTO.getCreatedToDate() != null) {
+		if (CommonValidators.validString(searchDTO.getCreatedToDate())) {
 			Date date = DateUtils.stringToDate(searchDTO.getCreatedToDate(),
 					CommonDateFormats.STANDARD_24_HOUR_DATE_FORMAT);
 			query.setParameter("createdToDate", date);
