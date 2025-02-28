@@ -13,4 +13,6 @@ public interface UserShiftService {
 	UserShiftDTO endShift(Long userId, UserDTO loggedUser) throws Exception;
 	
 	CurrentShiftSummaryDTO getCurrentShiftSummary(Long userId, String sessionCode);
+	
+	
 }

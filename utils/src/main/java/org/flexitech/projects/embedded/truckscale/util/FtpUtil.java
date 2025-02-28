@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.imageio.ImageIO;
 
-import org.apache.commons.net.ftp.FTPSClient;
+import org.flexitech.projects.embedded.truckscale.util.ftp.FTPClientHelper;
 
 public class FtpUtil {
     private final String host;
@@ -24,21 +24,18 @@ public class FtpUtil {
         this.password = password;
     }
 
-    private FTPSClient getFtpClient() throws IOException, NoSuchAlgorithmException, KeyManagementException {
-        FTPSClient ftpClient = new FTPSClient();
+    private FTPClientHelper getFtpClient() throws IOException, NoSuchAlgorithmException, KeyManagementException {
+        FTPClientHelper ftpClient = new FTPClientHelper();
         ftpClient.setConnectTimeout(5000);
         ftpClient.connect(host);
         ftpClient.login(username, password);
-        ftpClient.execPBSZ(0);
-        ftpClient.execPROT("P");
-
-		/* ftpClient.enterLocalPassiveMode(); */
-        ftpClient.setFileType(FTPSClient.BINARY_FILE_TYPE);
+        ftpClient.enterLocalPassiveMode(); // ENABLE THIS LINE
+        ftpClient.setFileType(FTPClientHelper.BINARY_FILE_TYPE);
         return ftpClient;
     }
 
     public boolean uploadFile(String localFilePath, String remoteFilePath) {
-        FTPSClient ftpClient = null;
+        FTPClientHelper ftpClient = null;
         try (FileInputStream fis = new FileInputStream(localFilePath)) {
             ftpClient = getFtpClient();
             boolean success = ftpClient.storeFile(remoteFilePath, fis);
@@ -52,10 +49,13 @@ public class FtpUtil {
     }
 
     public boolean downloadFile(String remoteFilePath, String localFilePath) {
-        FTPSClient ftpClient = null;
+        FTPClientHelper ftpClient = null;
         try (FileOutputStream fos = new FileOutputStream(localFilePath)) {
             ftpClient = getFtpClient();
             boolean success = ftpClient.retrieveFile(remoteFilePath, fos);
+            if (success) {
+                ftpClient.completePendingCommand(); // Add this line
+            }
             return success;
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,7 +66,7 @@ public class FtpUtil {
     }
 
     public boolean deleteFile(String remoteFilePath) {
-        FTPSClient ftpClient = null;
+        FTPClientHelper ftpClient = null;
         try {
             ftpClient = getFtpClient();
             return ftpClient.deleteFile(remoteFilePath);
@@ -79,7 +79,7 @@ public class FtpUtil {
     }
 
     public String[] listDirectory(String remotePath) {
-        FTPSClient ftpClient = null;
+        FTPClientHelper ftpClient = null;
         try {
             ftpClient = getFtpClient();
             return ftpClient.listNames(remotePath);
@@ -92,7 +92,7 @@ public class FtpUtil {
     }
 
     public BufferedImage getImageFromFtp(String remoteFilePath) {
-        FTPSClient ftpClient = null;
+        FTPClientHelper ftpClient = null;
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             ftpClient = getFtpClient();
             if (ftpClient.retrieveFile(remoteFilePath, baos)) {
@@ -111,7 +111,7 @@ public class FtpUtil {
         }
     }
 
-    private void closeFtpClient(FTPSClient ftpClient) {
+    private void closeFtpClient(FTPClientHelper ftpClient) {
         if (ftpClient != null && ftpClient.isConnected()) {
             try {
                 ftpClient.logout();

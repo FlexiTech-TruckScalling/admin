@@ -48,7 +48,7 @@ public class CompanyServiceImpl implements CompanyService {
 		c.setAddress(dto.getAddress());
 		c.setContactPerson(dto.getContactPerson());
 		c.setContactPhone(dto.getContactPhone());
-		c.setLogo(dto.getLogo());
+		c.setCompanyLogo(dto.getCompanyLogo());
 		c.setStatus(ActiveStatus.ACTIVE.getCode());
 		
 		this.companyDAO.saveOrUpdate(c);

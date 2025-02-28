@@ -149,7 +149,7 @@
 							<c:choose>
 								<c:when test="${not empty transactionDTO.vehiclePhotoOne}">
 									<img
-										src="${pageContext.request.contextPath}/ftp-photo.fxt?url=${transactionDTO.vehiclePhotoOne}"
+										src="/images/${transactionDTO.vehiclePhotoOne}"
 										class="img-fluid rounded" alt="Vehicle Photo 1"
 										style="max-height: 400px;">
 								</c:when>
@@ -162,7 +162,7 @@
 							<c:choose>
 								<c:when test="${not empty transactionDTO.vehiclePhotoTwo}">
 									<img
-										src="${pageContext.request.contextPath}/ftp-photo.fxt?url=${transactionDTO.vehiclePhotoTwo}"
+										src="/images/${transactionDTO.vehiclePhotoTwo}"
 										class="img-fluid rounded" alt="Vehicle Photo 2"
 										style="max-height: 400px;">
 								</c:when>

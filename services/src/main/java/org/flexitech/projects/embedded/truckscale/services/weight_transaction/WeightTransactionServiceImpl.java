@@ -377,4 +377,172 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 		return null;
 	}
 
+	@Override
+	public WeightTransactionResponse syncWeightTransaction(WeightTransactionRequest request) throws Exception {
+		if (!CommonValidators.isValidObject(request)) {
+			throw new IllegalArgumentException("Request cannot be empty!");
+		}
+
+		Transaction transaction = null;
+
+		if (CommonValidators.validLong(request.getId())) {
+			try {
+				transaction = this.transactionDAO.get(request.getId());
+				if (CommonValidators.isValidObject(transaction)) {
+					transaction.setUpdatedTime(new Date());
+				} else {
+					logger.warn("Transaction is not exit! continue with new transaction.");
+					transaction = new Transaction();
+					transaction.setCreatedTime(new Date());
+				}
+			} catch (Exception e) {
+				logger.error("Failed to get existing transaction: {}", ExceptionUtils.getStackTrace(e));
+				transaction = new Transaction();
+				transaction.setCreatedTime(new Date());
+			}
+		} else {
+			transaction = new Transaction();
+			transaction.setCreatedTime(new Date());
+
+			// transaction code
+			/*
+			 * int attempts = 0; final int maxAttempts = 5; boolean success = false;
+			 * 
+			 * while (attempts < maxAttempts && !success) { String code =
+			 * TokenUtil.generateTransactionCode(); if
+			 * (!this.transactionDAO.isCodeAlreadyUsed(code)) {
+			 * transaction.setTransactionCode(code); success = true; } attempts++; }
+			 * 
+			 * if (!success) throw new IllegalStateException(
+			 * "Failed to generate a unique transaction code after " + maxAttempts +
+			 * " attempts.");
+			 */
+		}
+
+		if (CommonValidators.validLong(request.getCustomerId())) {
+			Customers c = this.customerDAO.get(request.getCustomerId());
+			transaction.setCustomer(c);
+		}
+
+		if (CommonValidators.validLong(request.getCustomerTypeId())) {
+			CustomerTypes t = this.customerTypeDAO.get(request.getCustomerTypeId());
+			transaction.setCustomerType(t);
+		}
+
+		transaction.setTransactionCode(request.getTransactionCode());
+		transaction.setContainerNumber(request.getContainerNumber());
+		transaction.setContainerSize(request.getContainerSize());
+
+		transaction.setRegisterVehicleStatus(request.getSaveNewVehicle());
+
+		CustomerVehicles vehicle = this.customerVehicleDAO.getVehicleByPrefixAndNumber(request.getVehiclePrefix(),
+				request.getVehicleNumber());
+		if (vehicle == null) {
+			if (CommonValidators.validInteger(request.getSaveNewVehicle())) {
+				CustomerVehicles v = new CustomerVehicles();
+				v.setPrefix(request.getVehiclePrefix());
+				v.setNumber(request.getVehicleNumber());
+				v.setWeight(new BigDecimal(0));
+				Customers c = this.customerDAO.get(request.getCustomerId());
+				v.setCustomer(c);
+				v.setStatus(ActiveStatus.ACTIVE.getCode());
+				v.setCreatedTime(new Date());
+				Drivers d = this.driverDAO.getDriverByName(request.getDriverName());
+
+				if (CommonValidators.isValidObject(d)) {
+					v.setDriver(d);
+				} else {
+					Drivers driver = new Drivers();
+					driver.setName(request.getDriverName());
+					driver.setStatus(ActiveStatus.ACTIVE.getCode());
+					driver.setCreatedTime(new Date());
+					this.driverDAO.save(driver);
+					v.setDriver(driver);
+				}
+				this.customerVehicleDAO.save(v);
+				transaction.setVehicle(v);
+			}
+		} else {
+			transaction.setVehicle(vehicle);
+		}
+
+		transaction.setDriverName(request.getDriverName());
+
+		if (CommonValidators.validLong(request.getGoodId())) {
+			Goods g = this.goodDAO.get(request.getGoodId());
+			transaction.setGoods(g);
+		}
+
+		if (CommonValidators.validLong(request.getProductId())) {
+			Products p = this.productDAO.get(request.getProductId());
+			transaction.setProduct(p);
+		}
+
+		transaction.setQty(new BigDecimal(request.getQuantity()));
+
+		if (CommonValidators.validLong(request.getQuantityUnitId())) {
+			WeightUnit unit = this.weightUnitDAO.get(request.getQuantityUnitId());
+			transaction.setQuantityUnit(unit);
+		}
+
+		if (TransactionType.INOUT.getCode().equals(request.getTransactionType()))
+			transaction.setCost(new BigDecimal(request.getCost()));
+
+		transaction.setAllowedWeight(request.getAllowedWeight());
+
+		transaction.setOverWeight(request.getOverWeight());
+		transaction.setCargoWeight(request.getCargoWeight());
+		transaction.setWeight(request.getWeight());
+		
+		/*
+		 * if (TransactionType.INOUT.getCode().equals(request.getTransactionType())) if
+		 * (request.getCargoStatus() == CargoStatus.WITH_CARGO.getCode()) else if
+		 * (request.getCargoStatus() == CargoStatus.WITHOUT_CARGO.getCode())
+		 */
+
+		if (CommonValidators.validLong(request.getWeightUnitId())) {
+			WeightUnit unit = this.weightUnitDAO.get(request.getWeightUnitId());
+			transaction.setWeightUnit(unit);
+		}
+
+		transaction.setInOutStatus(request.getInOutStatus());
+
+		transaction.setCargoStatus(request.getCargoStatus());
+
+		if (CommonValidators.isValidObject(request.getInTime())) {
+			transaction.setInTime(request.getInTime());
+		}
+
+		if (CommonValidators.isValidObject(request.getOutTime())) {
+			transaction.setOutTime(request.getOutTime());
+		}
+
+		transaction.setSessionCode(request.getSessionId());
+
+		if (CommonValidators.validLong(request.getUserId())) {
+			Users user = this.userDAO.get(request.getUserId());
+			transaction.setUser(user);
+		}
+
+		transaction.setVehiclePhotoOne(request.getVehiclePhotoOne());
+		transaction.setVehiclePhotoTwo(request.getVehiclePhotoTwo());
+
+		transaction.setStatus(ActiveStatus.ACTIVE.getCode());
+		transaction.setTransactionType(request.getTransactionType());
+		transaction.setTransactionStatus(request.getTransactionSatus());
+
+		if (CommonValidators.validLong(request.getPaymentTypeId())) {
+			PaymentType type = this.paymentTypeDAO.get(request.getPaymentTypeId());
+			if (CommonValidators.isValidObject(type)) {
+				transaction.setPaymentType(type);
+			}
+		}
+
+		this.transactionDAO.saveOrUpdate(transaction);
+
+		/* checkForCompletedTransction(transaction); */
+
+		return new WeightTransactionResponse(new TransactionDTO(transaction));
+	}
+
 }

@@ -114,4 +114,14 @@
 			value="/WEB-INF/pages/reports/transaction-detail.jsp" />
 	</definition>
 	
+	<!-- shit Report -->
+	<definition name="shift-report" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/reports/shift-report.jsp" />
+	</definition>
+	<definition name="shift-detail" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/reports/shift-detail.jsp" />
+	</definition>
+	
 </tiles-definitions>

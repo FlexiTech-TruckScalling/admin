@@ -5,4 +5,6 @@ import org.flexitech.projects.embedded.truckscale.entities.shift.UserShiftSummar
 
 public interface UserShiftSummaryDAO extends CommonDAO<UserShiftSummary, Long>{
 
+	UserShiftSummary getUserShiftDetailByShiftId(Long shiftId);
+	
 }

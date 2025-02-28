@@ -2,6 +2,7 @@ package org.flexitech.projects.embedded.truckscale.admin.controllers.reports;
 
 import org.flexitech.projects.embedded.truckscale.common.SystemSettingConstants;
 import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
+import org.flexitech.projects.embedded.truckscale.common.enums.InOutBounds;
 import org.flexitech.projects.embedded.truckscale.common.enums.MathSign;
 import org.flexitech.projects.embedded.truckscale.dto.transaction.TransactionSearchDTO;
 import org.flexitech.projects.embedded.truckscale.services.payment_type.PaymentTypeService;
@@ -59,12 +60,21 @@ public class TransactionReportController{
 		model.addAttribute("pageTitle", "ENL | Truck Scale Transaction Search");
 		model.addAttribute("statusList", ActiveStatus.getAll());
 		model.addAttribute("transactionList", weightTransactionService.searchTransactions(searchDTO));
+		
+		Integer total = this.weightTransactionService.countTotalTransaction(searchDTO);
+		
+		int totalPages = (int) Math.ceil((double) total / searchDTO.getLimit());
+		
+		searchDTO.setPageCount(totalPages);
+		searchDTO.setTotalRecords(total);
+		
 		model.addAttribute("searchDTO", searchDTO);
 		model.addAttribute("goodList", goodService.getAllGoods(ActiveStatus.ACTIVE.getCode()));
 		model.addAttribute("paymentTypeList", paymentTypeService.getAll(ActiveStatus.ACTIVE.getCode()));
 		model.addAttribute("statusList", ActiveStatus.getAll());
 		model.addAttribute("productList", this.productService.getAllProducts(ActiveStatus.ACTIVE.getCode()));
 		model.addAttribute("mathSignList", MathSign.getAll());
+		model.addAttribute("inOutStatusList", InOutBounds.getAll());
 	}
 
 }

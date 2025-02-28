@@ -112,5 +112,8 @@ public class WeightTransactionRequest {
     
     @JsonProperty("payment_type_id")
     private Long paymentTypeId;
+    
+    @JsonProperty("transaction_status")
+    private Integer transactionSatus;
 }
 

@@ -14,4 +14,5 @@ public class CurrentShiftSummaryDTO{
 	private String sessionCode;
 	private Integer totalTrn;
 	private BigDecimal totalAmount;
+	private Integer inOutStatus;
 }

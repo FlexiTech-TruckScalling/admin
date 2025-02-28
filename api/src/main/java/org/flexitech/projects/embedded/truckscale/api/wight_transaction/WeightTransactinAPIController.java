@@ -191,5 +191,30 @@ public class WeightTransactinAPIController {
 		
 		return ResponseUtil.send(response);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@PostMapping("/sync-transaction")
+	public ResponseEntity<?> syncTransaction(@RequestBody WeightTransactionRequest request) {
+		Response response = new Response();
+
+		try {
+			WeightTransactionResponse res = this.weightTransactionService.syncWeightTransaction(request);
+			response = new BaseResponse<WeightTransactionResponse>();
+			response.setResponseCode(HttpStatus.OK.value());
+			response.setResponseMessage("Success.");
+			((BaseResponse<WeightTransactionResponse>) response).setData(res);
+		} catch (Exception e) {
+			logger.error("Error on manage transaction: {}", ExceptionUtils.getStackTrace(e));
+			response = new ErrorResponse<String>();
+			if (e instanceof IllegalArgumentException) {
+				response.setResponseCode(HttpStatus.BAD_REQUEST.value());
+			} else {
+				response.setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			}
+			response.setResponseMessage(ExceptionUtils.getMessage(e));
+		}
+
+		return ResponseUtil.send(response);
+	}
 
 }

@@ -31,7 +31,7 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 
 		setQueryParameters(query, searchDTO);
 
-		if (searchDTO.getPageNo() != null && searchDTO.getLimit() != null) {
+		if (!export && searchDTO.getPageNo() != null && searchDTO.getLimit() != null) {
 			int offset = (searchDTO.getPageNo() - 1) * searchDTO.getLimit();
 			query.setFirstResult(offset).setMaxResults(searchDTO.getLimit());
 		}
@@ -174,8 +174,8 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 			query.setParameter("userId", searchDTO.getUserId());
 		}
 		if (CommonValidators.validString(searchDTO.getCreatedFromDate())) {
-			Date date = DateUtils.stringToDate(searchDTO.getCreatedFromDate(),
-					CommonDateFormats.STANDARD_24_HOUR_DATE_FORMAT);
+			Date date = DateUtils.stringToDate(searchDTO.getCreatedFromDate() + " " + CommonDateFormats.HOUR_START, CommonDateFormats.STD_YYYY_MM_DD_24);
+
 			query.setParameter("createdFromDate", date);
 		}
 		if(CommonValidators.validDouble(searchDTO.getFromWeight())
@@ -183,10 +183,12 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 			query.setParameter("fromWeight", searchDTO.getFromWeight());
 		}
 		if (CommonValidators.validString(searchDTO.getCreatedToDate())) {
-			Date date = DateUtils.stringToDate(searchDTO.getCreatedToDate(),
-					CommonDateFormats.STANDARD_24_HOUR_DATE_FORMAT);
+			Date date = DateUtils.stringToDate(searchDTO.getCreatedToDate() + " " + CommonDateFormats.HOUR_END, CommonDateFormats.STD_YYYY_MM_DD_24);
 			query.setParameter("createdToDate", date);
 		}
+		
+		
+		
 		if(CommonValidators.validString(searchDTO.getTransctionCode())) {
 			query.setParameter("transactionCode", searchDTO.getTransctionCode());
 		}

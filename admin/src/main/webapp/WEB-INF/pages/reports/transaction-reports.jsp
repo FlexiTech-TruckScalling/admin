@@ -107,7 +107,7 @@
 						<form:select path="inOutStatus"
 							class="form-control border bg-white selectpicker">
 							<option value="-1">-- Select Status --</option>
-							<form:options items="${inOutStatusList}" />
+							<form:options items="${inOutStatusList}" itemLabel="desc" itemValue="code" />
 						</form:select>
 					</div>
 
@@ -147,6 +147,7 @@
 						<th class="py-1">Vehicle</th>
 						<th class="py-1">Driver</th>
 						<th class="py-1">Weight</th>
+						<th class="py-1" style="width: 120px;">Car + Cargo Weight</th>
 						<th class="py-1">Status</th>
 						<th class="py-1">Date/Time</th>
 						<th class="py-1">Actions</th>
@@ -162,7 +163,7 @@
 						<c:forEach items="${transactionList}" var="transaction"
 							varStatus="loop">
 							<tr>
-								<td>${loop.index + 1}</td>
+								<td>${(searchDTO.pageNo - 1) * searchDTO.limit + loop.index + 1}</td>
 								<td>${transaction.transactionCode}</td>
 								<td>${transaction.customerDTO.name}</td>
 								<td>${transaction.goodDTO.name}</td>
@@ -170,13 +171,12 @@
 								<td>${transaction.vehicleDTO.prefix}
 									${transaction.vehicleDTO.number}</td>
 								<td>${transaction.driverName}</td>
-								<td>${transaction.weight}${transaction.weightUnitDTO.code}</td>
+								<td>${transaction.weight}</td>
+								<td>${transaction.cargoWeight}</td>
 								<td><span
 									class="badge ${transaction.inOutStatus == 1 ? 'badge-success' : 'badge-warning'}">
 										${transaction.inOutStatus == 1 ? 'IN' : 'OUT'} </span></td>
-								<td>
-								${transaction.createdTimeDesc }
-								</td>
+								<td>${transaction.createdTimeDesc }</td>
 								<td><a href="transaction-detail.fxt?id=${transaction.id}"
 									class="btn btn-sm btn-info"> <i class="fas fa-eye"></i>
 								</a> <%-- <a href="transaction-edit.fxt?id=${transaction.id}"
@@ -199,20 +199,31 @@
 
 <%@ include file="../../includes/pagination-template.jsp"%>
 <script>
-	var pageCount = "${searchDTO.pageCount}";
-	var page = "${searchDTO.pageNo}";
+	var pageCount = parseInt("${searchDTO.pageCount}") || 1;
+	var page = parseInt("${searchDTO.pageNo}") || 1;
+	
+	console.log(pageCount, page)
+	
+	if (page < 1 || page > pageCount) {
+	    page = 1;
+	}
+	
+	console.log("Total Pages: ", pageCount);
+	console.log("Start Page: ", page);
+	
 	$('.pagination').twbsPagination({
-		totalPages : pageCount,
-		visiblePages : 5,
-		next : 'Next',
-		prev : 'Prev',
-		startPage : parseInt(page),
-		initiateStartPageClick : false,
-		onPageClick : function(event, page) {
-			$('#pageNo').val(page);
-			$('#common-form').submit();
-		}
+	    totalPages: pageCount,
+	    visiblePages: 5,
+	    next: 'Next',
+	    prev: 'Prev',
+	    startPage: page,
+	    initiateStartPageClick: false,
+	    onPageClick: function(event, page) {
+	        $('#pageNo').val(page);
+	        $('#common-form').submit();
+	    }
 	});
+
 
 	$("#search-btn").on("click", function() {
 		$('#pageNo').val(1);
