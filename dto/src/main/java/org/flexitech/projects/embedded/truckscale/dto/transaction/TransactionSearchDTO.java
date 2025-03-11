@@ -30,4 +30,8 @@ public class TransactionSearchDTO extends CommonSearchDTO{
 	private String createdToDate;
 	private String transctionCode;
 	private Long paymentTypeId;
+	
+	private Integer transactionStatus;
+	
+	private boolean excludeCancel = false;
 }

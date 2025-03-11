@@ -1,6 +1,6 @@
 <%@ include file="../../includes/import-tags.jsp"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
-
+<fmt:setLocale value="en_US" />
 <div class="container-fluid">
 	<!-- Page Heading -->
 	<div class="d-sm-flex align-items-center justify-content-between mb-4">
@@ -45,11 +45,10 @@
 								<dd class="col-sm-8">${transactionDTO.outTimeStr}</dd>
 
 								<dt class="col-sm-4">Weight:</dt>
-								<dd class="col-sm-8">${transactionDTO.weight}
-									${transactionDTO.weightUnitDTO.code}</dd>
+								<dd class="col-sm-8">${transactionDTO.weightDesc}</dd>
 
 								<dt class="col-sm-4">Cargo Weight:</dt>
-								<dd class="col-sm-8">${transactionDTO.cargoWeight}</dd>
+								<dd class="col-sm-8">${transactionDTO.cargoWeightDesc}</dd>
 							</dl>
 						</div>
 					</div>
@@ -124,13 +123,11 @@
 								</dd>
 
 								<dt class="col-sm-4">Quantity:</dt>
-								<dd class="col-sm-8">${transactionDTO.quantity}
-									${transactionDTO.quantityUnitDTO.code}</dd>
+								<dd class="col-sm-8">${transactionDTO.quantity}</dd>
 
 								<dt class="col-sm-4">Cost:</dt>
 								<dd class="col-sm-8">
-									<fmt:formatNumber value="${transactionDTO.cost}"
-										type="currency" />
+									<fmt:formatNumber value="${transactionDTO.cost}" pattern="#,##0 ' Ks'" />
 								</dd>
 							</dl>
 						</div>

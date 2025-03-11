@@ -12,7 +12,7 @@ public interface WeightTransactionService {
 	WeightTransactionPreloadDataResponse getWeightTransactionPreloadData(Long userId);
 	WeightTransactionResponse manageWeightTransaction(WeightTransactionRequest request) throws Exception;
 	Long cancelTransaction(Long transactionId) throws Exception;
-	List<TransactionDTO> searchTransactions(TransactionSearchDTO searchDTO);
+	List<TransactionDTO> searchTransactions(TransactionSearchDTO searchDTO, boolean export);
 	Integer countTotalTransaction(TransactionSearchDTO searchDTO);
 	TransactionDTO getById(Long id);
 	WeightTransactionResponse syncWeightTransaction(WeightTransactionRequest request) throws Exception;

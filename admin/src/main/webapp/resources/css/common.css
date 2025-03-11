@@ -58,3 +58,6 @@ button.toast-close-btn{
 button.toast-close-btn:hover{
 	color: red;
 }
+table th{
+	white-space: nowrap;
+}

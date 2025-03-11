@@ -126,7 +126,7 @@ public class WeightTransactinAPIController {
 		Integer pageNo = CommonValidators.validInteger(page) ? page : 1;
 		searchDTO.setPageNo(pageNo);
 		try {
-			List<TransactionDTO> trans = this.weightTransactionService.searchTransactions(searchDTO);
+			List<TransactionDTO> trans = this.weightTransactionService.searchTransactions(searchDTO, false);
 			response = new BaseResponse<CommonPagingDTO<TransactionDTO>>();
 			response.setResponseCode(HttpStatus.OK.value());
 			response.setResponseMessage("Search transaction successfully!");

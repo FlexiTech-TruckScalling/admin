@@ -50,7 +50,7 @@
 								class="text-danger">*</strong>
 						</form:label>
 						<form:input path="perKgValue" type="number"
-							class="form-control required" placeholder="0" step=".001" min="0" />
+							class="form-control required" placeholder="0" step="any" min="0" />
 						<span class="text-danger input-error-msg" data-label="Kg Value"></span>
 					</div>
 					

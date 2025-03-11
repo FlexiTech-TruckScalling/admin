@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.flexitech.projects.embedded.truckscale.common.CommonDateFormats;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
+import org.flexitech.projects.embedded.truckscale.common.enums.TransactionStatus;
 import org.flexitech.projects.embedded.truckscale.dto.CommonDTO;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerDTO;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerTypeDTO;
@@ -15,6 +16,7 @@ import org.flexitech.projects.embedded.truckscale.dto.products.ProductDTO;
 import org.flexitech.projects.embedded.truckscale.dto.setting.WeightUnitDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
 import org.flexitech.projects.embedded.truckscale.entities.transaction.Transaction;
+import org.flexitech.projects.embedded.truckscale.util.CommonUtil;
 import org.flexitech.projects.embedded.truckscale.util.DateUtils;
 
 import lombok.Getter;
@@ -43,7 +45,9 @@ public class TransactionDTO extends CommonDTO {
 	private Double overWeight;
 	private Integer cargoStatus;
 	private Double weight;
+	private String weightDesc;
 	private Double cargoWeight;
+	private String cargoWeightDesc;
 	private Integer inOutStatus;
 	private String vehiclePhotoOne;
 	private String vehiclePhotoTwo;
@@ -52,6 +56,7 @@ public class TransactionDTO extends CommonDTO {
 	private Date outTime;
 	private String outTimeStr;
 	private Integer transactionStatus;
+	private String transactionStatusDesc;
 	private String sessionCode;
 	private UserDTO userDTO;
 	private String transactionCode;
@@ -81,7 +86,13 @@ public class TransactionDTO extends CommonDTO {
 		this.overWeight = t.getOverWeight();
 		this.cargoStatus = t.getCargoStatus();
 		this.weight = t.getWeight();
+		if(CommonValidators.isValidObject(weight) && CommonValidators.isValidObject(t.getWeightUnit())) {
+			this.weightDesc = CommonUtil.getWeightDesc(weight, t.getWeightUnit().getPerKgValue(), t.getWeightUnit().getName());
+		}
 		this.cargoWeight = t.getCargoWeight();
+		if(CommonValidators.isValidObject(cargoWeight) && CommonValidators.isValidObject(t.getWeightUnit())) {
+			this.cargoWeightDesc = CommonUtil.getWeightDesc(cargoWeight, t.getWeightUnit().getPerKgValue(), t.getWeightUnit().getName());
+		}
 		this.inOutStatus = t.getInOutStatus();
 		this.vehiclePhotoOne = t.getVehiclePhotoOne();
 		this.vehiclePhotoTwo = t.getVehiclePhotoTwo();
@@ -94,6 +105,7 @@ public class TransactionDTO extends CommonDTO {
 			this.outTimeStr = DateUtils.dateToString(outTime, CommonDateFormats.STANDARD_12_HOUR_DATE_MINUTE_FORMAT);
 		}
 		this.transactionStatus = t.getTransactionStatus();
+		this.transactionStatusDesc = CommonValidators.validInteger(transactionStatus) ? TransactionStatus.getDescByCode(transactionStatus): "Unknown";
 		this.sessionCode = t.getSessionCode();
 		this.userDTO = t.getUser() != null ? new UserDTO(t.getUser()) : null;
 		this.transactionCode = t.getTransactionCode();

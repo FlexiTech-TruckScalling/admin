@@ -356,8 +356,8 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 	}
 
 	@Override
-	public List<TransactionDTO> searchTransactions(TransactionSearchDTO searchDTO) {
-		List<Transaction> transactions = this.transactionDAO.searchTransactions(searchDTO, false);
+	public List<TransactionDTO> searchTransactions(TransactionSearchDTO searchDTO, boolean export) {
+		List<Transaction> transactions = this.transactionDAO.searchTransactions(searchDTO, export);
 		if (CommonValidators.validList(transactions)) {
 			return transactions.stream().map(TransactionDTO::new).collect(Collectors.toList());
 		}

@@ -39,11 +39,12 @@ public class UserShiftReportController {
 	@GetMapping("shift-detail")
 	public String shiftDetailPage(@RequestParam(required = false) Long shiftId,Model model) {
 		model.addAttribute("userShiftSummary", this.userShiftReportService.getShiftDetailByShiftId(shiftId));
+		model.addAttribute("pageTitle", "ENL | Truck Scale User Shift Detail");
 		return "shift-detail";
 	}
 	
 	private void commonModelForSearch(Model model, UserShiftSearchDTO searchDTO) {
-		model.addAttribute("pageTitle", "ENL | Truck Scale Transaction Search");
+		model.addAttribute("pageTitle", "ENL | Truck Scale User Shifts");
 		model.addAttribute("shiftList", this.userShiftReportService.searchUserShift(searchDTO, false));
 		
 		Integer total = this.userShiftReportService.countUserShift(searchDTO);

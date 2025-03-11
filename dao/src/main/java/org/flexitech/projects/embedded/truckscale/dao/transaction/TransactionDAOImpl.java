@@ -72,7 +72,10 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 	        builder.append(String.join(" ", joins)).append(" ");
 	    }
 
-	    conditions.add("t.transaction_status != " + TransactionStatus.CANCEL.getCode() + " ");
+		/*
+		 * conditions.add("t.transaction_status != " +
+		 * TransactionStatus.CANCEL.getCode() + " ");
+		 */
 
 	    if(CommonValidators.validString(searchDTO.getTransctionCode())) {
 	    	conditions.add("t.transaction_code = :transactionCode");
@@ -130,13 +133,21 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 	    if(CommonValidators.validLong(searchDTO.getPaymentTypeId())) {
 	    	conditions.add("t.payment_type_id = :paymentTypeId");
 	    }
+	    
+	    if(searchDTO.isExcludeCancel()) {
+	    	conditions.add("t.transaction_status != " + TransactionStatus.CANCEL.getCode());
+	    }else {
+	    	if(CommonValidators.validInteger(searchDTO.getTransactionStatus())) {
+	    		conditions.add("t.transaction_status = :transactionStatus");
+	    	}
+	    }
 
 	    if (!conditions.isEmpty()) {
 	        builder.append("WHERE ").append(String.join(" AND ", conditions)).append(" ");
 	    }
 
 	    if (!countOnly && !export) {
-	        builder.append("ORDER BY t.in_time DESC ");
+	        builder.append("ORDER BY t.created_time DESC ");
 	    }
 
 	    return builder.toString();
@@ -187,7 +198,9 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 			query.setParameter("createdToDate", date);
 		}
 		
-		
+		if(CommonValidators.validInteger(searchDTO.getTransactionStatus())) {
+			query.setParameter("transactionStatus", searchDTO.getTransactionStatus());
+		}
 		
 		if(CommonValidators.validString(searchDTO.getTransctionCode())) {
 			query.setParameter("transactionCode", searchDTO.getTransctionCode());
@@ -218,7 +231,8 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 		.append("SUM(COALESCE(cost, 0)) as totalAmount ")
 		.append("FROM transactions ")
 		.append("WHERE user_id = :userId ")
-		.append("AND session_code = :sessionCode ");
+		.append("AND session_code = :sessionCode ")
+		.append("AND transaction_status != " + TransactionStatus.CANCEL.getCode());
 		
 		return b.toString();
 	}

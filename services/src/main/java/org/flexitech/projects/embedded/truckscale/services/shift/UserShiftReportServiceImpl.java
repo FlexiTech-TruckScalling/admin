@@ -77,6 +77,7 @@ public class UserShiftReportServiceImpl implements UserShiftReportService {
 			
 			TransactionSearchDTO search = new TransactionSearchDTO();
 			search.setSessionCode(shift.getCode());
+			search.setExcludeCancel(true);
 			
 			List<Transaction> transactions = this.transactionDAO.searchTransactions(search, true);
 			
