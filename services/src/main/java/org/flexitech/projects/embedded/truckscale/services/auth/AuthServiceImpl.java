@@ -17,6 +17,7 @@ import org.flexitech.projects.embedded.truckscale.dao.shift.UserShiftDAO;
 import org.flexitech.projects.embedded.truckscale.dao.shift.UserShiftSummaryDAO;
 import org.flexitech.projects.embedded.truckscale.dao.user.UserDAO;
 import org.flexitech.projects.embedded.truckscale.dto.auth.LoginDTO;
+import org.flexitech.projects.embedded.truckscale.dto.request.auth.AuthorizeRequestDTO;
 import org.flexitech.projects.embedded.truckscale.dto.request.auth.LoginRequestDTO;
 import org.flexitech.projects.embedded.truckscale.dto.request.auth.LogoutRequestDTO;
 import org.flexitech.projects.embedded.truckscale.dto.request.user_shift.UserShiftSummaryRequestDTO;
@@ -246,6 +247,19 @@ public class AuthServiceImpl implements AuthService {
 			error.setResponseMessage(ExceptionUtils.getMessage(e));
 			return error;
 		}
+	}
+
+	@Override
+	public boolean authorize(AuthorizeRequestDTO requestDTO) throws Exception{
+		LoginDTO login = new LoginDTO();
+		login.setLoginName(requestDTO.getName());
+		login.setPassword(requestDTO.getPassword());
+		UserDTO user = this.login(login);
+		if(!CommonValidators.isValidObject(user)) return false;
+		if(!user.getUserRoleDTO().getCode().equals(2) && !user.getUserRoleDTO().getCode().equals(1)) {
+			throw new IllegalArgumentException("Only manager or admin can approve.");
+		}
+		return true;
 	}
 
 }

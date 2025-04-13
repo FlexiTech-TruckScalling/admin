@@ -1,0 +1,1 @@
+INSERT INTO `flexitech_truckscale`.`menus` (`created_time`, `status`, `menu_code`, `description`, `name`, `parent_menu_code`, `parent_status`, `url`, `order`) VALUES (now(), '1', 'COMPANY', 'Company Setup', 'Company Setup', 'USER', '0', 'company.fxt', '1');

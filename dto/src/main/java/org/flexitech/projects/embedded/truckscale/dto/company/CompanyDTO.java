@@ -3,6 +3,7 @@ package org.flexitech.projects.embedded.truckscale.dto.company;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.dto.CommonDTO;
 import org.flexitech.projects.embedded.truckscale.entities.company.Company;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,8 @@ public class CompanyDTO extends CommonDTO{
 	private String contactPerson;
 	private String contactPhone;
 	private String companyLogo;
+	
+	private MultipartFile logoImage;
 	
 	public CompanyDTO(Company c) {
 		if(!CommonValidators.isValidObject(c))return;

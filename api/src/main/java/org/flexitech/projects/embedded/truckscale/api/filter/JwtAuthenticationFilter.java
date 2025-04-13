@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter implements Filter {
 	    System.out.println("Reach filter....");
 
 	    String requestURI = httpRequest.getRequestURI();
-	    if (requestURI.contains("/auth/login") || requestURI.contains("/auth/token") || requestURI.endsWith("/health")) {
+	    if (requestURI.contains("/auth/login") || requestURI.contains("/auth/token") || requestURI.endsWith("/health") || requestURI.contains("/auth/authorize")) {
 	        chain.doFilter(request, response);
 	        return;
 	    }

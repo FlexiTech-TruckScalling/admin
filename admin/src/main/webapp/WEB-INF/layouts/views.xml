@@ -17,6 +17,12 @@
 	</definition>
 	
 	<!-- User -->
+	<definition name="company" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/company/company.jsp" />
+	</definition>
+	
+	<!-- User -->
 	<definition name="user-manage" extends="main-template">
 		<put-attribute name="body"
 			value="/WEB-INF/pages/user/user-manage.jsp" />
