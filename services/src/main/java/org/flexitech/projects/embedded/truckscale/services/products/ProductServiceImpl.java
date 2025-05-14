@@ -76,7 +76,8 @@ public class ProductServiceImpl implements ProductService {
 				}
 			}
 
-			Set<Goods> currentGoods = p.getGoods();
+			Set<Goods> currentGoods = CommonValidators.isValidObject(p.getGoods()) ? p.getGoods()
+					: new HashSet<Goods>();
 
 			currentGoods.removeIf(existingGood -> !updatedGoods.contains(existingGood));
 
@@ -115,9 +116,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public List<ProductDTO> getProductsByGood(Long goodId, Integer status) {
-		
+
 		List<Products> products = this.productDAO.getAllProductsByGoodId(goodId, status);
-		if(CommonValidators.validList(products)) {
+		if (CommonValidators.validList(products)) {
 			return products.stream().map(ProductDTO::new).collect(Collectors.toList());
 		}
 		return Collections.emptyList();
