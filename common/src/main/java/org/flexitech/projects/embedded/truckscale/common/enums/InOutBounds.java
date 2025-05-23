@@ -8,21 +8,30 @@ import lombok.Getter;
 @Getter
 public enum InOutBounds {
 
-	IN(1, "In Bound"),
-	OUT(2, "Out Bound"),
-	BOTH(3, "Both");
+	IN(1, "In Bound"), OUT(2, "Out Bound"), BOTH(3, "Both");
 
 	private final Integer code;
 	private final String desc;
-	
+
 	InOutBounds(int i, String string) {
 		code = i;
 		desc = string;
 	}
-	
+
 	public static List<EnumObjects> getAll() {
 		List<EnumObjects> result = new ArrayList<EnumObjects>();
 		for (InOutBounds s : values()) {
+			result.add(new EnumObjects(s.code, s.desc));
+		}
+		return result;
+	}
+
+	public static List<EnumObjects> getAllWithoutBoth() {
+		List<EnumObjects> result = new ArrayList<EnumObjects>();
+		for (InOutBounds s : values()) {
+			if (s == BOTH)
+				continue;
+
 			result.add(new EnumObjects(s.code, s.desc));
 		}
 		return result;
@@ -37,5 +46,5 @@ public enum InOutBounds {
 
 		return null;
 	}
-	
+
 }

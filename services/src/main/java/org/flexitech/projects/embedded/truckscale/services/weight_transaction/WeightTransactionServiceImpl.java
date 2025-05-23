@@ -30,6 +30,7 @@ import org.flexitech.projects.embedded.truckscale.dao.transaction.TransactionDAO
 import org.flexitech.projects.embedded.truckscale.dao.user.UserDAO;
 import org.flexitech.projects.embedded.truckscale.dto.company.CompanyDTO;
 import org.flexitech.projects.embedded.truckscale.dto.counter.CounterDTO;
+import org.flexitech.projects.embedded.truckscale.dto.reports.transaction.TransactionReportSummaryDTO;
 import org.flexitech.projects.embedded.truckscale.dto.request.transactions.WeightTransactionRequest;
 import org.flexitech.projects.embedded.truckscale.dto.response.counter.CounterSettingResponse;
 import org.flexitech.projects.embedded.truckscale.dto.response.weight_transaction.WeightTransactionPreloadDataResponse;
@@ -116,10 +117,10 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 
 	@Autowired
 	SystemSettingService systemSettingService;
-	
+
 	@Autowired
 	PaymentTypeService paymentTypeService;
-	
+
 	@Autowired
 	CompanyDAO companyDAO;
 
@@ -132,10 +133,10 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 		data.setGoods(this.goodService.getAllGoods(ActiveStatus.ACTIVE.getCode()));
 
 		data.setPaymentTypes(this.paymentTypeService.getAll(ActiveStatus.ACTIVE.getCode()));
-		
+
 		List<Company> companies = this.companyDAO.getAll();
 		data.setCompany(new CompanyDTO(companies.get(0)));
-		
+
 		UserDTO user = this.userService.getUserById(userId);
 
 		UserShiftDTO activeShift = this.shiftService.getCurrentActiveShift(userId);
@@ -152,7 +153,7 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 					CounterSettingResponse settingResponse = new CounterSettingResponse();
 					settingResponse.setCounter(counter);
 					settingResponse.setUnits(this.weightUnitService.getAllWeightUnit(ActiveStatus.ACTIVE.getCode()));
-					settingResponse.setBounds(InOutBounds.getAll());
+					settingResponse.setBounds(InOutBounds.getAllWithoutBoth());
 					settingResponse.setCustomerTypes(
 							this.customerTypeService.getAllCustomerTypes(ActiveStatus.ACTIVE.getCode()));
 					data.setCounterSetting(settingResponse);
@@ -359,7 +360,33 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 	public List<TransactionDTO> searchTransactions(TransactionSearchDTO searchDTO, boolean export) {
 		List<Transaction> transactions = this.transactionDAO.searchTransactions(searchDTO, export);
 		if (CommonValidators.validList(transactions)) {
-			return transactions.stream().map(TransactionDTO::new).collect(Collectors.toList());
+
+			TransactionReportSummaryDTO summary = new TransactionReportSummaryDTO();
+
+			Double weight = 0.0, cargoWeight = 0.0, netWeight = 0.0;
+			int totalIn = 0, totalOut = 0;
+			for (Transaction t : transactions) {
+				weight += t.getWeight() == null ? 0 : t.getWeight();
+				cargoWeight += t.getCargoWeight() == null ? 0 : t.getCargoWeight();
+
+				if (InOutBounds.IN.getCode().equals(t.getInOutStatus())) {
+					totalIn++;
+				}
+				if (InOutBounds.OUT.getCode().equals(t.getInOutStatus())) {
+					totalOut++;
+				}
+			}
+
+			summary.setTotalCargoWeight(cargoWeight);
+			summary.setTotalWeight(weight);
+			summary.setTotalNetWeight(cargoWeight - weight);
+			summary.setTotalIn(totalIn);
+			summary.setTotalOut(totalOut);
+
+			List<TransactionDTO> dataList = transactions.stream().map(TransactionDTO::new).collect(Collectors.toList());
+			dataList.get(0).setSummary(summary);
+
+			return dataList;
 		}
 		return Collections.emptyList();
 	}
@@ -493,7 +520,7 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 		transaction.setOverWeight(request.getOverWeight());
 		transaction.setCargoWeight(request.getCargoWeight());
 		transaction.setWeight(request.getWeight());
-		
+
 		/*
 		 * if (TransactionType.INOUT.getCode().equals(request.getTransactionType())) if
 		 * (request.getCargoStatus() == CargoStatus.WITH_CARGO.getCode()) else if
@@ -543,6 +570,12 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 		/* checkForCompletedTransction(transaction); */
 
 		return new WeightTransactionResponse(new TransactionDTO(transaction));
+	}
+
+	@Override
+	public TransactionReportSummaryDTO getTransactionSummary(TransactionSearchDTO searchDTO) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

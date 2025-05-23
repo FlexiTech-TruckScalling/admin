@@ -139,7 +139,12 @@ public class TransactionReportController {
 		model.addAttribute("pageTitle", "ENL | Truck Scale Transaction Search");
 		model.addAttribute("statusList", ActiveStatus.getAll());
 		model.addAttribute("transactionStatusList", TransactionStatus.getAll());
-		model.addAttribute("transactionList", weightTransactionService.searchTransactions(searchDTO, false));
+		List<TransactionDTO> data = weightTransactionService.searchTransactions(searchDTO, false);
+		if(data.size() > 0) {
+			model.addAttribute("summary", data.get(0).getSummary());
+			
+		}
+		model.addAttribute("transactionList", data);
 
 		Integer total = this.weightTransactionService.countTotalTransaction(searchDTO);
 

@@ -187,6 +187,20 @@
 				List</span>
 		</div>
 		<div class="card-body">
+			<c:if test="${not empty summary }">
+				<div class="row">
+					<div class="col-md-6">
+
+						<label>Total Weigt</label> : <strong>${summary.totalWeight }</strong><br>
+						<label>Total Cargo Weight</label> : <strong>${summary.totalCargoWeight }</strong><br>
+						<label>Total Net Weight</label> : <strong>${summary.totalNetWeight }</strong><br>
+						<label>Total In</label> : <strong>${summary.totalIn }</strong><br>
+						<label>Total Out</label> : <strong>${summary.totalOut }</strong><br>
+					</div>
+				</div>
+			</c:if>
+
+
 			<div class=" table-responsive">
 				<table class="table table-striped">
 					<thead class="bg-gradient-primary text-white">

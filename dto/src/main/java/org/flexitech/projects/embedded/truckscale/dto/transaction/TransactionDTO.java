@@ -13,11 +13,14 @@ import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerVehicleD
 import org.flexitech.projects.embedded.truckscale.dto.payment_type.PaymentTypeDTO;
 import org.flexitech.projects.embedded.truckscale.dto.products.GoodDTO;
 import org.flexitech.projects.embedded.truckscale.dto.products.ProductDTO;
+import org.flexitech.projects.embedded.truckscale.dto.reports.transaction.TransactionReportSummaryDTO;
 import org.flexitech.projects.embedded.truckscale.dto.setting.WeightUnitDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
 import org.flexitech.projects.embedded.truckscale.entities.transaction.Transaction;
 import org.flexitech.projects.embedded.truckscale.util.CommonUtil;
 import org.flexitech.projects.embedded.truckscale.util.DateUtils;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -63,6 +66,9 @@ public class TransactionDTO extends CommonDTO {
 	private Integer transactionType;
 	
 	private PaymentTypeDTO paymentTypeDTO;
+	
+	@JsonIgnore
+	private TransactionReportSummaryDTO summary; 
 
 	public TransactionDTO(Transaction t) {
 		if (!CommonValidators.isValidObject(t))
