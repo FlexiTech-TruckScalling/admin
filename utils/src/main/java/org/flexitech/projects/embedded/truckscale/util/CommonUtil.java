@@ -12,7 +12,7 @@ import com.google.myanmartools.ZawgyiDetector;
 
 public class CommonUtil {
 
-	private static final DecimalFormat formatter = new DecimalFormat("#,###.##");
+	private static final DecimalFormat formatter = new DecimalFormat("#,###");
 
 	public static String formatNumber(Number b) {
 		return (b != null) ? formatter.format(b) : "0";
@@ -25,6 +25,11 @@ public class CommonUtil {
 			e.printStackTrace();
 			return 0;
 		}
+	}
+	
+	public static Integer convertNumberToInteger(Number value) {
+		if(value == null) return 0;
+		return value.intValue();
 	}
 	
 	public static String UnicodeToZawgyi(String value) {
@@ -73,6 +78,8 @@ public class CommonUtil {
 	}
 	
 	public static String getWeightDesc(Double weight, Number perKgValue, String postfix) {
+		
+		if(weight == null) return "0";
 		
 		if(!CommonValidators.isValidObject(perKgValue)) {
 			return formatNumber(weight) + " " + postfix;

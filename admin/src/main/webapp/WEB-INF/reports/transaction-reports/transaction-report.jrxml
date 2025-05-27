@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="transaction-report" pageWidth="1389" pageHeight="842" columnWidth="1349" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="08b1e900-b1a7-4cf2-8d9f-7e5323cc5ae8">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="transaction-report" pageWidth="1389" pageHeight="842" columnWidth="1349" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isIgnorePagination="true" uuid="08b1e900-b1a7-4cf2-8d9f-7e5323cc5ae8">
 	<property name="ireport.zoom" value="1.771561000000003"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="1455"/>
 	<property name="ireport.y" value="0"/>
 	<style name="DefaultStyle" isDefault="true" fontName="Zawgyi-One"/>
+	<parameter name="totalWeight" class="java.lang.Double"/>
+	<parameter name="totalCargoWeight" class="java.lang.Double"/>
+	<parameter name="totalNetWeight" class="java.lang.Double"/>
+	<parameter name="totalAmount" class="java.lang.String"/>
+	<parameter name="totalIn" class="java.lang.Integer"/>
+	<parameter name="totalOut" class="java.lang.Integer"/>
 	<field name="transactionCode" class="java.lang.String"/>
 	<field name="customerName" class="java.lang.String"/>
 	<field name="good" class="java.lang.String"/>
@@ -19,7 +25,7 @@
 	<title>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="1349" height="30" uuid="62f5920e-6419-4aad-9d95-40f96cf06b12"/>
+				<reportElement x="0" y="0" width="1130" height="30" uuid="62f5920e-6419-4aad-9d95-40f96cf06b12"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="15" isBold="true"/>
 				</textElement>
@@ -30,7 +36,7 @@
 	<columnHeader>
 		<band height="20">
 			<staticText>
-				<reportElement x="480" y="0" width="120" height="20" uuid="7cee5868-18ab-4600-b25a-73a7c7d980d0"/>
+				<reportElement x="380" y="0" width="120" height="20" uuid="7cee5868-18ab-4600-b25a-73a7c7d980d0"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -44,21 +50,7 @@
 				<text><![CDATA[Vehicle]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="600" y="0" width="120" height="20" uuid="54275ba1-4dbe-4068-997f-2c23fe330b85"/>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Driver]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="720" y="0" width="90" height="20" uuid="1e30ce30-04dc-462d-ac2c-a55ef22e2523"/>
+				<reportElement x="500" y="0" width="90" height="20" uuid="1e30ce30-04dc-462d-ac2c-a55ef22e2523"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -72,7 +64,7 @@
 				<text><![CDATA[Weight]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="810" y="0" width="100" height="20" uuid="33feafb5-4549-4cdf-9c45-83488cb54667"/>
+				<reportElement x="590" y="0" width="100" height="20" uuid="33feafb5-4549-4cdf-9c45-83488cb54667"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -86,7 +78,7 @@
 				<text><![CDATA[Cargo Weight]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="910" y="0" width="100" height="20" uuid="4c3db9e9-4816-4267-b3ad-a535aed26e32"/>
+				<reportElement x="690" y="0" width="100" height="20" uuid="4c3db9e9-4816-4267-b3ad-a535aed26e32"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -100,7 +92,7 @@
 				<text><![CDATA[In/Out Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1010" y="0" width="100" height="20" uuid="a3da4c8e-5814-42f3-a9e6-ca4acc4253d3"/>
+				<reportElement x="790" y="0" width="100" height="20" uuid="a3da4c8e-5814-42f3-a9e6-ca4acc4253d3"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -114,7 +106,7 @@
 				<text><![CDATA[Transaction Status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1110" y="0" width="120" height="20" uuid="fc77c9a9-3c81-4cc2-85a5-42141cfc526a"/>
+				<reportElement x="890" y="0" width="120" height="20" uuid="fc77c9a9-3c81-4cc2-85a5-42141cfc526a"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -128,7 +120,7 @@
 				<text><![CDATA[In Time]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1230" y="0" width="120" height="20" uuid="0e884fbd-6d4c-4378-a6cd-74e18b5c5e42"/>
+				<reportElement x="1010" y="0" width="120" height="20" uuid="0e884fbd-6d4c-4378-a6cd-74e18b5c5e42"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -197,20 +189,6 @@
 				</textElement>
 				<text><![CDATA[Goods]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="380" y="0" width="100" height="20" uuid="858b012a-2cba-460f-8a98-e0d29f914c32"/>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Product]]></text>
-			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -272,21 +250,7 @@
 				<textFieldExpression><![CDATA[$F{good}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="380" y="0" width="100" height="20" uuid="819d32f6-d27b-44cb-9661-ac0a6aefe7b7"/>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement>
-					<font fontName="Zawgyi-One" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{product}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="480" y="0" width="120" height="20" uuid="e4e01564-3ea4-4a18-a879-d9adb9547d39"/>
+				<reportElement x="380" y="0" width="120" height="20" uuid="e4e01564-3ea4-4a18-a879-d9adb9547d39"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -300,21 +264,7 @@
 				<textFieldExpression><![CDATA[$F{vehicle}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="600" y="0" width="120" height="20" uuid="085ff216-95ad-470a-860d-1480c2526335"/>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-					<pen lineWidth="1.0"/>
-					<topPen lineWidth="1.0"/>
-					<leftPen lineWidth="1.0"/>
-					<bottomPen lineWidth="1.0"/>
-					<rightPen lineWidth="1.0"/>
-				</box>
-				<textElement>
-					<font fontName="Zawgyi-One" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{driver}]]></textFieldExpression>
-			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="720" y="0" width="90" height="20" uuid="db8513c0-7100-4fde-ab29-26d1243f7f63"/>
+				<reportElement x="500" y="0" width="90" height="20" uuid="db8513c0-7100-4fde-ab29-26d1243f7f63"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -328,7 +278,7 @@
 				<textFieldExpression><![CDATA[$F{weight}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="810" y="0" width="100" height="20" uuid="7ff125f2-8674-4a1c-a7c9-db3a18553536"/>
+				<reportElement x="590" y="0" width="100" height="20" uuid="7ff125f2-8674-4a1c-a7c9-db3a18553536"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -342,7 +292,7 @@
 				<textFieldExpression><![CDATA[$F{cargoWeight}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="910" y="0" width="100" height="20" uuid="f1ac147a-dd7c-494f-b606-e03473f6b642"/>
+				<reportElement x="690" y="0" width="100" height="20" uuid="f1ac147a-dd7c-494f-b606-e03473f6b642"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -356,7 +306,7 @@
 				<textFieldExpression><![CDATA[$F{inOutStatus}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="1010" y="0" width="100" height="20" uuid="266ca26d-b282-4ffd-837c-e9aa11e9b61e"/>
+				<reportElement x="790" y="0" width="100" height="20" uuid="266ca26d-b282-4ffd-837c-e9aa11e9b61e"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -370,7 +320,7 @@
 				<textFieldExpression><![CDATA[$F{transactionStatus}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="1110" y="0" width="120" height="20" uuid="969c518c-0170-4734-b9b9-a730e7179d94"/>
+				<reportElement x="890" y="0" width="120" height="20" uuid="969c518c-0170-4734-b9b9-a730e7179d94"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -384,7 +334,7 @@
 				<textFieldExpression><![CDATA[$F{inTime}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="1230" y="0" width="120" height="20" uuid="b0a2ca98-390b-496e-814e-417c204cde0c"/>
+				<reportElement x="1010" y="0" width="120" height="20" uuid="b0a2ca98-390b-496e-814e-417c204cde0c"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -399,4 +349,71 @@
 			</textField>
 		</band>
 	</detail>
+	<summary>
+		<band height="135">
+			<frame>
+				<reportElement x="0" y="10" width="280" height="125" uuid="9c514af6-9d8c-4cd4-aa6e-d42750426993"/>
+				<staticText>
+					<reportElement x="0" y="0" width="100" height="20" uuid="a1f31f33-c75b-4437-9b8e-1ce6ca105568"/>
+					<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="5"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Total Weight]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="20" width="100" height="20" uuid="ef3ed494-921f-46c1-8e07-71d6b6471c11"/>
+					<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="5"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Total Cargo Weight]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="40" width="100" height="20" uuid="50ff6dab-1c71-4d89-be16-381015a32fb9"/>
+					<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="5"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Total Net Weight]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="80" width="100" height="20" uuid="3aed79ca-2ccb-45de-a1c7-b6b07f99f137"/>
+					<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="5"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Total In]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="100" width="100" height="20" uuid="8864d5f9-828f-47ed-8306-7c29293467f6"/>
+					<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="5"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Total Out]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="100" y="0" width="180" height="20" uuid="753b77e0-ab5b-4326-97e5-3b8053272e13"/>
+					<textFieldExpression><![CDATA[$P{totalWeight}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="100" y="20" width="180" height="20" uuid="eb08b9b7-b658-41e3-b283-c2ec9b5442b9"/>
+					<textFieldExpression><![CDATA[$P{totalCargoWeight}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="100" y="40" width="180" height="20" uuid="011bde1f-8ae0-49d6-89de-4e9532f908bc"/>
+					<textFieldExpression><![CDATA[$P{totalNetWeight}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="100" y="80" width="180" height="20" uuid="c564e28e-037f-4101-b209-dc5e5a5b2c62"/>
+					<textFieldExpression><![CDATA[$P{totalIn}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="100" y="100" width="180" height="20" uuid="983bb6cd-6993-4499-a321-6e63021110f5"/>
+					<textFieldExpression><![CDATA[$P{totalOut}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="60" width="100" height="20" uuid="d0e2bf56-5d81-435c-9a69-c16325fc2e11"/>
+					<box topPadding="0" leftPadding="5" bottomPadding="0" rightPadding="5"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<text><![CDATA[Total Amount]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="100" y="60" width="180" height="20" uuid="8c009db7-a33a-4210-90ea-11633a2ea942"/>
+					<textFieldExpression><![CDATA[$P{totalAmount}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</summary>
 </jasperReport>

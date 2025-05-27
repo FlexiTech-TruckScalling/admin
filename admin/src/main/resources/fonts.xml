@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <fontFamilies> 
     <fontFamily name="Zawgyi-One"> 
-        <normal>Zawgyi-One.ttf</normal> 
-        <bold>Zawgyi-One.ttf</bold> 
+        <normal>ZawgyiOne.ttf</normal> 
+        <bold>ZawgyiOne.ttf</bold> 
         <pdfEncoding>Identity-H</pdfEncoding> 
         <pdfEmbedded>true</pdfEmbedded> 
     </fontFamily>  

@@ -40,11 +40,11 @@ public class ReportServiceImpl implements ReportService{
 		try {
 			JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new File(reportPath));
 			JasperPrint print = JasperFillManager.fillReport(jasperReport, parameters, datasource);
-			if (jasperReport.getDefaultStyle() == null) {
-	            JRStyle defaultStyle = new JRBaseStyle();
-	            defaultStyle.setFontName("Zawgyi-One");
-	            defaultStyle.setPdfFontName("Zawgyi-One");
-	        }
+			/*
+			 * if (jasperReport.getDefaultStyle() == null) { JRStyle defaultStyle = new
+			 * JRBaseStyle(); defaultStyle.setFontName("Zawgyi-One");
+			 * defaultStyle.setPdfFontName("Zawgyi-One"); }
+			 */
 			JRPdfExporter exporterPdf = new JRPdfExporter();
 			exporterPdf.setExporterInput(new SimpleExporterInput(print));
 			exporterPdf.setExporterOutput(new SimpleOutputStreamExporterOutput(baos));

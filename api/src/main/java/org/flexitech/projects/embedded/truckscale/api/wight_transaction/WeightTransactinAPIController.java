@@ -2,6 +2,8 @@ package org.flexitech.projects.embedded.truckscale.api.wight_transaction;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @RestController
 @RequestMapping("/weight-transactions")
 public class WeightTransactinAPIController {
@@ -39,12 +43,12 @@ public class WeightTransactinAPIController {
 
 	@SuppressWarnings("unchecked")
 	@GetMapping("/preload-data")
-	public ResponseEntity<?> getWeightTransactionPreloadData(@RequestParam(required = false) Long userId) {
+	public ResponseEntity<?> getWeightTransactionPreloadData(@RequestParam(required = false) Long userId, HttpServletRequest request) {
 		Response response = new Response();
 		try {
 			if (CommonValidators.validLong(userId)) {
 				WeightTransactionPreloadDataResponse data = weightTransactionService
-						.getWeightTransactionPreloadData(userId);
+						.getWeightTransactionPreloadData(userId, request);
 				response = new BaseResponse<WeightTransactionPreloadDataResponse>();
 				response.setResponseCode(HttpStatus.OK.value());
 				response.setResponseMessage("Getting preload data success");
@@ -69,6 +73,7 @@ public class WeightTransactinAPIController {
 		Response response = new Response();
 
 		try {
+			System.out.println("weight request: "+new ObjectMapper().writeValueAsString(request));
 			WeightTransactionResponse res = this.weightTransactionService.manageWeightTransaction(request);
 			response = new BaseResponse<WeightTransactionResponse>();
 			response.setResponseCode(HttpStatus.OK.value());

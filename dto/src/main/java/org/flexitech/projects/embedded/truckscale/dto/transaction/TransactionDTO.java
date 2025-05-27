@@ -40,16 +40,16 @@ public class TransactionDTO extends CommonDTO {
 	private CustomerVehicleDTO vehicleDTO;
 	private Integer registerVehicleStatus;
 	private String driverName;
-	private BigDecimal quantity;
+	private Integer quantity;
 	private WeightUnitDTO quantityUnitDTO;
 	private WeightUnitDTO weightUnitDTO;
 	private BigDecimal cost;
-	private Double allowedWeight;
-	private Double overWeight;
+	private Integer allowedWeight;
+	private Integer overWeight;
 	private Integer cargoStatus;
-	private Double weight;
+	private Integer weight;
 	private String weightDesc;
-	private Double cargoWeight;
+	private Integer cargoWeight;
 	private String cargoWeightDesc;
 	private Integer inOutStatus;
 	private String vehiclePhotoOne;
@@ -84,20 +84,20 @@ public class TransactionDTO extends CommonDTO {
 		this.vehicleDTO = t.getVehicle() != null ? new CustomerVehicleDTO(t.getVehicle()) : null;
 		this.registerVehicleStatus = t.getRegisterVehicleStatus();
 		this.driverName = t.getDriverName();
-		this.quantity = t.getQty();
+		this.quantity = CommonUtil.convertNumberToInteger(t.getQty());
 		this.quantityUnitDTO = t.getQuantityUnit() != null ? new WeightUnitDTO(t.getQuantityUnit()) : null;
 		this.weightUnitDTO = t.getWeightUnit() != null ? new WeightUnitDTO(t.getWeightUnit()) : null;
 		this.cost = t.getCost();
-		this.allowedWeight = t.getAllowedWeight();
-		this.overWeight = t.getOverWeight();
+		this.allowedWeight = CommonUtil.convertNumberToInteger(t.getAllowedWeight());
+		this.overWeight = CommonUtil.convertNumberToInteger(t.getOverWeight());
 		this.cargoStatus = t.getCargoStatus();
-		this.weight = t.getWeight();
+		this.weight = CommonUtil.convertNumberToInteger(t.getWeight());
 		if(CommonValidators.isValidObject(weight) && CommonValidators.isValidObject(t.getWeightUnit())) {
-			this.weightDesc = CommonUtil.getWeightDesc(weight, t.getWeightUnit().getPerKgValue(), t.getWeightUnit().getName());
+			this.weightDesc = CommonUtil.getWeightDesc(t.getWeight(), t.getWeightUnit().getPerKgValue(), t.getWeightUnit().getName());
 		}
-		this.cargoWeight = t.getCargoWeight();
+		this.cargoWeight = CommonUtil.convertNumberToInteger(t.getCargoWeight());
 		if(CommonValidators.isValidObject(cargoWeight) && CommonValidators.isValidObject(t.getWeightUnit())) {
-			this.cargoWeightDesc = CommonUtil.getWeightDesc(cargoWeight, t.getWeightUnit().getPerKgValue(), t.getWeightUnit().getName());
+			this.cargoWeightDesc = CommonUtil.getWeightDesc(t.getCargoWeight(), t.getWeightUnit().getPerKgValue(), t.getWeightUnit().getName());
 		}
 		this.inOutStatus = t.getInOutStatus();
 		this.vehiclePhotoOne = t.getVehiclePhotoOne();

@@ -18,6 +18,7 @@ import org.flexitech.projects.embedded.truckscale.common.enums.InOutBounds;
 import org.flexitech.projects.embedded.truckscale.common.enums.MathSign;
 import org.flexitech.projects.embedded.truckscale.common.enums.TransactionStatus;
 import org.flexitech.projects.embedded.truckscale.dto.reports.transaction.TransactionReportDTO;
+import org.flexitech.projects.embedded.truckscale.dto.reports.transaction.TransactionReportSummaryDTO;
 import org.flexitech.projects.embedded.truckscale.dto.transaction.TransactionDTO;
 import org.flexitech.projects.embedded.truckscale.dto.transaction.TransactionSearchDTO;
 import org.flexitech.projects.embedded.truckscale.services.payment_type.PaymentTypeService;
@@ -79,11 +80,23 @@ public class TransactionReportController {
 			if (!CommonValidators.validList(list))
 				return;
 
+			TransactionReportSummaryDTO summary = list.get(0).getSummary();
+			
 			List<TransactionReportDTO> dataList = list.stream().map(TransactionReportDTO::new)
 					.collect(Collectors.toList());
 
 			String fileName = System.currentTimeMillis() + "_transaction_report.xlsx";
 			HashMap<String, Object> parameter = new HashMap<String, Object>();
+		
+			if(summary != null) {
+				parameter.put("totalWeight", summary.getTotalWeight());
+				parameter.put("totalCargoWeight", summary.getTotalCargoWeight());
+				parameter.put("totalNetWeight", summary.getTotalNetWeight());
+				parameter.put("totalAmount", summary.getTotalAmount());
+				parameter.put("totalIn", summary.getTotalIn());
+				parameter.put("totalOut", summary.getTotalOut());
+			}
+			
 			reportService.generateReportExcel(dataList, baos, reportPath, fileName, parameter);
 
 			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
@@ -109,11 +122,24 @@ public class TransactionReportController {
 			if (!CommonValidators.validList(list))
 				return;
 
+			
+			TransactionReportSummaryDTO summary = list.get(0).getSummary();
+			
 			List<TransactionReportDTO> dataList = list.stream().map(TransactionReportDTO::new)
 					.collect(Collectors.toList());
 
 			String fileName = System.currentTimeMillis() + "_transaction_report.pdf";
 			HashMap<String, Object> parameter = new HashMap<String, Object>();
+			
+			if(summary != null) {
+				parameter.put("totalWeight", summary.getTotalWeight());
+				parameter.put("totalCargoWeight", summary.getTotalCargoWeight());
+				parameter.put("totalNetWeight", summary.getTotalNetWeight());
+				parameter.put("totalAmount", summary.getTotalAmount());
+				parameter.put("totalIn", summary.getTotalIn());
+				parameter.put("totalOut", summary.getTotalOut());
+			}
+			
 			reportService.generateReportPdf(dataList, baos, reportPath, fileName, parameter);
 
 			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");

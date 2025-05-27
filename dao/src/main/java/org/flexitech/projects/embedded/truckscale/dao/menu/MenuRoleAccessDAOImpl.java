@@ -35,6 +35,7 @@ public class MenuRoleAccessDAOImpl extends CommonDAOImpl<MenuRoleAccess, Long> i
 		c.add(Restrictions.eq("r.id", roleId));
 		c.add(Restrictions.eq("m.parentMenuCode", parentMenuCode));
 		c.add(Restrictions.ne("m.parentStatus", ActiveStatus.ACTIVE.getCode()));
+		c.add(Restrictions.eq("m.status", ActiveStatus.ACTIVE.getCode()));
 		c.addOrder(Order.asc("m.order"));
 		return c.list();
 	}

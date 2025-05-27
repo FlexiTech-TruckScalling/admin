@@ -89,14 +89,12 @@ public class WeightTransactionRequest {
     private Long userId;
     
     @JsonProperty("in_time")
-    @DateTimeFormat(pattern = CommonDateFormats.STANDARD_12_HOUR_DATE_MINUTE_FORMAT)
     @JsonFormat(pattern = CommonDateFormats.STANDARD_12_HOUR_DATE_MINUTE_FORMAT)
-    private Date inTime;
+    private String inTime;
     
     @JsonProperty("out_time")
-    @DateTimeFormat(pattern = CommonDateFormats.STANDARD_12_HOUR_DATE_MINUTE_FORMAT)
     @JsonFormat(pattern = CommonDateFormats.STANDARD_12_HOUR_DATE_MINUTE_FORMAT)
-    private Date outTime;
+    private String outTime;
     
     @JsonProperty("transaction_code")
     private String transactionCode;

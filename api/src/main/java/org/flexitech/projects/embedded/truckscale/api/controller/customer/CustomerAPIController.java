@@ -3,6 +3,7 @@ package org.flexitech.projects.embedded.truckscale.api.controller.customer;
 import java.util.List;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.common.network.response.BaseResponse;
 import org.flexitech.projects.embedded.truckscale.common.network.response.ErrorResponse;
 import org.flexitech.projects.embedded.truckscale.common.network.response.Response;
@@ -32,6 +33,7 @@ public class CustomerAPIController {
 
 		Response response = new Response();
 		searchDTO.setPageNo(1);
+		searchDTO.setStatus(ActiveStatus.ACTIVE.getCode());
 		
 		try {
 			List<CustomerDTO> customers = this.customerService.searchCustomers(searchDTO);

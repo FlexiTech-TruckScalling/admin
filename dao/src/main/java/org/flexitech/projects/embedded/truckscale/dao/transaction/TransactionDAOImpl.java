@@ -9,6 +9,7 @@ import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.common.enums.MathSign;
 import org.flexitech.projects.embedded.truckscale.common.enums.TransactionStatus;
 import org.flexitech.projects.embedded.truckscale.dao.common.CommonDAOImpl;
+import org.flexitech.projects.embedded.truckscale.dto.reports.transaction.TransactionReportSummaryDTO;
 import org.flexitech.projects.embedded.truckscale.dto.shift.CurrentShiftSummaryDTO;
 import org.flexitech.projects.embedded.truckscale.dto.transaction.TransactionSearchDTO;
 import org.flexitech.projects.embedded.truckscale.entities.transaction.Transaction;
@@ -244,6 +245,121 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 		c.add(Restrictions.eq("transactionCode", code));
 		c.setMaxResults(1);
 		return c.uniqueResult() != null;
+	}
+
+	@Override
+	public TransactionReportSummaryDTO getTransactionSummary(TransactionSearchDTO searchDTO) {
+	    SQLQuery query = getCurrentSession().createSQLQuery(prepareSQLForSummary(searchDTO));
+	    query.addScalar("totalWeight", StandardBasicTypes.DOUBLE)
+	         .addScalar("totalCargoWeight", StandardBasicTypes.DOUBLE)
+	         .addScalar("totalNetWeight", StandardBasicTypes.DOUBLE)
+	         .addScalar("totalAmount", StandardBasicTypes.STRING)
+	         .addScalar("totalIn", StandardBasicTypes.INTEGER)
+	         .addScalar("totalOut", StandardBasicTypes.INTEGER);
+
+	    setQueryParameters(query, searchDTO);
+	    query.setResultTransformer(Transformers.aliasToBean(TransactionReportSummaryDTO.class));
+	    query.setMaxResults(1);
+	    
+	    return (TransactionReportSummaryDTO) query.uniqueResult();
+	}
+
+	private String prepareSQLForSummary(TransactionSearchDTO searchDTO) {
+	    StringBuilder builder = new StringBuilder();
+	    List<String> joins = new ArrayList<>();
+	    List<String> conditions = new ArrayList<>();
+
+	    builder.append("SELECT ")
+	           .append("COALESCE(SUM(t.weight), 0) as totalWeight, ")
+	           .append("COALESCE(SUM(t.cargo_weight), 0) as totalCargoWeight, ")
+	           .append("COALESCE(SUM(t.weight - t.cargo_weight), 0) as totalNetWeight, ")
+	           .append("COALESCE(SUM(t.cost), '0') as totalAmount, ")
+	           .append("COUNT(CASE WHEN t.in_out_status = 1 THEN 1 END) as totalIn, ")
+	           .append("COUNT(CASE WHEN t.in_out_status = 2 THEN 1 END) as totalOut ");
+
+	    builder.append("FROM transactions t ");
+	    joins.add("LEFT JOIN customers c ON t.customer_id = c.id");
+
+	    if (CommonValidators.validString(searchDTO.getVehiclePrefix()) || 
+	        CommonValidators.validString(searchDTO.getVehicleNumber())) {
+	        joins.add("LEFT JOIN customer_vehicles cv ON t.vehicle_id = cv.id");
+	    }
+
+	    if (!joins.isEmpty()) {
+	        builder.append(String.join(" ", joins)).append(" ");
+	    }
+
+	    // Reuse existing conditions from search
+	    if(CommonValidators.validString(searchDTO.getTransctionCode())) {
+	    	conditions.add("t.transaction_code = :transactionCode");
+	    }
+	    
+	    // WHERE clause
+	    if (CommonValidators.validString(searchDTO.getCustomerName())) {
+	        conditions.add("c.name LIKE :customerName");
+	    }
+	    if (CommonValidators.validLong(searchDTO.getGoodId())) {
+	        conditions.add("t.good_id = :goodId");
+	    }
+	    if (CommonValidators.validLong(searchDTO.getProductId())) {
+	        conditions.add("t.product_id = :productId");
+	    }
+	    if (CommonValidators.validString(searchDTO.getVehiclePrefix())) {
+	        conditions.add("cv.prefix LIKE :vehiclePrefix");
+	    }
+	    if (CommonValidators.validString(searchDTO.getVehicleNumber())) {
+	        conditions.add("cv.number LIKE :vehicleNumber");
+	    }
+	    if (CommonValidators.validString(searchDTO.getDriverName())) {
+	        conditions.add("t.driver_name LIKE :driverName");
+	    }
+	    if (CommonValidators.validDouble(searchDTO.getWeight())) {
+	        conditions.add("t.weight = :weight");
+	    }
+	    if (CommonValidators.validDouble(searchDTO.getFromWeight())
+	            && CommonValidators.validInteger(searchDTO.getMathSign())) {
+	        conditions.add("t.weight " + MathSign.getDescByCode(searchDTO.getMathSign()) + " :fromWeight ");
+	    }
+	    if (CommonValidators.validInteger(searchDTO.getInOutStatus())) {
+	        conditions.add("t.in_out_status = :inOutStatus");
+	    }
+	    if (CommonValidators.validInteger(searchDTO.getOverWeightStatus())) {
+	        if (searchDTO.getOverWeightStatus() == 1) {
+	            conditions.add("t.over_weight > 0");
+	        } else {
+	            conditions.add("t.over_weight <= 0");
+	        }
+	    }
+	    if (CommonValidators.validString(searchDTO.getSessionCode())) {
+	        conditions.add("t.session_code = :sessionCode");
+	    }
+	    if (CommonValidators.validLong(searchDTO.getUserId())) {
+	        conditions.add("t.user_id = :userId");
+	    }
+	    if (CommonValidators.validString(searchDTO.getCreatedFromDate())) {
+	        conditions.add("t.created_time >= :createdFromDate");
+	    }
+	    if (CommonValidators.validString(searchDTO.getCreatedToDate())) {
+	        conditions.add("t.created_time <= :createdToDate");
+	    }
+	    
+	    if(CommonValidators.validLong(searchDTO.getPaymentTypeId())) {
+	    	conditions.add("t.payment_type_id = :paymentTypeId");
+	    }
+	    
+	    if(searchDTO.isExcludeCancel()) {
+	        conditions.add("t.transaction_status != " + TransactionStatus.CANCEL.getCode());
+	    } else {
+	        if(CommonValidators.validInteger(searchDTO.getTransactionStatus())) {
+	            conditions.add("t.transaction_status = :transactionStatus");
+	        }
+	    }
+
+	    if (!conditions.isEmpty()) {
+	        builder.append("WHERE ").append(String.join(" AND ", conditions)).append(" ");
+	    }
+
+	    return builder.toString();
 	}
 
 }

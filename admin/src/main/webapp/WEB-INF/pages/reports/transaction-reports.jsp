@@ -29,7 +29,7 @@
 					</div>
 
 					<!-- Product -->
-					<div class="col-md-3">
+					<%-- <div class="col-md-3">
 						<form:label path="productId" class="form-label">Product</form:label>
 						<form:select path="productId"
 							class="form-control border bg-white selectpicker">
@@ -37,7 +37,7 @@
 							<form:options items="${productList}" itemValue="id"
 								itemLabel="name" />
 						</form:select>
-					</div>
+					</div> --%>
 
 					<!-- Product -->
 					<div class="col-md-3">
@@ -209,9 +209,9 @@
 							<th class="py-1">Transaction Code</th>
 							<th class="py-1">Customer</th>
 							<th class="py-1">Goods</th>
-							<th class="py-1">Product</th>
+							<!-- <th class="py-1">Product</th> -->
 							<th class="py-1">Vehicle</th>
-							<th class="py-1">Driver</th>
+							<!-- <th class="py-1">Driver</th> -->
 							<th class="py-1">Weight</th>
 							<th class="py-1">Car + Cargo Weight</th>
 							<th class="py-1">In/Out Status</th>
@@ -235,10 +235,10 @@
 										class="">${transaction.transactionCode} </a></td>
 									<td>${transaction.customerDTO.name}</td>
 									<td>${transaction.goodDTO.name}</td>
-									<td>${transaction.productDTO.name}</td>
+									<%-- <td>${transaction.productDTO.name}</td> --%>
 									<td>${transaction.vehicleDTO.prefix}
 										${transaction.vehicleDTO.number}</td>
-									<td>${transaction.driverName}</td>
+									<%-- <td>${transaction.driverName}</td> --%>
 									<td>${transaction.weightDesc}</td>
 									<td>${transaction.cargoWeightDesc}</td>
 									<td><span

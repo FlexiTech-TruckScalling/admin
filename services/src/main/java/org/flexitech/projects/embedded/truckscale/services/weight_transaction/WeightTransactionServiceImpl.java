@@ -6,11 +6,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.flexitech.projects.embedded.truckscale.common.CommonDateFormats;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.common.enums.CargoStatus;
@@ -58,6 +60,8 @@ import org.flexitech.projects.embedded.truckscale.services.setting.SystemSetting
 import org.flexitech.projects.embedded.truckscale.services.setting.WeightUnitService;
 import org.flexitech.projects.embedded.truckscale.services.shift.UserShiftService;
 import org.flexitech.projects.embedded.truckscale.services.user.UserService;
+import org.flexitech.projects.embedded.truckscale.util.CommonUtil;
+import org.flexitech.projects.embedded.truckscale.util.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -125,7 +129,7 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 	CompanyDAO companyDAO;
 
 	@Override
-	public WeightTransactionPreloadDataResponse getWeightTransactionPreloadData(Long userId) {
+	public WeightTransactionPreloadDataResponse getWeightTransactionPreloadData(Long userId, HttpServletRequest request) {
 		WeightTransactionPreloadDataResponse data = new WeightTransactionPreloadDataResponse();
 
 		data.setSystemSettings(this.systemSettingService.getAllSystemSettings(ActiveStatus.ACTIVE.getCode()));
@@ -136,6 +140,12 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 
 		List<Company> companies = this.companyDAO.getAll();
 		data.setCompany(new CompanyDTO(companies.get(0)));
+		
+		/*
+		 * if(data.getCompany() != null) {
+		 * 
+		 * }
+		 */
 
 		UserDTO user = this.userService.getUserById(userId);
 
@@ -294,12 +304,14 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 
 		transaction.setCargoStatus(request.getCargoStatus());
 
-		if (CommonValidators.isValidObject(request.getInTime())) {
-			transaction.setInTime(request.getInTime());
+		if (CommonValidators.validString(request.getInTime())) {
+			Date inTime = DateUtils.stringToDate(request.getInTime(), CommonDateFormats.STANDARD_12_HOUR_DATE_MINUTE_FORMAT);
+			transaction.setInTime(inTime);
 		}
 
-		if (CommonValidators.isValidObject(request.getOutTime())) {
-			transaction.setOutTime(request.getOutTime());
+		if (CommonValidators.validString(request.getOutTime())) {
+			Date outTime = DateUtils.stringToDate(request.getOutTime(), CommonDateFormats.STANDARD_12_HOUR_DATE_MINUTE_FORMAT);
+			transaction.setOutTime(outTime);
 		}
 
 		transaction.setSessionCode(request.getSessionId());
@@ -361,28 +373,8 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 		List<Transaction> transactions = this.transactionDAO.searchTransactions(searchDTO, export);
 		if (CommonValidators.validList(transactions)) {
 
-			TransactionReportSummaryDTO summary = new TransactionReportSummaryDTO();
-
-			Double weight = 0.0, cargoWeight = 0.0, netWeight = 0.0;
-			int totalIn = 0, totalOut = 0;
-			for (Transaction t : transactions) {
-				weight += t.getWeight() == null ? 0 : t.getWeight();
-				cargoWeight += t.getCargoWeight() == null ? 0 : t.getCargoWeight();
-
-				if (InOutBounds.IN.getCode().equals(t.getInOutStatus())) {
-					totalIn++;
-				}
-				if (InOutBounds.OUT.getCode().equals(t.getInOutStatus())) {
-					totalOut++;
-				}
-			}
-
-			summary.setTotalCargoWeight(cargoWeight);
-			summary.setTotalWeight(weight);
-			summary.setTotalNetWeight(cargoWeight - weight);
-			summary.setTotalIn(totalIn);
-			summary.setTotalOut(totalOut);
-
+			TransactionReportSummaryDTO summary = this.transactionDAO.getTransactionSummary(searchDTO);
+			
 			List<TransactionDTO> dataList = transactions.stream().map(TransactionDTO::new).collect(Collectors.toList());
 			dataList.get(0).setSummary(summary);
 
@@ -536,12 +528,14 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 
 		transaction.setCargoStatus(request.getCargoStatus());
 
-		if (CommonValidators.isValidObject(request.getInTime())) {
-			transaction.setInTime(request.getInTime());
+		if (CommonValidators.validString(request.getInTime())) {
+			Date inTime = DateUtils.stringToDate(request.getInTime(), CommonDateFormats.STANDARD_12_HOUR_DATE_MINUTE_FORMAT);
+			transaction.setInTime(inTime);
 		}
 
-		if (CommonValidators.isValidObject(request.getOutTime())) {
-			transaction.setOutTime(request.getOutTime());
+		if (CommonValidators.validString(request.getOutTime())) {
+			Date outTime = DateUtils.stringToDate(request.getOutTime(), CommonDateFormats.STANDARD_12_HOUR_DATE_MINUTE_FORMAT);
+			transaction.setOutTime(outTime);
 		}
 
 		transaction.setSessionCode(request.getSessionId());
