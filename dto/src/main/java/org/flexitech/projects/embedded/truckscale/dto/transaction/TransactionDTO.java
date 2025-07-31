@@ -19,6 +19,9 @@ import org.flexitech.projects.embedded.truckscale.entities.transaction.Transacti
 import org.flexitech.projects.embedded.truckscale.util.CommonUtil;
 import org.flexitech.projects.embedded.truckscale.util.DateUtils;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +29,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonInclude(Include.NON_NULL)
 public class TransactionDTO extends CommonDTO {
 
 	private CustomerDTO customerDTO;

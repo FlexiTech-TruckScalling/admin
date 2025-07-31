@@ -20,9 +20,11 @@ public enum InOutBounds {
 		desc = string;
 	}
 	
-	public static List<EnumObjects> getAll() {
+	public static List<EnumObjects> getAll(boolean useBoth) {
 		List<EnumObjects> result = new ArrayList<EnumObjects>();
 		for (InOutBounds s : values()) {
+			if(!useBoth && s.code == InOutBounds.BOTH.code)
+				continue;
 			result.add(new EnumObjects(s.code, s.desc));
 		}
 		return result;

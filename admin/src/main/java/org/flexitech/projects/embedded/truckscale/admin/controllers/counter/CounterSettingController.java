@@ -65,7 +65,7 @@ public class CounterSettingController {
 	private void commonModel(Model model, CounterDTO counter) {
 		model.addAttribute("counterDTO", counter);
 		model.addAttribute("counterList", counterService.getAllCounters(ActiveStatus.ACTIVE.getCode()));
-		model.addAttribute("inOutBoundList", InOutBounds.getAll());
+		model.addAttribute("inOutBoundList", InOutBounds.getAll(false));
 		model.addAttribute("weigthUnitList", weightUnitService.getAllWeightUnit(ActiveStatus.ACTIVE.getCode()));
 	}
 

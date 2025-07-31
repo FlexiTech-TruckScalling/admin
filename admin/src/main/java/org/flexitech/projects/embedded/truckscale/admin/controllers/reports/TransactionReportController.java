@@ -154,7 +154,7 @@ public class TransactionReportController {
 		model.addAttribute("statusList", ActiveStatus.getAll());
 		model.addAttribute("productList", this.productService.getAllProducts(ActiveStatus.ACTIVE.getCode()));
 		model.addAttribute("mathSignList", MathSign.getAll());
-		model.addAttribute("inOutStatusList", InOutBounds.getAll());
+		model.addAttribute("inOutStatusList", InOutBounds.getAll(false));
 	}
 
 }

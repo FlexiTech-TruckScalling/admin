@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.flexitech.projects.embedded.truckscale.common.CommonConstants;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
 import org.flexitech.projects.embedded.truckscale.common.network.response.BaseResponse;
 import org.flexitech.projects.embedded.truckscale.common.network.response.ErrorResponse;
@@ -121,12 +122,15 @@ public class WeightTransactinAPIController {
 
 	@SuppressWarnings("unchecked")
 	@PostMapping("/search")
-	public ResponseEntity<?> searchTransactions(@RequestBody TransactionSearchDTO searchDTO,@RequestParam(required = false) Integer page) {
+	public ResponseEntity<?> searchTransactions(@RequestBody TransactionSearchDTO searchDTO,@RequestParam(required = false) Integer page,
+			@RequestParam(required = false) Integer limit) {
 		Response response = new Response();
 		Integer pageNo = CommonValidators.validInteger(page) ? page : 1;
+		Integer limitRecord = CommonValidators.validInteger(limit)? limit: CommonConstants.ROW_PER_PAGE;
 		searchDTO.setPageNo(pageNo);
+		searchDTO.setLimit(limitRecord);
 		try {
-			List<TransactionDTO> trans = this.weightTransactionService.searchTransactions(searchDTO, false);
+			List<TransactionDTO> trans = this.weightTransactionService.searchTransactions(searchDTO, searchDTO.isExport());
 			response = new BaseResponse<CommonPagingDTO<TransactionDTO>>();
 			response.setResponseCode(HttpStatus.OK.value());
 			response.setResponseMessage("Search transaction successfully!");

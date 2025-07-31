@@ -152,7 +152,7 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 					CounterSettingResponse settingResponse = new CounterSettingResponse();
 					settingResponse.setCounter(counter);
 					settingResponse.setUnits(this.weightUnitService.getAllWeightUnit(ActiveStatus.ACTIVE.getCode()));
-					settingResponse.setBounds(InOutBounds.getAll());
+					settingResponse.setBounds(InOutBounds.getAll(false));
 					settingResponse.setCustomerTypes(
 							this.customerTypeService.getAllCustomerTypes(ActiveStatus.ACTIVE.getCode()));
 					data.setCounterSetting(settingResponse);

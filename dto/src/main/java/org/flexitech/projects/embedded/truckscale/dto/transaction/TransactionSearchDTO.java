@@ -34,4 +34,5 @@ public class TransactionSearchDTO extends CommonSearchDTO{
 	private Integer transactionStatus;
 	
 	private boolean excludeCancel = false;
+	private boolean isExport = false;
 }
