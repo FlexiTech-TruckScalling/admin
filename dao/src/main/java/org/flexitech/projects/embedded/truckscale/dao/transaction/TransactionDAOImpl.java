@@ -62,6 +62,7 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 	    // FROM clause
 	    builder.append("FROM transactions t ");
 	    joins.add("LEFT JOIN customers c ON t.customer_id = c.id");
+	    joins.add("LEFT OUTER JOIN quantity_unit qu ON t.quantity_unit = qu.id");
 
 	    if (CommonValidators.validString(searchDTO.getVehiclePrefix()) || CommonValidators.validString(searchDTO.getVehicleNumber())) {
 	        joins.add("LEFT JOIN customer_vehicles cv ON t.vehicle_id = cv.id");

@@ -18,6 +18,7 @@ import org.flexitech.projects.embedded.truckscale.entities.payment_type.PaymentT
 import org.flexitech.projects.embedded.truckscale.entities.product.Goods;
 import org.flexitech.projects.embedded.truckscale.entities.product.Products;
 import org.flexitech.projects.embedded.truckscale.entities.setting.WeightUnit;
+import org.flexitech.projects.embedded.truckscale.entities.unit.QuantityUnit;
 import org.flexitech.projects.embedded.truckscale.entities.user.Users;
 
 import lombok.Data;
@@ -70,7 +71,7 @@ public class Transaction extends BaseEntity{
 	
 	@ManyToOne
 	@JoinColumn(name = "quantity_unit")
-	private WeightUnit quantityUnit;
+	private QuantityUnit quantityUnit;
 	
 	@ManyToOne
 	@JoinColumn(name = "weight_unit_id")

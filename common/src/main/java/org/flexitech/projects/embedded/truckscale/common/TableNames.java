@@ -35,4 +35,6 @@ public class TableNames {
 	
 	public static final String COMPANY_TABLE = "company_info";
 	
+	public static final String QUANTITY_UNIT = "quantity_unit";
+	
 }

@@ -27,6 +27,7 @@ import org.flexitech.projects.embedded.truckscale.dao.products.GoodDAO;
 import org.flexitech.projects.embedded.truckscale.dao.products.ProductDAO;
 import org.flexitech.projects.embedded.truckscale.dao.setting.WeightUnitDAO;
 import org.flexitech.projects.embedded.truckscale.dao.transaction.TransactionDAO;
+import org.flexitech.projects.embedded.truckscale.dao.unit.QuantityUnitDAO;
 import org.flexitech.projects.embedded.truckscale.dao.user.UserDAO;
 import org.flexitech.projects.embedded.truckscale.dto.company.CompanyDTO;
 import org.flexitech.projects.embedded.truckscale.dto.counter.CounterDTO;
@@ -48,6 +49,7 @@ import org.flexitech.projects.embedded.truckscale.entities.product.Goods;
 import org.flexitech.projects.embedded.truckscale.entities.product.Products;
 import org.flexitech.projects.embedded.truckscale.entities.setting.WeightUnit;
 import org.flexitech.projects.embedded.truckscale.entities.transaction.Transaction;
+import org.flexitech.projects.embedded.truckscale.entities.unit.QuantityUnit;
 import org.flexitech.projects.embedded.truckscale.entities.user.Users;
 import org.flexitech.projects.embedded.truckscale.services.counter.CounterSettingService;
 import org.flexitech.projects.embedded.truckscale.services.customers.CustomerTypeService;
@@ -56,6 +58,7 @@ import org.flexitech.projects.embedded.truckscale.services.products.GoodService;
 import org.flexitech.projects.embedded.truckscale.services.setting.SystemSettingService;
 import org.flexitech.projects.embedded.truckscale.services.setting.WeightUnitService;
 import org.flexitech.projects.embedded.truckscale.services.shift.UserShiftService;
+import org.flexitech.projects.embedded.truckscale.services.unit.QuantityUnitService;
 import org.flexitech.projects.embedded.truckscale.services.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -122,6 +125,12 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 	
 	@Autowired
 	CompanyDAO companyDAO;
+	
+	@Autowired
+	QuantityUnitService quantityUnitService;
+	
+	@Autowired
+	QuantityUnitDAO quantityUnitDAO;
 
 	@Override
 	public WeightTransactionPreloadDataResponse getWeightTransactionPreloadData(Long userId) {
@@ -155,6 +164,7 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 					settingResponse.setBounds(InOutBounds.getAll(false));
 					settingResponse.setCustomerTypes(
 							this.customerTypeService.getAllCustomerTypes(ActiveStatus.ACTIVE.getCode()));
+					settingResponse.setQuantityUnits(this.quantityUnitService.getQuantityUnitsByStatus(ActiveStatus.ACTIVE));
 					data.setCounterSetting(settingResponse);
 				}
 			}
@@ -267,7 +277,7 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 		transaction.setQty(new BigDecimal(request.getQuantity()));
 
 		if (CommonValidators.validLong(request.getQuantityUnitId())) {
-			WeightUnit unit = this.weightUnitDAO.get(request.getQuantityUnitId());
+			QuantityUnit unit = this.quantityUnitDAO.get(request.getQuantityUnitId());
 			transaction.setQuantityUnit(unit);
 		}
 
@@ -481,7 +491,7 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 		transaction.setQty(new BigDecimal(request.getQuantity()));
 
 		if (CommonValidators.validLong(request.getQuantityUnitId())) {
-			WeightUnit unit = this.weightUnitDAO.get(request.getQuantityUnitId());
+			QuantityUnit unit = this.quantityUnitDAO.get(request.getQuantityUnitId());
 			transaction.setQuantityUnit(unit);
 		}
 

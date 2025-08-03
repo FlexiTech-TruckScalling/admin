@@ -58,6 +58,12 @@
 			value="/WEB-INF/pages/settings/weight-units.jsp" />
 	</definition>
 	
+	<!-- Quantity Unit Setting -->
+	<definition name="quantity-units" extends="main-template">
+		<put-attribute name="body"
+			value="/WEB-INF/pages/settings/quantity-units.jsp" />
+	</definition>
+	
 	<!-- Master Counter Setting -->
 	<definition name="master-counter-settings" extends="main-template">
 		<put-attribute name="body"

@@ -14,6 +14,7 @@ import org.flexitech.projects.embedded.truckscale.dto.payment_type.PaymentTypeDT
 import org.flexitech.projects.embedded.truckscale.dto.products.GoodDTO;
 import org.flexitech.projects.embedded.truckscale.dto.products.ProductDTO;
 import org.flexitech.projects.embedded.truckscale.dto.setting.WeightUnitDTO;
+import org.flexitech.projects.embedded.truckscale.dto.unit.QuantityUnitDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
 import org.flexitech.projects.embedded.truckscale.entities.transaction.Transaction;
 import org.flexitech.projects.embedded.truckscale.util.CommonUtil;
@@ -42,7 +43,7 @@ public class TransactionDTO extends CommonDTO {
 	private Integer registerVehicleStatus;
 	private String driverName;
 	private BigDecimal quantity;
-	private WeightUnitDTO quantityUnitDTO;
+	private QuantityUnitDTO quantityUnitDTO;
 	private WeightUnitDTO weightUnitDTO;
 	private BigDecimal cost;
 	private Double allowedWeight;
@@ -83,7 +84,7 @@ public class TransactionDTO extends CommonDTO {
 		this.registerVehicleStatus = t.getRegisterVehicleStatus();
 		this.driverName = t.getDriverName();
 		this.quantity = t.getQty();
-		this.quantityUnitDTO = t.getQuantityUnit() != null ? new WeightUnitDTO(t.getQuantityUnit()) : null;
+		this.quantityUnitDTO = t.getQuantityUnit() != null ? new QuantityUnitDTO(t.getQuantityUnit()) : null;
 		this.weightUnitDTO = t.getWeightUnit() != null ? new WeightUnitDTO(t.getWeightUnit()) : null;
 		this.cost = t.getCost();
 		this.allowedWeight = t.getAllowedWeight();

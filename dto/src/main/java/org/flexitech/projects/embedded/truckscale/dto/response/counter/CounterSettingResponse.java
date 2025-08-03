@@ -7,6 +7,7 @@ import org.flexitech.projects.embedded.truckscale.common.enums.EnumObjects;
 import org.flexitech.projects.embedded.truckscale.dto.counter.CounterDTO;
 import org.flexitech.projects.embedded.truckscale.dto.customers.CustomerTypeDTO;
 import org.flexitech.projects.embedded.truckscale.dto.setting.WeightUnitDTO;
+import org.flexitech.projects.embedded.truckscale.dto.unit.QuantityUnitDTO;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,4 +21,5 @@ public class CounterSettingResponse{
 	private List<WeightUnitDTO> units;
 	private List<EnumObjects> bounds;
 	private List<CustomerTypeDTO> customerTypes = new ArrayList<CustomerTypeDTO>();
+	private List<QuantityUnitDTO> quantityUnits;
 }
