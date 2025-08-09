@@ -28,7 +28,7 @@ public class GoodController {
 	
 	@ModelAttribute("pageTitle")
 	public String pageTitle() {
-		return "ENL | Truck Scale Goods Management";
+		return "Flexitech | Truck Scale Goods Management";
 	}
 	
 	@GetMapping("goods-manage")

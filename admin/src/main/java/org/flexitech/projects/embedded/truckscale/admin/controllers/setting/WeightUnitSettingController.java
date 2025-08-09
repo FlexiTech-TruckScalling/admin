@@ -28,7 +28,7 @@ public class WeightUnitSettingController {
 	
 	@ModelAttribute("pageTitle")
 	public String pageTitle() {
-		return "ENL | Truck Scale Weight Unit Setting";
+		return "Flexitech | Truck Scale Weight Unit Setting";
 	}
 	
 	@GetMapping("/weight-units")

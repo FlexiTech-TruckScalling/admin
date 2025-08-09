@@ -7,8 +7,8 @@
 		</div>
 		<div class="card-body">
 
-			<form:form action="quantity-units.fxt" modelAttribute="quantityUnitDTO"
-				method="post" id="common-form">
+			<form:form action="quantity-units.fxt"
+				modelAttribute="quantityUnitDTO" method="post" id="common-form">
 				<form:hidden path="id" />
 				<div class="row g-3 mb-2">
 					<!-- Name -->
@@ -26,8 +26,7 @@
 						<form:label path="code" class="form-label">Code <strong
 								class="text-danger">*</strong>
 						</form:label>
-						<form:input path="code" type="text"
-							class="form-control required" />
+						<form:input path="code" type="text" class="form-control required" />
 						<span class="text-danger input-error-msg" data-label="Code"></span>
 					</div>
 
@@ -53,7 +52,7 @@
 							class="form-control required" placeholder="0" step="any" min="0" />
 						<span class="text-danger input-error-msg" data-label="Kg Value"></span>
 					</div>
-					
+
 					<div class="col-md-4">
 						<form:label path="status" class="form-label">Status <strong
 								class="text-danger">*</strong>
@@ -90,46 +89,49 @@
 				Counters</span>
 		</div>
 		<div class="card-body">
-			<table class="table table-striped">
-				<thead class="bg-gradient-primary text-white">
-					<tr>
-						<th class="py-1" scope="col" style="width: 50px;">#</th>
-						<th class="py-1" scope="col">Name</th>
-						<th class="py-1" scope="col">Code</th>
-						<th class="py-1" scope="col">Sequence</th>
-						<th class="py-1" scope="col">Price Per Unit</th>
-						<th class="py-1" scope="col">Status</th>
-						<th class="py-1" scope="col">Created Time</th>
-						<th class="py-1" scope="col" style="width: 140px;">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:if test="${empty quantityUnitList }">
+			<div class=" table-responsive">
+				<table class="table table-striped w-100">
+					<thead class="bg-gradient-primary text-white">
 						<tr>
-							<td colspan="8" class="text-center">No data.</td>
+							<th class="py-1" scope="col" style="width: 50px;">#</th>
+							<th class="py-1" scope="col">Name</th>
+							<th class="py-1" scope="col">Code</th>
+							<th class="py-1" scope="col">Sequence</th>
+							<th class="py-1" scope="col">Price Per Unit</th>
+							<th class="py-1" scope="col">Status</th>
+							<th class="py-1" scope="col">Created Time</th>
+							<th class="py-1" scope="col" style="width: 140px;">Actions</th>
 						</tr>
-					</c:if>
-					<c:if test="${not empty quantityUnitList }">
-						<c:forEach items="${quantityUnitList }" var="counter" varStatus="loop">
-							<tr
-								class="${not empty new_id && new_id == counter.id || quantityUnitDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
-								<td>${loop.index + 1 }</td>
-								<td>${counter.name }</td>
-								<td>${counter.code }</td>
-								<td>${counter.sequence }</td>
-								<td>${counter.pricePerUnit }</td>
-								<td><span
-									class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
-										${counter.statusDesc } </span></td>
-								<td>${counter.createdTimeDesc }</td>
-								<td><a
-									href="?id=${counter.id }"><i class="fas fa-fw fa-edit"></i>Edit</a>
-								</td>
+					</thead>
+					<tbody>
+						<c:if test="${empty quantityUnitList }">
+							<tr>
+								<td colspan="8" class="text-center">No data.</td>
 							</tr>
-						</c:forEach>
-					</c:if>
-				</tbody>
-			</table>
+						</c:if>
+						<c:if test="${not empty quantityUnitList }">
+							<c:forEach items="${quantityUnitList }" var="counter"
+								varStatus="loop">
+								<tr
+									class="${not empty new_id && new_id == counter.id || quantityUnitDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
+									<td>${loop.index + 1 }</td>
+									<td>${counter.name }</td>
+									<td>${counter.code }</td>
+									<td>${counter.sequence }</td>
+									<td>${counter.pricePerUnit }</td>
+									<td><span
+										class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
+											${counter.statusDesc } </span></td>
+									<td>${counter.createdTimeDesc }</td>
+									<td><a href="?id=${counter.id }"><i
+											class="fas fa-fw fa-edit"></i>Edit</a></td>
+								</tr>
+							</c:forEach>
+						</c:if>
+					</tbody>
+				</table>
+			</div>
+
 		</div>
 	</div>
 </div>

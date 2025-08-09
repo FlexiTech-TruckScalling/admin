@@ -51,9 +51,9 @@
 						<button type="submit" class="btn btn-primary">${empty counterDTO.id ? "Save":"Update" }</button>
 						<a href="counter-manage.fxt" class="btn btn-secondary">Clear</a>
 						<c:if test="${not empty counterDTO.id }">
-								<button type="button" data-action="counter-delete.fxt"
-									data-id="${counterDTO.id }" class="btn btn-danger delete-data">Delete</button>
-							</c:if>
+							<button type="button" data-action="counter-delete.fxt"
+								data-id="${counterDTO.id }" class="btn btn-danger delete-data">Delete</button>
+						</c:if>
 					</div>
 				</div>
 			</form:form>
@@ -66,42 +66,45 @@
 				Counters</span>
 		</div>
 		<div class="card-body">
-			<table class="table table-striped">
-				<thead class="bg-gradient-primary text-white">
-					<tr>
-						<th class="py-1" scope="col" style="width: 50px;">#</th>
-						<th class="py-1" scope="col">Name</th>
-						<th class="py-1" scope="col">IP Address</th>
-						<th class="py-1" scope="col">Status</th>
-						<th class="py-1" scope="col">Created Time</th>
-						<th class="py-1" scope="col" style="width: 140px;">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:if test="${empty counterList }">
+			<div class=" table-responsive">
+				<table class="table table-striped">
+					<thead class="bg-gradient-primary text-white">
 						<tr>
-							<td colspan="5" class="text-center">No counter.</td>
+							<th class="py-1" scope="col" style="width: 50px;">#</th>
+							<th class="py-1" scope="col">Name</th>
+							<th class="py-1" scope="col">IP Address</th>
+							<th class="py-1" scope="col">Status</th>
+							<th class="py-1" scope="col">Created Time</th>
+							<th class="py-1" scope="col" style="width: 140px;">Actions</th>
 						</tr>
-					</c:if>
-					<c:if test="${not empty counterList }">
-						<c:forEach items="${counterList }" var="counter" varStatus="loop">
-							<tr
-								class="${not empty new_id && new_id == counter.id || counterDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
-								<td>${loop.index + 1 }</td>
-								<td>${counter.name }</td>
-								<td>${counter.counterIp }</td>
-								<td><span
-									class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
-										${counter.statusDesc } </span></td>
-								<td>${counter.createdTimeDesc }</td>
-								<td><a href="counter-setting.fxt?counterId=${counter.id }"><i class="fas fa-fw fa-cog"></i> Setting</a>
-									<a href="?id=${counter.id }"><i class="fas fa-fw fa-edit"></i>Edit</a>
-								</td>
+					</thead>
+					<tbody>
+						<c:if test="${empty counterList }">
+							<tr>
+								<td colspan="5" class="text-center">No counter.</td>
 							</tr>
-						</c:forEach>
-					</c:if>
-				</tbody>
-			</table>
+						</c:if>
+						<c:if test="${not empty counterList }">
+							<c:forEach items="${counterList }" var="counter" varStatus="loop">
+								<tr
+									class="${not empty new_id && new_id == counter.id || counterDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
+									<td>${loop.index + 1 }</td>
+									<td>${counter.name }</td>
+									<td>${counter.counterIp }</td>
+									<td><span
+										class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
+											${counter.statusDesc } </span></td>
+									<td>${counter.createdTimeDesc }</td>
+									<td><a href="counter-setting.fxt?counterId=${counter.id }"><i
+											class="fas fa-fw fa-cog"></i> Setting</a> <a
+										href="?id=${counter.id }"><i class="fas fa-fw fa-edit"></i>Edit</a>
+									</td>
+								</tr>
+							</c:forEach>
+						</c:if>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>

@@ -28,7 +28,8 @@
 						</form:label>
 						<form:input path="phoneNumber" type="text"
 							class="form-control required" placeholder="Phone number" />
-						<span class="text-danger input-error-msg" data-label="Phone number"></span>
+						<span class="text-danger input-error-msg"
+							data-label="Phone number"></span>
 					</div>
 
 					<div class="col-md-4">
@@ -51,9 +52,9 @@
 						<button type="submit" class="btn btn-primary">${empty driverDTO.id ? "Save":"Update" }</button>
 						<a href="driver-manage.fxt" class="btn btn-secondary">Clear</a>
 						<c:if test="${not empty driverDTO.id }">
-								<button type="button" data-action="driver-delete.fxt"
-									data-id="${driverDTO.id }" class="btn btn-danger delete-data">Delete</button>
-							</c:if>
+							<button type="button" data-action="driver-delete.fxt"
+								data-id="${driverDTO.id }" class="btn btn-danger delete-data">Delete</button>
+						</c:if>
 					</div>
 				</div>
 			</form:form>
@@ -66,42 +67,44 @@
 				Drivers</span>
 		</div>
 		<div class="card-body">
-			<table class="table table-striped">
-				<thead class="bg-gradient-primary text-white">
-					<tr>
-						<th class="py-1" scope="col" style="width: 50px;">#</th>
-						<th class="py-1" scope="col">Name</th>
-						<th class="py-1" scope="col">Phone No.</th>
-						<th class="py-1" scope="col">Status</th>
-						<th class="py-1" scope="col">Created Time</th>
-						<th class="py-1" scope="col" style="width: 140px;">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:if test="${empty driverList }">
+			<div class=" table-responsive">
+				<table class="table table-striped">
+					<thead class="bg-gradient-primary text-white">
 						<tr>
-							<td colspan="6" class="text-center">No drivers.</td>
+							<th class="py-1" scope="col" style="width: 50px;">#</th>
+							<th class="py-1" scope="col">Name</th>
+							<th class="py-1" scope="col">Phone No.</th>
+							<th class="py-1" scope="col">Status</th>
+							<th class="py-1" scope="col">Created Time</th>
+							<th class="py-1" scope="col" style="width: 140px;">Actions</th>
 						</tr>
-					</c:if>
-					<c:if test="${not empty driverList }">
-						<c:forEach items="${driverList }" var="counter" varStatus="loop">
-							<tr
-								class="${not empty new_id && new_id == counter.id || driverDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
-								<td>${loop.index + 1 }</td>
-								<td>${counter.name }</td>
-								<td>${counter.phoneNumber }</td>
-								<td><span
-									class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
-										${counter.statusDesc } </span></td>
-								<td>${counter.createdTimeDesc }</td>
-								<td>
-									<a href="?id=${counter.id }"><i class="fas fa-fw fa-edit"></i>Edit</a>
-								</td>
+					</thead>
+					<tbody>
+						<c:if test="${empty driverList }">
+							<tr>
+								<td colspan="6" class="text-center">No drivers.</td>
 							</tr>
-						</c:forEach>
-					</c:if>
-				</tbody>
-			</table>
+						</c:if>
+						<c:if test="${not empty driverList }">
+							<c:forEach items="${driverList }" var="counter" varStatus="loop">
+								<tr
+									class="${not empty new_id && new_id == counter.id || driverDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
+									<td>${loop.index + 1 }</td>
+									<td>${counter.name }</td>
+									<td>${counter.phoneNumber }</td>
+									<td><span
+										class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
+											${counter.statusDesc } </span></td>
+									<td>${counter.createdTimeDesc }</td>
+									<td><a href="?id=${counter.id }"><i
+											class="fas fa-fw fa-edit"></i>Edit</a></td>
+								</tr>
+							</c:forEach>
+						</c:if>
+					</tbody>
+				</table>
+			</div>
+
 		</div>
 	</div>
 </div>

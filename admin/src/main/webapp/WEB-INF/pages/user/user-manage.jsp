@@ -12,7 +12,7 @@
 
 				<form:form action="user-manage.fxt" modelAttribute="userDTO"
 					method="post" id="common-form">
-					<form:hidden path="id"/>
+					<form:hidden path="id" />
 					<div class="row g-3">
 						<!-- Login Name -->
 						<div class="col-md-4">
@@ -117,48 +117,50 @@
 		<div class="card-header py-3">
 			<span class="m-0 font-weight-bold text-secondary">Total Users</span>
 		</div>
-		<div class="card-body">
-			<table class="table table-striped">
-				<thead class="bg-gradient-primary text-white">
-					<tr>
-						<th class="py-1" scope="col" style="width: 50px;">#</th>
-						<th class="py-1" scope="col">Login Name</th>
-						<th class="py-1" scope="col">Name</th>
-						<th class="py-1" scope="col">Phone Number</th>
-						<th class="py-1" scope="col">Role</th>
-						<th class="py-1" scope="col">Counter</th>
-						<th class="py-1" scope="col">Status</th>
-						<th class="py-1" scope="col">Created Time</th>
-						<th class="py-1" scope="col" style="width: 140px;">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:if test="${empty userList }">
+		<div class="card-body ">
+			<div class=" table-responsive">
+				<table class="table table-striped">
+					<thead class="bg-gradient-primary text-white">
 						<tr>
-							<td colspan="8" class="text-center">No user role.</td>
+							<th class="py-1" scope="col" style="width: 50px;">#</th>
+							<th class="py-1" scope="col">Login Name</th>
+							<th class="py-1" scope="col">Name</th>
+							<th class="py-1" scope="col">Phone Number</th>
+							<th class="py-1" scope="col">Role</th>
+							<th class="py-1" scope="col">Counter</th>
+							<th class="py-1" scope="col">Status</th>
+							<th class="py-1" scope="col">Created Time</th>
+							<th class="py-1" scope="col" style="width: 140px;">Actions</th>
 						</tr>
-					</c:if>
-					<c:if test="${not empty userList }">
-						<c:forEach items="${userList }" var="counter" varStatus="loop">
-							<tr
-								class="${not empty new_id && new_id == counter.id || roleDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
-								<td>${loop.index + 1 }</td>
-								<td>${counter.loginName }</td>
-								<td>${counter.name }</td>
-								<td>${counter.phoneNo }</td>
-								<td>${counter.userRoleDTO.name }</td>
-								<td>${counter.counterDTO.name }</td>
-								<td><span
-									class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
-										${counter.statusDesc } </span></td>
-								<td>${counter.createdTimeDesc }</td>
-								<td><a href="?id=${counter.id }"><i
-										class="fas fa-fw fa-edit"></i>Edit</a></td>
+					</thead>
+					<tbody>
+						<c:if test="${empty userList }">
+							<tr>
+								<td colspan="8" class="text-center">No user role.</td>
 							</tr>
-						</c:forEach>
-					</c:if>
-				</tbody>
-			</table>
+						</c:if>
+						<c:if test="${not empty userList }">
+							<c:forEach items="${userList }" var="counter" varStatus="loop">
+								<tr
+									class="${not empty new_id && new_id == counter.id || roleDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
+									<td>${loop.index + 1 }</td>
+									<td>${counter.loginName }</td>
+									<td>${counter.name }</td>
+									<td>${counter.phoneNo }</td>
+									<td>${counter.userRoleDTO.name }</td>
+									<td>${counter.counterDTO.name }</td>
+									<td><span
+										class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
+											${counter.statusDesc } </span></td>
+									<td>${counter.createdTimeDesc }</td>
+									<td><a href="?id=${counter.id }"><i
+											class="fas fa-fw fa-edit"></i>Edit</a></td>
+								</tr>
+							</c:forEach>
+						</c:if>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 

@@ -28,7 +28,7 @@ public class UserRoleController {
 	
 	@ModelAttribute("pageTitle")
 	public String pageTitle() {
-		return "ENL | Truck Scale Role Manage";
+		return "Flexitech | Truck Scale Role Manage";
 	}
 	
 	@GetMapping("role-manage")

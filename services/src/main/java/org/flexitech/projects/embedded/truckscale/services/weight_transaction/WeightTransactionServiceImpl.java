@@ -318,8 +318,11 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 			transaction.setUser(user);
 		}
 
-		transaction.setVehiclePhotoOne(request.getVehiclePhotoOne());
-		transaction.setVehiclePhotoTwo(request.getVehiclePhotoTwo());
+		if(InOutBounds.IN.getCode().equals(request.getInOutStatus())) {
+			transaction.setVehiclePhotoOne(request.getVehiclePhotoOne());
+		}else if(InOutBounds.OUT.getCode().equals(request.getInOutStatus())) {
+			transaction.setVehiclePhotoTwo(request.getVehiclePhotoTwo());
+		}
 
 		transaction.setStatus(ActiveStatus.ACTIVE.getCode());
 		transaction.setTransactionType(request.getTransactionType());

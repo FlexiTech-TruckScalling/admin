@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class DriverController extends BaseController<DriverDTO, DriverService> {
 
 	protected DriverController(DriverService service) {
-		super(service, "ENL | Truck Scale Driver Manage", "driver-manage");
+		super(service, "Flexitech | Truck Scale Driver Manage", "driver-manage");
 	}
 
 	@GetMapping("driver-manage")

@@ -29,7 +29,7 @@ public class CustomerController extends BaseController<CustomerDTO, CustomerServ
 	CustomerVehicleService customerVehicleService;
 	
 	protected CustomerController(CustomerService service) {
-		super(service, "ENL | Truck Scale Customer Manage", "customer-manage");
+		super(service, "Flexitech | Truck Scale Customer Manage", "customer-manage");
 	}
 
 	@GetMapping("customer-manage")
@@ -57,7 +57,7 @@ public class CustomerController extends BaseController<CustomerDTO, CustomerServ
 	}
 	
 	private void commonSearchModel(Model model, CustomerSearchDTO searchDTO) {
-		model.addAttribute("pageTitle", "ENL | Truck Scale Customer Search");
+		model.addAttribute("pageTitle", "Flexitech | Truck Scale Customer Search");
 		model.addAttribute("statusList", ActiveStatus.getAll());
 		System.out.println("PageNO: " + searchDTO.getPageNo());
 		model.addAttribute("customerList", service.searchCustomers(searchDTO));

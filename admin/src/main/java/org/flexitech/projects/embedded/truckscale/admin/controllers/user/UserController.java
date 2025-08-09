@@ -36,7 +36,7 @@ public class UserController {
 	
 	@ModelAttribute("pageTitle")
 	public String pageTitle() {
-		return "ENL | Truck Scale User Manage";
+		return "Flexitech | Truck Scale User Manage";
 	}
 	
 	@GetMapping("user-manage")

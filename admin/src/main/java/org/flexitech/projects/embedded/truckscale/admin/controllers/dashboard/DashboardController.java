@@ -10,7 +10,7 @@ public class DashboardController {
 
 	@ModelAttribute("pageTitle")
 	public String pageTitle() {
-		return "ENL | Truck Scale Dashboard";
+		return "Flexitech | Truck Scale Dashboard";
 	}
 	
 	@GetMapping("/dashboard")

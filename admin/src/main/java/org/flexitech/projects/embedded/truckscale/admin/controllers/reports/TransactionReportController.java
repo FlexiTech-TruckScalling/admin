@@ -130,13 +130,13 @@ public class TransactionReportController {
 	@GetMapping("/transaction-detail")
 	public String transactionDetail(@RequestParam(required = false) Long id, Model model) {
 		model.addAttribute("transactionDTO", this.weightTransactionService.getById(id));
-		model.addAttribute("pageTitle", "ENL | Truck Scale Transaction Detail");
+		model.addAttribute("pageTitle", "Flexitech | Truck Scale Transaction Detail");
 		return "transaction-detail";
 	}
 
 	private void commonSearchModel(Model model, TransactionSearchDTO searchDTO) {
 		searchDTO.setExcludeCancel(false);
-		model.addAttribute("pageTitle", "ENL | Truck Scale Transaction Search");
+		model.addAttribute("pageTitle", "Flexitech | Truck Scale Transaction Search");
 		model.addAttribute("statusList", ActiveStatus.getAll());
 		model.addAttribute("transactionStatusList", TransactionStatus.getAll());
 		model.addAttribute("transactionList", weightTransactionService.searchTransactions(searchDTO, false));

@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class PaymentTypeController extends BaseController<PaymentTypeDTO, PaymentTypeService>{
 
 	protected PaymentTypeController(PaymentTypeService service) {
-		super(service, "ENL | Truck Scale Products Management", "payment-type-manage");
+		super(service, "Flexitech | Truck Scale Products Management", "payment-type-manage");
 	}
 
 	@GetMapping("payment-type-manage")

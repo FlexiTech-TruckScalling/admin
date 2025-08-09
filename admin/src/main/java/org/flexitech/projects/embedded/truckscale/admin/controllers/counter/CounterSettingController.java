@@ -35,7 +35,7 @@ public class CounterSettingController {
 	
 	@ModelAttribute("pageTitle")
 	public String pageTitle() {
-		return "ENL | Truck Scale Counter Setting";
+		return "Flexitech | Truck Scale Counter Setting";
 	}
 
 	@GetMapping("counter-setting")

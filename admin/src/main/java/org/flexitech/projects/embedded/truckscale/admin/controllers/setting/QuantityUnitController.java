@@ -28,7 +28,7 @@ public class QuantityUnitController {
 	
 	@ModelAttribute("pageTitle")
 	public String pageTitle() {
-		return "ENL | Truck Scale Quantity Unit Setting";
+		return "Flexitech | Truck Scale Quantity Unit Setting";
 	}
 	
 	@GetMapping("/quantity-units")

@@ -86,48 +86,51 @@
 				Customers</span>
 		</div>
 		<div class="card-body">
-			<table class="table table-striped">
-				<thead class="bg-gradient-primary text-white">
-					<tr>
-						<th class="py-1" scope="col" style="width: 50px;">#</th>
-						<th class="py-1" scope="col">Name</th>
-						<th class="py-1" scope="col">Code</th>
-						<th class="py-1" scope="col">Phone Number</th>
-						<th class="py-1" scope="col">Customer Type</th>
-						<th class="py-1" scope="col">Address</th>
-						<th class="py-1" scope="col">Status</th>
-						<th class="py-1" scope="col">Created Time</th>
-						<th class="py-1" scope="col" style="width: 180px;">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:if test="${empty customerList }">
+			<div class=" table-responsive">
+				<table class="table table-striped">
+					<thead class="bg-gradient-primary text-white">
 						<tr>
-							<td colspan="9" class="text-center">No customers.</td>
+							<th class="py-1" scope="col" style="width: 50px;">#</th>
+							<th class="py-1" scope="col">Name</th>
+							<th class="py-1" scope="col">Code</th>
+							<th class="py-1" scope="col">Phone Number</th>
+							<th class="py-1" scope="col">Customer Type</th>
+							<th class="py-1" scope="col">Address</th>
+							<th class="py-1" scope="col">Status</th>
+							<th class="py-1" scope="col">Created Time</th>
+							<th class="py-1" scope="col" style="width: 180px;">Actions</th>
 						</tr>
-					</c:if>
-					<c:if test="${not empty customerList }">
-						<c:forEach items="${customerList }" var="counter" varStatus="loop">
+					</thead>
+					<tbody>
+						<c:if test="${empty customerList }">
 							<tr>
-								<td>${loop.index + 1 }</td>
-								<td>${counter.name }</td>
-								<td>${counter.code }</td>
-								<td>${counter.phoneNumber }</td>
-								<td>${counter.customerTypeNames }</td>
-								<td>${counter.address }</td>
-								<td><span
-									class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
-										${counter.statusDesc } </span></td>
-								<td>${counter.createdTimeDesc }</td>
-								<td>
-								<a href="${counter.id }/customer-vehicle-manage.fxt"><i class="fas fa-fw fa-truck"></i> Add Vehicles</a>
-								<a href="customer-manage.fxt?id=${counter.id }"><i
-										class="fas fa-fw fa-edit"></i>Edit</a></td>
+								<td colspan="9" class="text-center">No customers.</td>
 							</tr>
-						</c:forEach>
-					</c:if>
-				</tbody>
-			</table>
+						</c:if>
+						<c:if test="${not empty customerList }">
+							<c:forEach items="${customerList }" var="counter"
+								varStatus="loop">
+								<tr>
+									<td>${loop.index + 1 }</td>
+									<td>${counter.name }</td>
+									<td>${counter.code }</td>
+									<td>${counter.phoneNumber }</td>
+									<td>${counter.customerTypeNames }</td>
+									<td>${counter.address }</td>
+									<td><span
+										class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
+											${counter.statusDesc } </span></td>
+									<td>${counter.createdTimeDesc }</td>
+									<td><a href="${counter.id }/customer-vehicle-manage.fxt"><i
+											class="fas fa-fw fa-truck"></i> Add Vehicles</a> <a
+										href="customer-manage.fxt?id=${counter.id }"><i
+											class="fas fa-fw fa-edit"></i>Edit</a></td>
+								</tr>
+							</c:forEach>
+						</c:if>
+					</tbody>
+				</table>
+			</div>
 			<div class="row mt-3">
 				<div class="pagination mr-3 ml-auto">
 					<!-- Pagination content goes here -->
@@ -155,9 +158,9 @@
 			$('#common-form').submit();
 		}
 	});
-	$("#search-btn").on("click", function(){
+	$("#search-btn").on("click", function() {
 		var page = document.getElementById("pageNo");
-		if(page){
+		if (page) {
 			$('#pageNo').val(1);
 		}
 	})

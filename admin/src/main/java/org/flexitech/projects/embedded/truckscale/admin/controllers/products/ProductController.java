@@ -22,7 +22,7 @@ public class ProductController extends BaseController<ProductDTO, ProductService
 	GoodService goodService;
 	
     public ProductController(ProductService service) {
-        super(service, "ENL | Truck Scale Products Management", "products-manage");
+        super(service, "Flexitech | Truck Scale Products Management", "products-manage");
     }
 
     @GetMapping("products-manage")

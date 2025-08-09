@@ -6,9 +6,9 @@ input, button, .btn, textarea {
 	font-size: 0.85rem !important;
 	padding: 5px 10px !important;
 }
-.login-wrapper {
+/* .login-wrapper {
 	width: 500px;
-}
+} */
 
 .inputs {
 	font-size: .8rem;

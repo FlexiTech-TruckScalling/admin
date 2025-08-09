@@ -17,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CustomerTypeController extends BaseController<CustomerTypeDTO, CustomerTypeService> {
 
 	protected CustomerTypeController(CustomerTypeService service) {
-		super(service, "ENL | Truck Scale Customer Type Manage", "customer-type-manage");
+		super(service, "Flexitech | Truck Scale Customer Type Manage", "customer-type-manage");
 	}
 
 	@GetMapping("customer-type-manage")

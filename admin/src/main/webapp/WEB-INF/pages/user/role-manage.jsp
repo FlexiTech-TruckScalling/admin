@@ -90,43 +90,45 @@
 				Roles</span>
 		</div>
 		<div class="card-body">
-			<table class="table table-striped">
-				<thead class="bg-gradient-primary text-white">
-					<tr>
-						<th class="py-1" scope="col" style="width: 50px;">#</th>
-						<th class="py-1" scope="col">Code</th>
-						<th class="py-1" scope="col">Name</th>
-						<th class="py-1" scope="col">Description</th>
-						<th class="py-1" scope="col">Status</th>
-						<th class="py-1" scope="col">Created Time</th>
-						<th class="py-1" scope="col" style="width: 140px;">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:if test="${empty roleList }">
+			<div class=" table-responsive">
+				<table class="table table-striped">
+					<thead class="bg-gradient-primary text-white">
 						<tr>
-							<td colspan="6" class="text-center">No user role.</td>
+							<th class="py-1" scope="col" style="width: 50px;">#</th>
+							<th class="py-1" scope="col">Code</th>
+							<th class="py-1" scope="col">Name</th>
+							<th class="py-1" scope="col">Description</th>
+							<th class="py-1" scope="col">Status</th>
+							<th class="py-1" scope="col">Created Time</th>
+							<th class="py-1" scope="col" style="width: 140px;">Actions</th>
 						</tr>
-					</c:if>
-					<c:if test="${not empty roleList }">
-						<c:forEach items="${roleList }" var="counter" varStatus="loop">
-							<tr
-								class="${not empty new_id && new_id == counter.id || roleDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
-								<td>${loop.index + 1 }</td>
-								<td>${counter.code }</td>
-								<td>${counter.name }</td>
-								<td>${counter.description }</td>
-								<td><span
-									class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
-										${counter.statusDesc } </span></td>
-								<td>${counter.createdTimeDesc }</td>
-								<td><a href="?id=${counter.id }"><i
-										class="fas fa-fw fa-edit"></i>Edit</a></td>
+					</thead>
+					<tbody>
+						<c:if test="${empty roleList }">
+							<tr>
+								<td colspan="6" class="text-center">No user role.</td>
 							</tr>
-						</c:forEach>
-					</c:if>
-				</tbody>
-			</table>
+						</c:if>
+						<c:if test="${not empty roleList }">
+							<c:forEach items="${roleList }" var="counter" varStatus="loop">
+								<tr
+									class="${not empty new_id && new_id == counter.id || roleDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
+									<td>${loop.index + 1 }</td>
+									<td>${counter.code }</td>
+									<td>${counter.name }</td>
+									<td>${counter.description }</td>
+									<td><span
+										class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
+											${counter.statusDesc } </span></td>
+									<td>${counter.createdTimeDesc }</td>
+									<td><a href="?id=${counter.id }"><i
+											class="fas fa-fw fa-edit"></i>Edit</a></td>
+								</tr>
+							</c:forEach>
+						</c:if>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>

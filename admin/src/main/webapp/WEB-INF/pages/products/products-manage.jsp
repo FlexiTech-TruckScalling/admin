@@ -43,8 +43,8 @@
 						</form:select>
 						<span class="text-danger input-error-msg" data-label="Status"></span>
 					</div>
-					
-					
+
+
 				</div>
 				<div class="row g-3 mt-3">
 					<div class="col-md-4">
@@ -67,9 +67,9 @@
 						<button type="submit" class="btn btn-primary">${empty productDTO.id ? "Save":"Update" }</button>
 						<a href="products-manage.fxt" class="btn btn-secondary">Clear</a>
 						<c:if test="${not empty productDTO.id }">
-								<button type="button" data-action="products-delete.fxt"
-									data-id="${productDTO.id }" class="btn btn-danger delete-data">Delete</button>
-							</c:if>
+							<button type="button" data-action="products-delete.fxt"
+								data-id="${productDTO.id }" class="btn btn-danger delete-data">Delete</button>
+						</c:if>
 					</div>
 				</div>
 			</form:form>
@@ -82,44 +82,47 @@
 				Products</span>
 		</div>
 		<div class="card-body">
-			<table class="table table-striped">
-				<thead class="bg-gradient-primary text-white">
-					<tr>
-						<th class="py-1" scope="col" style="width: 50px;">#</th>
-						<th class="py-1" scope="col">Name</th>
-						<th class="py-1" scope="col">Code</th>
-						<th class="py-1" scope="col">Goods</th>
-						<th class="py-1" scope="col">Status</th>
-						<th class="py-1" scope="col">Created Time</th>
-						<th class="py-1" scope="col" style="width: 140px;">Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					<c:if test="${empty productsList }">
+			<div class=" table-responsive">
+				<table class="table table-striped">
+					<thead class="bg-gradient-primary text-white">
 						<tr>
-							<td colspan="6" class="text-center">No products.</td>
+							<th class="py-1" scope="col" style="width: 50px;">#</th>
+							<th class="py-1" scope="col">Name</th>
+							<th class="py-1" scope="col">Code</th>
+							<th class="py-1" scope="col">Goods</th>
+							<th class="py-1" scope="col">Status</th>
+							<th class="py-1" scope="col">Created Time</th>
+							<th class="py-1" scope="col" style="width: 140px;">Actions</th>
 						</tr>
-					</c:if>
-					<c:if test="${not empty productsList }">
-						<c:forEach items="${productsList }" var="counter" varStatus="loop">
-							<tr
-								class="${not empty new_id && new_id == counter.id || productDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
-								<td>${loop.index + 1 }</td>
-								<td>${counter.name }</td>
-								<td>${counter.code }</td>
-								<td>${counter.goodNames }</td>
-								<td><span
-									class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
-										${counter.statusDesc } </span></td>
-								<td>${counter.createdTimeDesc }</td>
-								<td>
-									<a href="?id=${counter.id }"><i class="fas fa-fw fa-edit"></i>Edit</a>
-								</td>
+					</thead>
+					<tbody>
+						<c:if test="${empty productsList }">
+							<tr>
+								<td colspan="6" class="text-center">No products.</td>
 							</tr>
-						</c:forEach>
-					</c:if>
-				</tbody>
-			</table>
+						</c:if>
+						<c:if test="${not empty productsList }">
+							<c:forEach items="${productsList }" var="counter"
+								varStatus="loop">
+								<tr
+									class="${not empty new_id && new_id == counter.id || productDTO.id == counter.id ? 'font-weight-bold text-info':'' }">
+									<td>${loop.index + 1 }</td>
+									<td>${counter.name }</td>
+									<td>${counter.code }</td>
+									<td>${counter.goodNames }</td>
+									<td><span
+										class="badge ${counter.status == 1 ? 'badge-info':'badge-danger' }">
+											${counter.statusDesc } </span></td>
+									<td>${counter.createdTimeDesc }</td>
+									<td><a href="?id=${counter.id }"><i
+											class="fas fa-fw fa-edit"></i>Edit</a></td>
+								</tr>
+							</c:forEach>
+						</c:if>
+					</tbody>
+				</table>
+			</div>
+
 		</div>
 	</div>
 </div>

@@ -32,7 +32,7 @@ public class CustomerVehicleController extends BaseController<CustomerVehicleDTO
 	private DriverService driverService;
 	
 	protected CustomerVehicleController(CustomerVehicleService service) {
-		super(service, "ENL | Truck Scale Customer Vehicle Manage", "customer-vehicle-manage");
+		super(service, "Flexitech | Truck Scale Customer Vehicle Manage", "customer-vehicle-manage");
 	}
 	
 	@GetMapping("/{customerId}/customer-vehicle-manage")

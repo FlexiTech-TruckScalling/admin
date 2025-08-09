@@ -12,6 +12,7 @@
 <meta name="description" content="" />
 <meta name="keywords" content="" />
 <meta name="author" content="CodedThemes" />
+<link rel="icon" type="image/x-icon" href="./resources/imgs/logo/favicon.ico">
 <%@ include file="../includes/css-templates.jsp"%>
 <%@ include file="../includes/js-templates.jsp"%>
 </head>

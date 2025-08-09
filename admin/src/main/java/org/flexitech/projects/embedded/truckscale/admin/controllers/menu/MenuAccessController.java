@@ -35,7 +35,7 @@ public class MenuAccessController {
 
 	@ModelAttribute("pageTitle")
 	public String pageTitle() {
-		return "ENL | Truck Scale Menu Access";
+		return "Flexitech | Truck Scale Menu Access";
 	}
 	
 	private final Logger logger = LogManager.getLogger(MenuAccessController.class);

@@ -28,7 +28,7 @@ public class CounterController {
 	
 	@ModelAttribute("pageTitle")
 	public String pageTitle() {
-		return "ENL | Truck Scale Counter Manage";
+		return "Flexitech | Truck Scale Counter Manage";
 	}
 	
 	@GetMapping("counter-manage")
