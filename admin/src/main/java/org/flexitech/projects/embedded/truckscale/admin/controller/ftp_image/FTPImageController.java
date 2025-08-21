@@ -2,9 +2,7 @@ package org.flexitech.projects.embedded.truckscale.admin.controller.ftp_image;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
@@ -27,85 +25,89 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class FTPImageController {
 
-	private final Logger logger = LogManager.getLogger(getClass());
+    private final Logger logger = LogManager.getLogger(getClass());
 
-	@Autowired
-	private SystemSettingService systemSettingService;
+    @Autowired
+    private SystemSettingService systemSettingService;
 
-	@GetMapping("/ftp-photo")
-	public ResponseEntity<InputStreamResource> getFtpImage(@RequestParam(required = false) String url) {
-		logger.debug("Request received for FTP image: {}", url);
+    @GetMapping("/ftp-photo")
+    public ResponseEntity<InputStreamResource> getFtpImage(@RequestParam(required = false) String img) {
+        logger.debug("Request received for FTP image: {}", img);
 
-		if (!CommonValidators.validString(url)) {
-			logger.warn("Invalid path requested: {}", url);
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-		}
+        if (!CommonValidators.validString(img)) {
+            logger.warn("Invalid image URL received: {}", img);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
 
-		// Get FTP configuration
-		final String ftpHost = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_HOST).getValue();
-		final String ftpUsername = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_USER).getValue();
-		final String ftpPassword = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_PASSWORD)
-				.getValue();
-		final String ftpFolder = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_FOLDER_PATH)
-				.getValue();
+        try {
+            final String ftpHost = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_HOST).getValue();
+            final int ftpPort = 21;
+            final String ftpUser = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_USER).getValue();
+            final String ftpPassword = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_PASSWORD).getValue();
+            final String ftpFolder = systemSettingService.getSettingByCode(SystemSettingConstants.FTP_FOLDER_PATH).getValue();
 
-		String filePath = buildFtpPath(ftpFolder, url);
-		logger.debug("Attempting to retrieve file: {}", filePath);
+            String filePath = buildFtpPath(ftpFolder, img);
+            logger.debug("Retrieving FTP file: {}", filePath);
 
-	
-		
-		try {
-			FtpUtil ftpUtil = new FtpUtil(ftpHost, ftpUsername, ftpPassword);
-			
-			BufferedImage image = ftpUtil.getImageFromFtp(filePath);
-			
-			if (image == null) {
-				logger.warn("File not found or transfer failed: {}", filePath);
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-			}
+            FtpUtil ftpUtil = new FtpUtil(ftpHost, ftpPort, ftpUser, ftpPassword);
+            byte[] fileBytes = ftpUtil.getFileBytesFromFtp(filePath);
 
-			ByteArrayInputStream imageStream = new ByteArrayInputStream(imageToBytes(image, determineFormat(url)));
-			return ResponseEntity.ok().cacheControl(createCacheControl()).contentType(determineMediaType(url))
-					.body(new InputStreamResource(imageStream));
+            if (fileBytes == null || fileBytes.length == 0) {
+                logger.warn("File not found or empty: {}", filePath);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
 
-		} catch (Exception e) {
-			logger.error("FTP error: ", e);
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-		}
-	}
+            ByteArrayInputStream inputStream = new ByteArrayInputStream(fileBytes);
+            String format = determineFormat(img);
 
-	private byte[] imageToBytes(BufferedImage image, String format) throws Exception {
-		try (java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream()) {
-			ImageIO.write(image, format, baos);
-			return baos.toByteArray();
-		}
-	}
+            return ResponseEntity.ok()
+                    .contentType(determineMediaType(format))
+                    .cacheControl(createCacheControl())
+                    .body(new InputStreamResource(inputStream));
 
-	private String determineFormat(String path) {
-		String extension = path.substring(path.lastIndexOf('.') + 1).toLowerCase();
-		return (extension.equals("jpg") || extension.equals("jpeg")) ? "jpeg" : extension;
-	}
+        } catch (Exception ex) {
+            logger.error("Error while retrieving image from FTP: {}", ex.getMessage(), ex);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 
-	private MediaType determineMediaType(String path) {
-		String extension = path.substring(path.lastIndexOf('.') + 1).toLowerCase();
-		switch (extension) {
-		case "jpg":
-		case "jpeg":
-			return MediaType.IMAGE_JPEG;
-		case "png":
-			return MediaType.IMAGE_PNG;
-		case "gif":
-			return MediaType.IMAGE_GIF;
-		default:
-			return MediaType.APPLICATION_OCTET_STREAM;
-		}
-	}
 
-	private String buildFtpPath(String baseFolder, String relativePath) {
-		return baseFolder.replaceAll("/$", "") + "/" + relativePath.replaceAll("^/", "");
-	}
+    private String buildFtpPath(String baseFolder, String relativePath) {
+        return baseFolder.replaceAll("/$", "") + "/" + relativePath.replaceAll("^/", "");
+    }
 
-	private CacheControl createCacheControl() {
-		return CacheControl.maxAge(7, TimeUnit.DAYS).cachePublic().mustRevalidate();
-	}
+    private byte[] imageToBytes(BufferedImage image, String format) throws Exception {
+        try (java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream()) {
+            boolean success = ImageIO.write(image, format, baos);
+            if (!success) {
+                throw new Exception("Unsupported image format: " + format);
+            }
+            return baos.toByteArray();
+        }
+    }
+
+    private String determineFormat(String path) {
+        String ext = path.substring(path.lastIndexOf('.') + 1).toLowerCase();
+        return (ext.equals("jpg")) ? "jpeg" : ext; // Normalize JPG
+    }
+
+    private MediaType determineMediaType(String format) {
+        switch (format.toLowerCase()) {
+            case "jpeg":
+            case "jpg":
+                return MediaType.IMAGE_JPEG;
+            case "png":
+                return MediaType.IMAGE_PNG;
+            case "gif":
+                return MediaType.IMAGE_GIF;
+            default:
+                return MediaType.APPLICATION_OCTET_STREAM;
+        }
+    }
+
+    private CacheControl createCacheControl() {
+        return CacheControl.maxAge(7, TimeUnit.DAYS)
+                           .cachePublic()
+                           .mustRevalidate();
+    }
 }

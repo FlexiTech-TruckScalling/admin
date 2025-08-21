@@ -37,7 +37,7 @@ public class TransactionDTO extends CommonDTO {
 	private CustomerVehicleDTO vehicleDTO;
 	private Integer registerVehicleStatus;
 	private String driverName;
-	private BigDecimal quantity;
+	private Integer quantity;
 	private WeightUnitDTO quantityUnitDTO;
 	private WeightUnitDTO weightUnitDTO;
 	private BigDecimal cost;
@@ -51,6 +51,8 @@ public class TransactionDTO extends CommonDTO {
 	private Integer inOutStatus;
 	private String vehiclePhotoOne;
 	private String vehiclePhotoTwo;
+	private String vehiclePhotoThree;
+	private String vehiclePhotoFour;
 	private Date inTime;
 	private String inTimeStr;
 	private Date outTime;
@@ -78,7 +80,7 @@ public class TransactionDTO extends CommonDTO {
 		this.vehicleDTO = t.getVehicle() != null ? new CustomerVehicleDTO(t.getVehicle()) : null;
 		this.registerVehicleStatus = t.getRegisterVehicleStatus();
 		this.driverName = t.getDriverName();
-		this.quantity = t.getQty();
+		this.quantity = t.getQty() != null ? t.getQty().intValue(): 0;
 		this.quantityUnitDTO = t.getQuantityUnit() != null ? new WeightUnitDTO(t.getQuantityUnit()) : null;
 		this.weightUnitDTO = t.getWeightUnit() != null ? new WeightUnitDTO(t.getWeightUnit()) : null;
 		this.cost = t.getCost();
@@ -96,6 +98,8 @@ public class TransactionDTO extends CommonDTO {
 		this.inOutStatus = t.getInOutStatus();
 		this.vehiclePhotoOne = t.getVehiclePhotoOne();
 		this.vehiclePhotoTwo = t.getVehiclePhotoTwo();
+		this.vehiclePhotoThree = t.getVehiclePhotoThree();
+		this.vehiclePhotoFour = t.getVehiclePhotoFour();
 		this.inTime = t.getInTime();
 		this.outTime = t.getOutTime();
 		if (CommonValidators.isValidObject(inTime)) {

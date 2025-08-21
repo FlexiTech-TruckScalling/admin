@@ -61,3 +61,6 @@ button.toast-close-btn:hover{
 table th{
 	white-space: nowrap;
 }
+.img-preview{
+	cursor: pointer;
+}
