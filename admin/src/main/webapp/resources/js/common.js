@@ -44,4 +44,10 @@ $(()=>{
 			$('#deleteModal').modal('show');
 		}
 	})
+	
+	$('.img-preview').on('click', function () {
+	      const src = $(this).attr('src');
+	      $('#modalImage').attr('src', src);
+	      $('#imagePreviewModal').modal('show');
+	    });
 })

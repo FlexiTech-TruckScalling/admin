@@ -41,6 +41,7 @@ public class TransactionDTO extends CommonDTO {
 	private Integer registerVehicleStatus;
 	private String driverName;
 	private Integer quantity;
+	private Integer quantity;
 	private WeightUnitDTO quantityUnitDTO;
 	private WeightUnitDTO weightUnitDTO;
 	private BigDecimal cost;
@@ -54,6 +55,8 @@ public class TransactionDTO extends CommonDTO {
 	private Integer inOutStatus;
 	private String vehiclePhotoOne;
 	private String vehiclePhotoTwo;
+	private String vehiclePhotoThree;
+	private String vehiclePhotoFour;
 	private Date inTime;
 	private String inTimeStr;
 	private Date outTime;
@@ -102,6 +105,8 @@ public class TransactionDTO extends CommonDTO {
 		this.inOutStatus = t.getInOutStatus();
 		this.vehiclePhotoOne = t.getVehiclePhotoOne();
 		this.vehiclePhotoTwo = t.getVehiclePhotoTwo();
+		this.vehiclePhotoThree = t.getVehiclePhotoThree();
+		this.vehiclePhotoFour = t.getVehiclePhotoFour();
 		this.inTime = t.getInTime();
 		this.outTime = t.getOutTime();
 		if (CommonValidators.isValidObject(inTime)) {

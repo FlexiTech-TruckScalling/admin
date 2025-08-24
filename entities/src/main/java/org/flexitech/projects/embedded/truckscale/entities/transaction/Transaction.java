@@ -100,6 +100,12 @@ public class Transaction extends BaseEntity{
 	
 	@Column(name = "vehicle_photo_two")
 	private String vehiclePhotoTwo;
+	
+	@Column(name = "vehicle_photo_three")
+	private String vehiclePhotoThree;
+	
+	@Column(name = "vehicle_photo_four")
+	private String vehiclePhotoFour;
 
 	@Column(name = "in_time")
 	private Date inTime;

@@ -127,7 +127,8 @@
 
 								<dt class="col-sm-4">Cost:</dt>
 								<dd class="col-sm-8">
-									<fmt:formatNumber value="${transactionDTO.cost}" pattern="#,##0 ' Ks'" />
+									<fmt:formatNumber value="${transactionDTO.cost}"
+										pattern="#,##0 ' Ks'" />
 								</dd>
 							</dl>
 						</div>
@@ -142,32 +143,79 @@
 				</div>
 				<div class="card-body">
 					<div class="row">
-						<div class="col-md-6 text-center">
-							<c:choose>
-								<c:when test="${not empty transactionDTO.vehiclePhotoOne}">
-									<img
-										src="/images/${transactionDTO.vehiclePhotoOne}"
-										class="img-fluid rounded" alt="Vehicle Photo 1"
-										style="max-height: 400px;">
-								</c:when>
-								<c:otherwise>
-									<div class="alert alert-warning">No photo available</div>
-								</c:otherwise>
-							</c:choose>
+
+						<!-- Inbound Images Fieldset -->
+						<div class="col-md-6 mx-0">
+
+							<fieldset>
+								<legend>Inbound Images</legend>
+								<div class="row">
+									<div class="col-md-6 text-center">
+										<c:choose>
+											<c:when test="${not empty transactionDTO.vehiclePhotoOne}">
+												<img
+													src="<%=request.getContextPath()%>/ftp-photo.fxt?img=${transactionDTO.vehiclePhotoOne}"
+													class="img-fluid rounded img-preview" alt="Vehicle Photo 1"
+													style="max-height: 400px;">
+											</c:when>
+											<c:otherwise>
+												<div class="alert alert-warning">No photo available</div>
+											</c:otherwise>
+										</c:choose>
+									</div>
+									<div class="col-md-6 text-center">
+										<c:choose>
+											<c:when test="${not empty transactionDTO.vehiclePhotoTwo}">
+												<img
+													src="<%=request.getContextPath()%>/ftp-photo.fxt?img=${transactionDTO.vehiclePhotoTwo}"
+													class="img-fluid rounded img-preview" alt="Vehicle Photo 2"
+													style="max-height: 400px;">
+											</c:when>
+											<c:otherwise>
+												<div class="alert alert-warning">No photo available</div>
+											</c:otherwise>
+										</c:choose>
+									</div>
+								</div>
+							</fieldset>
+
 						</div>
-						<div class="col-md-6 text-center">
-							<c:choose>
-								<c:when test="${not empty transactionDTO.vehiclePhotoTwo}">
-									<img
-										src="/images/${transactionDTO.vehiclePhotoTwo}"
-										class="img-fluid rounded" alt="Vehicle Photo 2"
-										style="max-height: 400px;">
-								</c:when>
-								<c:otherwise>
-									<div class="alert alert-warning">No photo available</div>
-								</c:otherwise>
-							</c:choose>
+
+						<!-- Outbound Images Fieldset -->
+						<div class="col-md-6 mx-0">
+							<fieldset>
+								<legend>Outbound Images</legend>
+								<div class="row">
+									<div class="col-md-6 text-center">
+										<c:choose>
+											<c:when test="${not empty transactionDTO.vehiclePhotoThree}">
+												<img
+													src="<%=request.getContextPath()%>/ftp-photo.fxt?img=${transactionDTO.vehiclePhotoThree}"
+													class="img-fluid rounded img-preview" alt="Vehicle Photo 3"
+													style="max-height: 400px;">
+											</c:when>
+											<c:otherwise>
+												<div class="alert alert-warning">No photo available</div>
+											</c:otherwise>
+										</c:choose>
+									</div>
+									<div class="col-md-6 text-center">
+										<c:choose>
+											<c:when test="${not empty transactionDTO.vehiclePhotoFour}">
+												<img
+													src="<%=request.getContextPath()%>/ftp-photo.fxt?img=${transactionDTO.vehiclePhotoFour}"
+													class="img-fluid rounded img-preview" alt="Vehicle Photo 4"
+													style="max-height: 400px;">
+											</c:when>
+											<c:otherwise>
+												<div class="alert alert-warning">No photo available</div>
+											</c:otherwise>
+										</c:choose>
+									</div>
+								</div>
+							</fieldset>
 						</div>
+
 					</div>
 				</div>
 			</div>
@@ -208,4 +256,21 @@
 			</div>
 		</div>
 	</div>
+</div>
+
+<!-- Bootstrap 4 Image Preview Modal -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1" role="dialog" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imagePreviewModalLabel">Image Preview</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center p-2">
+        <img id="modalImage" src="" alt="Preview" class="img-fluid rounded" style="width: 100%;">
+      </div>
+    </div>
+  </div>
 </div>
