@@ -41,7 +41,6 @@ public class TransactionDTO extends CommonDTO {
 	private Integer registerVehicleStatus;
 	private String driverName;
 	private Integer quantity;
-	private Integer quantity;
 	private WeightUnitDTO quantityUnitDTO;
 	private WeightUnitDTO weightUnitDTO;
 	private BigDecimal cost;
