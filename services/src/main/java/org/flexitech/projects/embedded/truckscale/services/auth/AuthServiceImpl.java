@@ -15,6 +15,7 @@ import org.flexitech.projects.embedded.truckscale.common.network.response.Respon
 import org.flexitech.projects.embedded.truckscale.dao.counter.CounterDAO;
 import org.flexitech.projects.embedded.truckscale.dao.shift.UserShiftDAO;
 import org.flexitech.projects.embedded.truckscale.dao.shift.UserShiftSummaryDAO;
+import org.flexitech.projects.embedded.truckscale.dao.superadminuser.SuperAdminUserDAO;
 import org.flexitech.projects.embedded.truckscale.dao.user.UserDAO;
 import org.flexitech.projects.embedded.truckscale.dto.auth.LoginDTO;
 import org.flexitech.projects.embedded.truckscale.dto.request.auth.AuthorizeRequestDTO;
@@ -23,10 +24,12 @@ import org.flexitech.projects.embedded.truckscale.dto.request.auth.LogoutRequest
 import org.flexitech.projects.embedded.truckscale.dto.request.user_shift.UserShiftSummaryRequestDTO;
 import org.flexitech.projects.embedded.truckscale.dto.response.auth.AuthResponse;
 import org.flexitech.projects.embedded.truckscale.dto.shift.UserShiftDTO;
+import org.flexitech.projects.embedded.truckscale.dto.superadminuser.SuperAdminUserDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
 import org.flexitech.projects.embedded.truckscale.entities.counters.Counters;
 import org.flexitech.projects.embedded.truckscale.entities.shift.UserShift;
 import org.flexitech.projects.embedded.truckscale.entities.shift.UserShiftSummary;
+import org.flexitech.projects.embedded.truckscale.entities.superadmin.SuperAdminUser;
 import org.flexitech.projects.embedded.truckscale.entities.user.Users;
 import org.flexitech.projects.embedded.truckscale.services.shift.UserShiftService;
 import org.flexitech.projects.embedded.truckscale.util.auth.TokenUtil;
@@ -47,17 +50,20 @@ public class AuthServiceImpl implements AuthService {
 	UserDAO userDAO;
 
 	@Autowired
+	SuperAdminUserDAO superAdminUserDAO; // for super admin
+
+	@Autowired
 	JwtService jwtService;
 
 	@Autowired
 	UserShiftService shiftService;
-	
+
 	@Autowired
 	UserShiftDAO userShiftDAO;
-	
+
 	@Autowired
 	CounterDAO counterDAO;
-	
+
 	@Autowired
 	UserShiftSummaryDAO userShiftSummaryDAO;
 
@@ -84,54 +90,54 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public void logout(LogoutRequestDTO logoutRequest, UserDTO loggedUser)  throws Exception{
-		if(!CommonValidators.isValidObject(logoutRequest)) {
+	public void logout(LogoutRequestDTO logoutRequest, UserDTO loggedUser) throws Exception {
+		if (!CommonValidators.isValidObject(logoutRequest)) {
 			throw new IllegalArgumentException("Please provide a valid request!");
 		}
-		if(!CommonValidators.validLong(logoutRequest.getUserId())) {
+		if (!CommonValidators.validLong(logoutRequest.getUserId())) {
 			throw new IllegalArgumentException("Invalid request!");
 		}
-		
+
 		Users user = this.userDAO.get(logoutRequest.getUserId());
-		if(!CommonValidators.isValidObject(user)) {
+		if (!CommonValidators.isValidObject(user)) {
 			throw new IllegalArgumentException("Please provide a valid user id!");
 		}
-		
+
 		Users loggedU = this.userDAO.get(loggedUser.getId());
-		
+
 		user.setSessionToken("");
-		
+
 		// logout change session
 		this.userDAO.update(user);
-		
-		if(logoutRequest.isEndShift()) {
-			
-			if(!CommonValidators.isValidObject(logoutRequest.getShiftSummary())) {
+
+		if (logoutRequest.isEndShift()) {
+
+			if (!CommonValidators.isValidObject(logoutRequest.getShiftSummary())) {
 				throw new IllegalArgumentException("Please provide shift summary to end shift!");
 			}
-			
+
 			UserShift shift = this.userShiftDAO.getCurrentActiveShift(user.getId());
-			
-			if(!CommonValidators.isValidObject(shift)) {
+
+			if (!CommonValidators.isValidObject(shift)) {
 				throw new IllegalArgumentException("Current user doesn't have active shift!");
 			}
-			
+
 			// end shift
 			this.shiftService.endShift(user.getId(), loggedUser);
-			
+
 			UserShiftSummaryRequestDTO summary = logoutRequest.getShiftSummary();
-			
+
 			UserShiftSummary s = new UserShiftSummary();
-			
+
 			Users sUser = this.userDAO.get(summary.getUserId());
 			s.setUser(sUser);
-			
+
 			UserShift sShift = this.userShiftDAO.getUserShitByCode(summary.getShiftCode());
 			s.setUserShift(sShift);
-			
+
 			Counters c = this.counterDAO.get(summary.getCounterId());
 			s.setCounter(c);
-			
+
 			s.setTotalTransaction(summary.getTotalTransaction());
 			s.setTotalInTransaction(summary.getTotalInTransaction());
 			s.setTotalOutTransaction(summary.getTotalOutTranaction());
@@ -139,10 +145,10 @@ public class AuthServiceImpl implements AuthService {
 			s.setEndByUser(loggedU);
 			s.setCreatedTime(new Date());
 			s.setStatus(ActiveStatus.ACTIVE.getCode());
-			
+
 			this.userShiftSummaryDAO.save(s);
 		}
-		
+
 	}
 
 	@Override
@@ -250,16 +256,108 @@ public class AuthServiceImpl implements AuthService {
 	}
 
 	@Override
-	public boolean authorize(AuthorizeRequestDTO requestDTO) throws Exception{
+	public boolean authorize(AuthorizeRequestDTO requestDTO) throws Exception {
 		LoginDTO login = new LoginDTO();
 		login.setLoginName(requestDTO.getName());
 		login.setPassword(requestDTO.getPassword());
 		UserDTO user = this.login(login);
-		if(!CommonValidators.isValidObject(user)) return false;
-		if(!user.getUserRoleDTO().getCode().equals(2) && !user.getUserRoleDTO().getCode().equals(1)) {
+		if (!CommonValidators.isValidObject(user))
+			return false;
+		if (!user.getUserRoleDTO().getCode().equals(2) && !user.getUserRoleDTO().getCode().equals(1)) {
 			throw new IllegalArgumentException("Only manager or admin can approve.");
 		}
 		return true;
+	}
+
+	@Override
+	public SuperAdminUserDTO loginForSuperAdminUser(LoginDTO loginDTO) throws Exception {
+
+		try {
+			SuperAdminUser superAdminUser = this.superAdminUserDAO.findAdminUserByLoginName(loginDTO.getLoginName());
+			if (superAdminUser == null) {
+				throw new Exception("Invalid login name!");
+			}
+			
+			System.out.println("DB Password = " + superAdminUser.getPassword());
+			System.out.println("Input Password = " + loginDTO.getPassword());
+			if (!CommonValidators.validString(loginDTO.getPassword())
+					&& !CommonValidators.validString(superAdminUser.getPassword())) {
+				throw new Exception("Password cannot be empty!");
+			}
+			if (superAdminUser.getPassword().equals(loginDTO.getPassword())) {
+				return new SuperAdminUserDTO(superAdminUser);
+			} else {
+				throw new Exception("Wrong password, please try again!");
+			}
+		} catch (Exception e) {
+			logger.error("Error on Login: {}", ExceptionUtils.getMessage(e));
+			throw e;
+		}
+
+	}
+
+	@Override
+	public void logoutForSuperAdminUser(LogoutRequestDTO logoutRequest, SuperAdminUserDTO loggedSuperAdminUser)
+			throws Exception {
+
+		if (!CommonValidators.isValidObject(logoutRequest)) {
+			throw new IllegalArgumentException("Please provide a valid request!");
+		}
+		if (!CommonValidators.validLong(logoutRequest.getUserId())) {
+			throw new IllegalArgumentException("Invalid request!");
+		}
+
+		SuperAdminUser superAdminUser = this.superAdminUserDAO.get(logoutRequest.getUserId());
+		if (!CommonValidators.isValidObject(superAdminUser)) {
+			throw new IllegalArgumentException("Please provide a valid user id!");
+		}
+
+		SuperAdminUser loggedU = this.superAdminUserDAO.get(loggedSuperAdminUser.getId());
+
+		// superAdminUser.setSessionToken("");
+
+		// logout change session
+		// this.superAdminUserDAO.update(superAdminUserDAO);
+
+		if (logoutRequest.isEndShift()) {
+
+			if (!CommonValidators.isValidObject(logoutRequest.getShiftSummary())) {
+				throw new IllegalArgumentException("Please provide shift summary to end shift!");
+			}
+
+			UserShift shift = this.userShiftDAO.getCurrentActiveShift(superAdminUser.getId());
+
+			if (!CommonValidators.isValidObject(shift)) {
+				throw new IllegalArgumentException("Current user doesn't have active shift!");
+			}
+
+			// end shift
+			// this.shiftService.endShift(superAdminUser.getId(), loggedSuperAdminUser);
+
+			UserShiftSummaryRequestDTO summary = logoutRequest.getShiftSummary();
+
+			UserShiftSummary s = new UserShiftSummary();
+
+			Users sUser = this.userDAO.get(summary.getUserId());
+			s.setUser(sUser);
+
+			UserShift sShift = this.userShiftDAO.getUserShitByCode(summary.getShiftCode());
+			s.setUserShift(sShift);
+
+			Counters c = this.counterDAO.get(summary.getCounterId());
+			s.setCounter(c);
+
+			s.setTotalTransaction(summary.getTotalTransaction());
+			s.setTotalInTransaction(summary.getTotalInTransaction());
+			s.setTotalOutTransaction(summary.getTotalOutTranaction());
+			s.setTotalAmount(summary.getTotalAmount());
+			// s.setEndByUser(loggedU);
+			s.setCreatedTime(new Date());
+			s.setStatus(ActiveStatus.ACTIVE.getCode());
+
+			this.userShiftSummaryDAO.save(s);
+		}
+
 	}
 
 }

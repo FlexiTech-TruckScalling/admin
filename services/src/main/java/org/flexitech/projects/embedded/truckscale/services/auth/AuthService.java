@@ -5,6 +5,7 @@ import org.flexitech.projects.embedded.truckscale.dto.auth.LoginDTO;
 import org.flexitech.projects.embedded.truckscale.dto.request.auth.AuthorizeRequestDTO;
 import org.flexitech.projects.embedded.truckscale.dto.request.auth.LoginRequestDTO;
 import org.flexitech.projects.embedded.truckscale.dto.request.auth.LogoutRequestDTO;
+import org.flexitech.projects.embedded.truckscale.dto.superadminuser.SuperAdminUserDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
 
 public interface AuthService {
@@ -13,4 +14,8 @@ public interface AuthService {
 	Response login(LoginRequestDTO loginRequestDTO); 
 	Response checkToken(String token);
 	boolean authorize(AuthorizeRequestDTO requestDTO) throws Exception;
+	
+	//for super admin user
+	SuperAdminUserDTO loginForSuperAdminUser(LoginDTO loginDTO) throws Exception;
+	void logoutForSuperAdminUser(LogoutRequestDTO logoutRequest, SuperAdminUserDTO loggedSuperAdminUser) throws Exception;
 }

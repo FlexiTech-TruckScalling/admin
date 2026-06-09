@@ -1,0 +1,1 @@
+<h3 class="text-center fs-sm">Welcome to <b style="color: #4e73df"> Flexitech | Truck Scale Management System</b></h3>

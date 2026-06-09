@@ -21,6 +21,7 @@ import org.flexitech.projects.embedded.truckscale.dao.user.UserRoleDAO;
 import org.flexitech.projects.embedded.truckscale.dto.menu.MenuAccessListDTO;
 import org.flexitech.projects.embedded.truckscale.dto.menu.MenuAccessTreeDTO;
 import org.flexitech.projects.embedded.truckscale.dto.menu.MenuDTO;
+import org.flexitech.projects.embedded.truckscale.dto.superadminuser.SuperAdminUserDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
 import org.flexitech.projects.embedded.truckscale.entities.menu.Menu;
 import org.flexitech.projects.embedded.truckscale.entities.menu.MenuRoleAccess;
@@ -181,6 +182,110 @@ public class MenuRoleAccessServiceImpl implements MenuRoleAccessService {
 				this.menuRoleAccessDAO.saveOrUpdate(access);
 			}
 		}
+	}
+
+	@Override
+	public void saveMenuAccessForSuperAdmin(MenuAccessListDTO accessTreeDtoList,
+			SuperAdminUserDTO loginSuperAdminUser) {
+		Long roleId = accessTreeDtoList.getRoleId();
+		List<String> newAccessTreeList = accessTreeDtoList.getAccessTreeList();
+
+		List<MenuRoleAccess> existingAccessList = menuRoleAccessDAO.getAllMenuRoleAccess(roleId,
+				ActiveStatus.ACTIVE.getCode());
+
+		Set<String> existingMenuIds = existingAccessList.stream().map(access -> access.getMenu().getCode())
+				.collect(Collectors.toSet());
+
+		Set<String> newMenuIds = new HashSet<>(newAccessTreeList);
+
+		Set<String> menusToAdd = new HashSet<>(newMenuIds);
+		menusToAdd.removeAll(existingMenuIds);
+
+		Set<String> menusToRemove = new HashSet<>(existingMenuIds);
+		menusToRemove.removeAll(newMenuIds);
+
+		if (!menusToRemove.isEmpty()) {
+			List<MenuRoleAccess> accessesToRemove = existingAccessList.stream()
+					.filter(access -> menusToRemove.contains(access.getMenu().getCode()))
+					.collect(Collectors.toList());
+
+			for (MenuRoleAccess ac : accessesToRemove) {
+				menuRoleAccessDAO.delete(ac);
+			}
+		}
+
+		// 6. Add new menu accesses
+		if (!menusToAdd.isEmpty()) {
+			List<MenuRoleAccess> accessesToAdd = menusToAdd.stream().map(menuId -> {
+				Menu menu = menuDAO.getByCode(menuId);
+
+				UserRoles role = userRoleDAO.get(roleId);
+
+				MenuRoleAccess newAccess = new MenuRoleAccess();
+				newAccess.setMenu(menu);
+				newAccess.setRole(role);
+				newAccess.setCreatedTime(new Date());
+				newAccess.setStatus(ActiveStatus.ACTIVE.getCode());
+				return newAccess;
+			}).collect(Collectors.toList());
+
+			for (MenuRoleAccess access : accessesToAdd) {
+				this.menuRoleAccessDAO.saveOrUpdate(access);
+			}
+		}
+	}
+
+	@Override
+	public void saveMenuAccessForSupAdmin(MenuAccessListDTO accessTreeDtoList, SuperAdminUserDTO loginUser) {
+
+		Long roleId = accessTreeDtoList.getRoleId();
+		List<String> newAccessTreeList = accessTreeDtoList.getAccessTreeList();
+
+		List<MenuRoleAccess> existingAccessList = menuRoleAccessDAO.getAllMenuRoleAccess(roleId,
+				ActiveStatus.ACTIVE.getCode());
+
+		Set<String> existingMenuIds = existingAccessList.stream().map(access -> access.getMenu().getCode())
+				.collect(Collectors.toSet());
+
+		Set<String> newMenuIds = new HashSet<>(newAccessTreeList);
+
+		Set<String> menusToAdd = new HashSet<>(newMenuIds);
+		menusToAdd.removeAll(existingMenuIds);
+
+		Set<String> menusToRemove = new HashSet<>(existingMenuIds);
+		menusToRemove.removeAll(newMenuIds);
+
+		if (!menusToRemove.isEmpty()) {
+			List<MenuRoleAccess> accessesToRemove = existingAccessList.stream()
+					.filter(access -> menusToRemove.contains(access.getMenu().getCode()))
+					.collect(Collectors.toList());
+
+			for (MenuRoleAccess ac : accessesToRemove) {
+				menuRoleAccessDAO.delete(ac);
+			}
+		}
+
+		// 6. Add new menu accesses
+		if (!menusToAdd.isEmpty()) {
+			List<MenuRoleAccess> accessesToAdd = menusToAdd.stream().map(menuId -> {
+				Menu menu = menuDAO.getByCode(menuId);
+
+				UserRoles role = userRoleDAO.get(roleId);
+
+				MenuRoleAccess newAccess = new MenuRoleAccess();
+				newAccess.setMenu(menu);
+				newAccess.setRole(role);
+				newAccess.setCreatedTime(new Date());
+				newAccess.setStatus(ActiveStatus.ACTIVE.getCode());
+				return newAccess;
+			}).collect(Collectors.toList());
+
+			for (MenuRoleAccess access : accessesToAdd) {
+				this.menuRoleAccessDAO.saveOrUpdate(access);
+			}
+		}
+	
+		
 	}
 
 }

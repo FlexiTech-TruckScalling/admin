@@ -6,6 +6,7 @@ import java.util.Map;
 import org.flexitech.projects.embedded.truckscale.dto.menu.MenuAccessListDTO;
 import org.flexitech.projects.embedded.truckscale.dto.menu.MenuAccessTreeDTO;
 import org.flexitech.projects.embedded.truckscale.dto.menu.MenuDTO;
+import org.flexitech.projects.embedded.truckscale.dto.superadminuser.SuperAdminUserDTO;
 import org.flexitech.projects.embedded.truckscale.dto.user.UserDTO;
 
 public interface MenuRoleAccessService {
@@ -14,4 +15,8 @@ public interface MenuRoleAccessService {
 	List<MenuAccessTreeDTO> getSelectedAccessTree(Long userRoleId);
 
 	void saveMenuAccess(MenuAccessListDTO accessTreeDtoList, UserDTO loginUser);
+	
+	void saveMenuAccessForSuperAdmin(MenuAccessListDTO accessTreeDtoList, SuperAdminUserDTO loginSuperAdminUser);
+
+	void saveMenuAccessForSupAdmin(MenuAccessListDTO accessTreeDtoList, SuperAdminUserDTO loginUser);
 }
