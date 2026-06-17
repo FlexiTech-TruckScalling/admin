@@ -54,6 +54,35 @@
 						<span class="text-danger input-error-msg"
 							data-label="dob"></span>
 					</div>
+					
+					<div class="col-md-4">
+						<form:label path="superAdminLicenseKey" class="form-label">Lincense Key Status <strong
+								class="text-danger">*</strong>
+						</form:label>
+						<form:select
+							class="form-control border bg-white selectpicker required"
+							id="status" path="superAdminLicenseKey">
+							<option value="-1" disabled selected>Select Lincense Key Status</option>
+							<form:options items="${licenseKeyStsList }" itemLabel="desc"
+								itemValue="code" />
+						</form:select>
+						<span class="text-danger input-error-msg" data-label="Status"></span>
+					</div>
+					
+					<!-- Expiration -->
+					<div class="col-md-4">
+						<form:label path="expiration" class="form-label">Expiration<strong
+								class="text-danger">*</strong>
+						</form:label>
+						<form:input path="expiration" type="text"
+							class="form-control required" placeholder="dob" />
+						<span class="text-danger input-error-msg"
+							data-label="dob"></span>
+					</div>
+					
+					<form:hidden path="superAdminLicenseKey" />
+					<form:hidden path="key" />
+					<form:hidden path="subscriptionTypeId" />
 
 				</div>
 				

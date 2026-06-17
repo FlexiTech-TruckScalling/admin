@@ -24,9 +24,9 @@ public class SuperAdminCustomerDTO extends CommonDTO {
 
 	private Date dob;
 
-	private Long superAdminLicenseKey;
-
-	private Long superAdminCustomerId;
+	private Integer superAdminLicenseKey;
+	
+	private String LicenseKeyDesc;
 
 	private Long key;
 
@@ -41,7 +41,6 @@ public class SuperAdminCustomerDTO extends CommonDTO {
 		this.contactEmail = c.getContactEmail();
 		this.dob = c.getDob();
 		this.superAdminLicenseKey = c.getSuperAdminLicenseKey();
-		this.superAdminCustomerId = c.getSuperAdminCustomerId();
 		this.key = c.getKey();
 		this.subscriptionTypeId = c.getSubscriptionTypeId();
 		this.expiration = c.getExpiration();

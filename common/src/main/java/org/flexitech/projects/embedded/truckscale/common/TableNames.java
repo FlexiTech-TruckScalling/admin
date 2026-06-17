@@ -37,4 +37,10 @@ public class TableNames {
 	
 	public static final String QUANTITY_UNIT = "quantity_unit";
 	
+	public static final String SUPERADMIN_USER = "superadmin_user";
+	
+	public static final String SUPERADMIN_CUSTOMER = "superadmin_customer";
+	
+	public static final String SUBSCRIPTION_TYPE = "subscription_type";
+	
 }

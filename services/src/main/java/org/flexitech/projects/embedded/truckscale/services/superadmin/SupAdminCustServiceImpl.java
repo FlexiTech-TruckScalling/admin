@@ -56,7 +56,6 @@ public class SupAdminCustServiceImpl implements SupAdminCustService {
 		c.setContactEmail(dto.getContactEmail());
 		c.setDob(dto.getDob());
 		c.setSuperAdminLicenseKey(dto.getSuperAdminLicenseKey());
-		c.setSuperAdminCustomerId(dto.getSuperAdminCustomerId());
 		c.setKey(dto.getKey());
 		c.setSubscriptionTypeId(dto.getSubscriptionTypeId());
 		c.setExpiration(dto.getExpiration());

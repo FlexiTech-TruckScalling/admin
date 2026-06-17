@@ -1,6 +1,7 @@
 package org.flexitech.projects.embedded.truckscale.superadmin.controllers.customers;
 
 import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
+import org.flexitech.projects.embedded.truckscale.common.enums.LincenseKeyStatus;
 import org.flexitech.projects.embedded.truckscale.dto.deletion.DeleteDTO;
 import org.flexitech.projects.embedded.truckscale.dto.superadminuser.SuperAdminCustomerDTO;
 import org.flexitech.projects.embedded.truckscale.services.superadmin.SupAdminCustService;
@@ -61,6 +62,8 @@ public class SupAdminCustController extends BaseController<SuperAdminCustomerDTO
 		
 		model.addAttribute("supAdminCustDTO", dto);
 		model.addAttribute("statusList", ActiveStatus.getAll());
+		
+		model.addAttribute("licenseKeyStsList", LincenseKeyStatus.getAll());
 		
 		
 	}

@@ -6,6 +6,7 @@
 		<groupId>org.flexitech.projects.embedded.truckscale</groupId>
 		<artifactId>parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
+		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 	<artifactId>common</artifactId>
 	<name>common</name>
