@@ -11,4 +11,6 @@ public interface UserShiftDAO extends CommonDAO<UserShift, Long> {
 	UserShift getUserShitByCode(String code);
 	List<UserShift> searchUserShift(UserShiftSearchDTO searchDTO, boolean export);
 	Integer countUserShift(UserShiftSearchDTO searchDTO);
+	
+	long countActiveShifts();
 }

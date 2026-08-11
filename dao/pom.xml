@@ -21,12 +21,5 @@
 			<artifactId>dto</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>
-				org.flexitech.projects.embedded.truckscale
-			</groupId>
-			<artifactId>admin</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
 </project>

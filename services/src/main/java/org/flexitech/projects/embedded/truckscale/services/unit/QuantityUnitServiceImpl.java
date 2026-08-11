@@ -3,6 +3,7 @@ package org.flexitech.projects.embedded.truckscale.services.unit;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
@@ -65,7 +66,7 @@ public class QuantityUnitServiceImpl implements QuantityUnitService {
 		if(!CommonValidators.validList(data)) {
 			return Collections.emptyList();
 		}
-		return data.stream().map(QuantityUnitDTO::new).toList();
+		return data.stream().map(QuantityUnitDTO::new).collect(Collectors.toList());
 	}
 
 	@Override

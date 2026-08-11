@@ -1,4 +1,19 @@
 @charset "UTF-8";
+
+:root {
+	--primary-color: #2b6cb0;
+	--secondary-color: #64748b;
+	--success-color: #16a34a;
+	--info-color: #0284c7;
+	--danger-color: #dc2626;
+	--warning-color: #ca8a04;
+
+	--light-bg: #f8fafc;
+	--card-bg: #ffffff;
+	--border-color: #e2e8f0;
+	--shadow-color: rgba(15, 23, 42, 0.08);
+}
+
 body {
 	font-size: 0.85rem !important;
 }
@@ -53,7 +68,7 @@ input, button, .btn, textarea {
 }
 button.toast-close-btn{
 	background-color: transparent !important;
-	border-width: 0 !important; 
+	border-width: 0 !important;
 }
 button.toast-close-btn:hover{
 	color: red;

@@ -93,7 +93,7 @@ public class MasterCounterSettingServiceImpl implements MasterCounterSettingServ
 	public List<CounterSettingCategoryDTO> getAllCategory(Integer status) {
 		List<CounterSettingCategory> categories = this.categoryDAO.getAllByStatus(status);
 		if (CommonValidators.validList(categories)) {
-			return categories.stream().map(CounterSettingCategoryDTO::new).toList();
+			return categories.stream().map(CounterSettingCategoryDTO::new).collect(Collectors.toList());
 		}
 		return Collections.emptyList();
 	}

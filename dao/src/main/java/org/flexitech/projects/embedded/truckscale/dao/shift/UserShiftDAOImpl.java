@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.flexitech.projects.embedded.truckscale.common.CommonDateFormats;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
+import org.flexitech.projects.embedded.truckscale.common.enums.ActiveStatus;
 import org.flexitech.projects.embedded.truckscale.common.enums.ShiftStatus;
 import org.flexitech.projects.embedded.truckscale.dao.common.CommonDAOImpl;
 import org.flexitech.projects.embedded.truckscale.dto.user_shift.UserShiftSearchDTO;
@@ -112,6 +113,14 @@ public class UserShiftDAOImpl extends CommonDAOImpl<UserShift, Long> implements 
 		appendParamentersForSearch(query, searchDTO, true);
 		query.setMaxResults(1);
 		return ((Number) query.uniqueResult()).intValue();
+	}
+	
+	@Override
+	public long countActiveShifts() {
+	    String sql = "SELECT COUNT(*) FROM user_shifts WHERE shift_status = :active";
+	    SQLQuery query = getCurrentSession().createSQLQuery(sql);
+	    query.setParameter("active", ActiveStatus.ACTIVE.getCode());
+	    return ((Number) query.uniqueResult()).longValue();
 	}
 
 }

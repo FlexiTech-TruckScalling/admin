@@ -2,13 +2,18 @@ package org.flexitech.projects.embedded.truckscale.dao.transaction;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.flexitech.projects.embedded.truckscale.common.CommonDateFormats;
 import org.flexitech.projects.embedded.truckscale.common.CommonValidators;
+import org.flexitech.projects.embedded.truckscale.common.enums.InOutBounds;
 import org.flexitech.projects.embedded.truckscale.common.enums.MathSign;
 import org.flexitech.projects.embedded.truckscale.common.enums.TransactionStatus;
 import org.flexitech.projects.embedded.truckscale.dao.common.CommonDAOImpl;
+import org.flexitech.projects.embedded.truckscale.dto.dashboard.CustomerStatDTO;
+import org.flexitech.projects.embedded.truckscale.dto.dashboard.DashboardStatsDTO;
 import org.flexitech.projects.embedded.truckscale.dto.shift.CurrentShiftSummaryDTO;
 import org.flexitech.projects.embedded.truckscale.dto.transaction.TransactionSearchDTO;
 import org.flexitech.projects.embedded.truckscale.entities.transaction.Transaction;
@@ -245,6 +250,98 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 		c.add(Restrictions.eq("transactionCode", code));
 		c.setMaxResults(1);
 		return c.uniqueResult() != null;
+	}
+	
+	@Override
+	public DashboardStatsDTO getDashboardStats(Date fromDate, Date toDate) {
+	    String sql = "SELECT COUNT(*) as transactionCount, "
+	            + "COALESCE(SUM(COALESCE(weight, 0) + COALESCE(cargo_weight, 0)), 0) as totalWeight, "
+	            + "COALESCE(SUM(cost), 0) as totalRevenue "
+	            + "FROM transactions "
+	            + "WHERE in_time BETWEEN :fromDate AND :toDate";
+
+	    SQLQuery query = getCurrentSession().createSQLQuery(sql)
+	            .addScalar("transactionCount", StandardBasicTypes.LONG)
+	            .addScalar("totalWeight", StandardBasicTypes.DOUBLE)
+	            .addScalar("totalRevenue", StandardBasicTypes.BIG_DECIMAL);
+
+	    query.setParameter("fromDate", fromDate);
+	    query.setParameter("toDate", toDate);
+	    query.setResultTransformer(Transformers.aliasToBean(DashboardStatsDTO.class));
+
+	    return (DashboardStatsDTO) query.uniqueResult();
+	}
+
+	@Override
+	public Map<Integer, Long> getHourlyTransactionCounts(Date fromDate, Date toDate) {
+	    // NOTE: HOUR() is MySQL syntax — swap for your DB's equivalent if not MySQL
+	    String sql = "SELECT HOUR(in_time) as hr, COUNT(*) as cnt "
+	            + "FROM transactions "
+	            + "WHERE in_time BETWEEN :fromDate AND :toDate "
+	            + "GROUP BY HOUR(in_time)";
+
+	    SQLQuery query = getCurrentSession().createSQLQuery(sql)
+	            .addScalar("hr", StandardBasicTypes.INTEGER)
+	            .addScalar("cnt", StandardBasicTypes.LONG);
+
+	    query.setParameter("fromDate", fromDate);
+	    query.setParameter("toDate", toDate);
+
+	    @SuppressWarnings("unchecked")
+	    List<Object[]> rows = query.list();
+
+	    Map<Integer, Long> result = new LinkedHashMap<>();
+	    for (Object[] row : rows) {
+	        result.put((Integer) row[0], (Long) row[1]);
+	    }
+	    return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Transaction> getRecentTransactions(int limit) {
+	    SQLQuery query = getCurrentSession()
+	            .createSQLQuery("SELECT * FROM transactions ORDER BY in_time DESC")
+	            .addEntity(daoType);
+	    query.setMaxResults(limit);
+	    return query.list();
+	}
+
+	@Override
+	public List<CustomerStatDTO> getTopCustomersByDateRange(Date fromDate, Date toDate, int limit) {
+	    String sql = "SELECT c.name as customerName, COUNT(t.id) as trnCount, "
+	            + "COALESCE(SUM(t.weight), 0) as totalWeight "
+	            + "FROM transactions t "
+	            + "JOIN customers c ON t.customer_id = c.id "
+	            + "WHERE t.in_time BETWEEN :fromDate AND :toDate "
+	            + "GROUP BY c.id, c.name "
+	            + "ORDER BY trnCount DESC";
+
+	    SQLQuery query = getCurrentSession().createSQLQuery(sql)
+	            .addScalar("customerName", StandardBasicTypes.STRING)
+	            .addScalar("trnCount", StandardBasicTypes.LONG)
+	            .addScalar("totalWeight", StandardBasicTypes.DOUBLE);
+
+	    query.setParameter("fromDate", fromDate);
+	    query.setParameter("toDate", toDate);
+	    query.setMaxResults(limit);
+
+	    @SuppressWarnings("unchecked")
+	    List<Object[]> rows = query.list();
+
+	    List<CustomerStatDTO> result = new ArrayList<>();
+	    for (Object[] row : rows) {
+	        result.add(new CustomerStatDTO((String) row[0], ((Long) row[1]).intValue(), (Double) row[2]));
+	    }
+	    return result;
+	}
+
+	@Override
+	public long countVehiclesInYard() {
+	    String sql = "SELECT COUNT(*) FROM transactions WHERE in_out_status = :inbound AND out_time IS NULL";
+	    SQLQuery query = getCurrentSession().createSQLQuery(sql);
+	    query.setParameter("inbound", InOutBounds.IN.getCode());
+	    return ((Number) query.uniqueResult()).longValue();
 	}
 
 }

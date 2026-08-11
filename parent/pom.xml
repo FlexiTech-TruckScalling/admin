@@ -16,7 +16,7 @@
 		<module>../services</module>
 		<module>../admin</module>
 		<module>../api</module>
-		<module>../superadmin</module>
+		<!--<module>../superadmin</module>-->
 	</modules>
 
 	<properties>
