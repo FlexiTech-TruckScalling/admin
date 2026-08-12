@@ -34,32 +34,11 @@ body {
 	border-radius: 4px;
 }
 
-@
-keyframes shimmer { 0% {
-	background-position: -200% 0;
+@keyframes shimmer { 
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
 }
 
-100
-
-
-%
-{
-background-position
-
-
-:
-
-
-200
-%
-
-
-0
-;
-
-
-}
-}
 .dash-content {
 	display: none;
 }
@@ -184,7 +163,6 @@ background-position
 	font-size: 0.875rem;
 }
 
-/* Date filter */
 .dash-toolbar {
 	display: flex;
 	align-items: center;
@@ -312,22 +290,26 @@ background-position
 	font-weight: 500;
 	color: var(--secondary-color);
 }
+
+@media (max-width: 768px) {
+	.date-filter-menu {
+		right: auto;
+		left: 0;
+	}
+}
 </style>
 
-<div
-	class="page-header mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+<div class="page-header mb-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
 	<div>
 		<h1 class="mb-0">Truck Scale Dashboard</h1>
 		<p class="text-muted mb-0 small">Weighbridge operations overview</p>
 	</div>
 
 	<div class="dash-toolbar">
-		<span class="active-range-badge d-none d-md-inline"
-			id="active-range-label"></span>
+		<span class="active-range-badge d-none d-md-inline" id="active-range-label"></span>
 
 		<div class="date-filter" id="date-filter">
-			<button type="button" class="date-filter-toggle"
-				id="date-filter-toggle">
+			<button type="button" class="date-filter-toggle" id="date-filter-toggle">
 				<i class="far fa-calendar-alt"></i> <span id="date-filter-current">Today</span>
 				<i class="fas fa-chevron-down"></i>
 			</button>
@@ -353,17 +335,14 @@ background-position
 				</div>
 
 				<div class="custom-range-panel" id="custom-range-panel">
-					<label>Start Date</label> <input type="date"
-						class="form-control mb-2" id="custom-start-date"> <label>End
-						Date</label> <input type="date" class="form-control" id="custom-end-date">
-					<button type="button" class="btn btn-sm btn-apply-range"
-						id="apply-custom-range">Apply</button>
+					<label>Start Date</label> <input type="date" class="form-control mb-2" id="custom-start-date"> 
+					<label>End Date</label> <input type="date" class="form-control" id="custom-end-date">
+					<button type="button" class="btn btn-sm btn-apply-range" id="apply-custom-range">Apply</button>
 				</div>
 			</div>
 		</div>
 
-		<button id="refresh-btn"
-			class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2">
+		<button id="refresh-btn" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2">
 			<i class="fas fa-sync-alt"></i> <span class="d-none d-sm-inline">Refresh</span>
 		</button>
 	</div>
@@ -375,8 +354,7 @@ background-position
 			<div class="card-body">
 				<div class="d-flex align-items-center justify-content-between">
 					<div>
-						<div class="text-muted text-uppercase mb-1"
-							style="font-size: 0.7rem;">Transactions</div>
+						<div class="text-muted text-uppercase mb-1" style="font-size: 0.7rem;">Transactions</div>
 						<div class="skeleton-container">
 							<div class="skeleton skeleton-text" style="width: 70px;"></div>
 						</div>
@@ -395,8 +373,7 @@ background-position
 			<div class="card-body">
 				<div class="d-flex align-items-center justify-content-between">
 					<div>
-						<div class="text-muted text-uppercase mb-1"
-							style="font-size: 0.7rem;">Total Weight (kg)</div>
+						<div class="text-muted text-uppercase mb-1" style="font-size: 0.7rem;">Total Weight (kg)</div>
 						<div class="skeleton-container">
 							<div class="skeleton skeleton-text" style="width: 90px;"></div>
 						</div>
@@ -415,8 +392,7 @@ background-position
 			<div class="card-body">
 				<div class="d-flex align-items-center justify-content-between">
 					<div>
-						<div class="text-muted text-uppercase mb-1"
-							style="font-size: 0.7rem;">Total Revenue</div>
+						<div class="text-muted text-uppercase mb-1" style="font-size: 0.7rem;">Total Revenue</div>
 						<div class="skeleton-container">
 							<div class="skeleton skeleton-text" style="width: 90px;"></div>
 						</div>
@@ -435,8 +411,7 @@ background-position
 			<div class="card-body">
 				<div class="d-flex align-items-center justify-content-between">
 					<div>
-						<div class="text-muted text-uppercase mb-1"
-							style="font-size: 0.7rem;">Vehicles In Yard</div>
+						<div class="text-muted text-uppercase mb-1" style="font-size: 0.7rem;">Vehicles In Yard</div>
 						<div class="skeleton-container">
 							<div class="skeleton skeleton-text" style="width: 60px;"></div>
 						</div>
@@ -455,8 +430,7 @@ background-position
 			<div class="card-body">
 				<div class="d-flex align-items-center justify-content-between">
 					<div>
-						<div class="text-muted text-uppercase mb-1"
-							style="font-size: 0.7rem;">Active Shifts</div>
+						<div class="text-muted text-uppercase mb-1" style="font-size: 0.7rem;">Active Shifts</div>
 						<div class="skeleton-container">
 							<div class="skeleton skeleton-text" style="width: 50px;"></div>
 						</div>
@@ -472,25 +446,23 @@ background-position
 </div>
 
 <div class="row mb-3 g-3">
-	<div class="col-xl-8 col-lg-7">
+	<div class="col-xl-8 mb-3 col-lg-7">
 		<div class="card h-100">
 			<div class="card-header">
-				<h6 class="m-0 font-weight-bold text-dark small">Transactions
-					by Hour</h6>
+				<h6 class="m-0 font-weight-bold text-dark small">Transactions by Hour</h6>
 			</div>
 			<div class="card-body">
 				<div class="skeleton-container">
 					<div class="skeleton skeleton-chart" style="height: 240px;"></div>
 				</div>
-				<div class="dash-content"
-					style="position: relative; height: 240px; width: 100%">
+				<div class="dash-content" style="position: relative; height: 240px; width: 100%">
 					<canvas id="hourlyTransactionChart"></canvas>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="col-xl-4 col-lg-5">
+	<div class="col-xl-4 mb-3 col-lg-5">
 		<div class="card h-100">
 			<div class="card-header">
 				<h6 class="m-0 font-weight-bold text-dark small">Top Customers</h6>
@@ -500,11 +472,9 @@ background-position
 					<div class="skeleton skeleton-table-row"></div>
 					<div class="skeleton skeleton-table-row"></div>
 				</div>
-				<div class="dash-content p-3" id="top-customers-chart-wrap"
-					style="display: none;">
+				<div class="dash-content p-3" id="top-customers-chart-wrap" style="display: none;">
 					<canvas id="topCustomersChart" height="220"></canvas>
-					<div id="top-customers-empty" class="text-center py-4 text-muted"
-						style="display: none;">No customer data</div>
+					<div id="top-customers-empty" class="text-center py-4 text-muted" style="display: none;">No customer data</div>
 				</div>
 			</div>
 		</div>
@@ -515,8 +485,7 @@ background-position
 	<div class="col-12">
 		<div class="card h-100">
 			<div class="card-header">
-				<h6 class="m-0 font-weight-bold text-dark small">Recent
-					Transactions</h6>
+				<h6 class="m-0 font-weight-bold text-dark small">Recent Transactions</h6>
 			</div>
 			<div class="card-body p-0">
 				<div class="skeleton-container p-3">
@@ -548,7 +517,5 @@ background-position
 <script>
 	var CONTEXT_PATH = "${pageContext.request.contextPath}/";
 </script>
-<script
-	src="${pageContext.request.contextPath}/resources/plugins/chart/chart.js"></script>
-<script
-	src="${pageContext.request.contextPath}/resources/js/dashboard/dashboard.js"></script>
+<script src="${pageContext.request.contextPath}/resources/plugins/chart/chart.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/dashboard/dashboard.js"></script>
