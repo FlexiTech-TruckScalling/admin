@@ -379,7 +379,10 @@ public class WeightTransactionServiceImpl implements WeightTransactionService {
 		if (CommonValidators.validList(transactions)) {
 
 			TransactionReportSummaryDTO summary = this.transactionDAO.getTransactionSummary(searchDTO);
-			
+			if(summary.getTotalCargoWeight() !=null && summary.getTotalWeight() != null) {
+				summary.setTotalNetWeight(summary.getTotalCargoWeight() - summary.getTotalWeight());
+				
+			}
 			List<TransactionDTO> dataList = transactions.stream().map(TransactionDTO::new).collect(Collectors.toList());
 			dataList.get(0).setSummary(summary);
 
