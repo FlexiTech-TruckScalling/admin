@@ -26,7 +26,7 @@ public class SystemSettingServiceImpl implements SystemSettingService {
 	public SystemSettingListDTO getAllSystemSettings(Integer status) {
 		List<SystemSetting> settings = this.systemSettingDAO.getAllByStatus(status);
 		if (CommonValidators.validList(settings)) {
-			return new SystemSettingListDTO(settings.stream().map(SystemSettingDTO::new).toList());
+			return new SystemSettingListDTO(settings.stream().map(SystemSettingDTO::new).collect(Collectors.toList()));
 		}
 		return new SystemSettingListDTO(Collections.emptyList());
 	}

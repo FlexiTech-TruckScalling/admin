@@ -272,7 +272,7 @@ public class TransactionDAOImpl extends CommonDAOImpl<Transaction, Long> impleme
 	    builder.append("SELECT ")
 	           .append("COALESCE(SUM(t.weight), 0) as totalWeight, ")
 	           .append("COALESCE(SUM(t.cargo_weight), 0) as totalCargoWeight, ")
-	           .append("COALESCE(SUM(t.weight - t.cargo_weight), 0) as totalNetWeight, ")
+	           .append("COALESCE(SUM(t.cargo_weight - t.weight), 0) as totalNetWeight, ")
 	           .append("COALESCE(SUM(t.cost), '0') as totalAmount, ")
 	           .append("COUNT(CASE WHEN t.in_out_status = 1 THEN 1 END) as totalIn, ")
 	           .append("COUNT(CASE WHEN t.in_out_status = 2 THEN 1 END) as totalOut ");
